@@ -1,0 +1,36 @@
+{
+	"name"             :"traineratwot/pdo-extended",
+	"type"             :"project",
+	"version"          :"1.0.0",
+	"description"      :"",
+	"license"          :"MIT",
+	"readme"           :"./README.md",
+	"homepage"         :"https://github.com/traineratwot/PDOExtended",
+	"authors"          :[
+		{
+			"name" :"Kirill",
+			"email":"Traineratwot@yandex.ru"
+		}
+	],
+	"autoload"         :{
+		"psr-4":{
+			"Traineratwot\\PDOExtended\\":"src/"
+		}
+	},
+	"minimum-stability":"stable",
+	"require"          :{
+		"php":">=7.4"
+	},
+	"require-dev"      :{
+		"phpunit/phpunit"              :"^9.0",
+		"roave/security-advisories"    :"dev-latest",
+		"jetbrains/phpstorm-attributes":"dev-master"
+	},
+	"keywords"         :[
+		"PSR-4",
+		"simple",
+		"PDO",
+		"SQL",
+		"Query builder"
+	]
+}

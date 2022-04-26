@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Warning":6,"SqlLight::testConnect":3},"times":{"Warning":0.003,"Test::testMyTest":0.002,"SqlLight::testConnect":0.003,"TestHelpers::testPrepare":0.003}}
