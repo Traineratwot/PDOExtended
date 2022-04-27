@@ -9,8 +9,24 @@
 
 	class PDOE extends PDO
 	{
+		/**
+		 * PostgreSQL
+		 * <img src="https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png" width="50" height="50" />
+		 */
+		public const DRIVER_PostgreSQL = 'pgsql';
+		/**
+		 * SQLite
+		 * <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/sqlite_logo_icon_169724.png" width="50" height="50" />
+		 */
+		public const DRIVER_SQLite = 'sqlite';
+		/**
+		 * PostgreSQL
+		 * <img src="https://img-blog.csdnimg.cn/20200828185219514.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" width="50" height="50" />
+		 */
+		public const DRIVER_MySQL    = 'mysql';
+		public const CHARSET_utf8    = 'utf8';
+		public const CHARSET_utf8mb4 = 'utf8mb4';
 
-		public const utf8 = 'utf8';
 
 		/**
 		 * @var array|false
@@ -30,7 +46,7 @@
 		public function __construct(dsn $dsn, $driverOptions = [])
 		{
 			$this->dsn = $dsn;
-			parent::__construct($dsn->get(), $dsn->getUsername(), $dsn->getPassword(), $driverOptions);
+			parent::__construct($dsn->_get(), $dsn->getUsername(), $dsn->getPassword(), $driverOptions);
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 		}
 
@@ -83,7 +99,7 @@
 		 */
 		public function getAllTables()
 		{
-			if ($this->dsn->getDriver() === dsn::DRIVER_SQLite) {
+			if ($this->dsn->getDriver() === self::DRIVER_SQLite) {
 				return $this->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
 			}
 			return $this->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);

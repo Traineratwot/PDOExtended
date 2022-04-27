@@ -2,25 +2,30 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\PDOExtended\dsn\dsn;
+	use Traineratwot\PDOExtended\dsn\DsnException;
+	use Traineratwot\PDOExtended\dsn\DsnHost;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class MySql extends TestCase
 	{
-		public function setup()
+		/**
+		 * @throws DsnException
+		 */
+		public function setUp()
+		: void
 		{
-			define('WT_HOST_DB', 'C:\light.db');
-			define('WT_PORT_DB', '');
-			define('WT_DATABASE_DB', '');
-			define('WT_TYPE_DB', 'sqlite');
-			define('WT_USER_DB', '');
-			define('WT_PASS_DB', '');
-			define('WT_CHARSET_DB', '');
-			define('WT_DSN_DB', WT_TYPE_DB . ":" . WT_HOST_DB);
-			$this->db = new PDOE(WT_DSN_DB, WT_USER_DB, WT_PASS_DB);
+			parent::setUp();
+			$dns = new DsnHost();
+			$dns->setDriver(PDOE::DRIVER_SQLite);
+			$dns->setHost('C:\light.db');
+			$this->db = new PDOE($dns);
 		}
 
 		public function testConnect()
 		{
-			$this->assertEquals(1, 1, 'test');
+
+			$tables = $this->db->getAllTables();
+			$this->assertEquals('test', $tables[0], 'ok');
 		}
 	}

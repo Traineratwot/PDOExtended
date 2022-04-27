@@ -2,36 +2,21 @@
 
 	namespace Traineratwot\PDOExtended\dsn;
 
+	use Traineratwot\PDOExtended\PDOE;
+
 	abstract class dsn
 	{
-		/**
-		 * PostgreSQL
-		 * <img src="https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png" width="50" height="50" />
-		 */
-		public const DRIVER_PostgreSQL = 'pgsql';
-		/**
-		 * SQLite
-		 * <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/sqlite_logo_icon_169724.png" width="50" height="50" />
-		 */
-		public const DRIVER_SQLite = 'sqlite';
-		/**
-		 * PostgreSQL
-		 * <img src="https://img-blog.csdnimg.cn/20200828185219514.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" width="50" height="50" />
-		 */
-		public const DRIVER_MySQL    = 'mysql';
-		public const CHARSET_utf8    = 'utf8';
-		public const CHARSET_utf8mb4 = 'utf8mb4';
 		public $DRIVERS
 						 = [
-				self::DRIVER_PostgreSQL => 5432,
-				self::DRIVER_MySQL      => 3306,
-				self::DRIVER_SQLite     => '',
+				PDOE::DRIVER_PostgreSQL => 5432,
+				PDOE::DRIVER_MySQL      => 3306,
+				PDOE::DRIVER_SQLite     => '',
 			];
-		public $password = '';
-		public $username = '';
+		public $password;
+		public $username;
 		public $driver   = '';
 		public $database = '';
-		public $charset  = self::CHARSET_utf8;
+		public $charset  = PDOE::CHARSET_utf8;
 		public $port;
 
 		public function __construct()
@@ -56,9 +41,9 @@
 		/**
 		 * @throws DsnException
 		 */
-		public function get()
+		public function _get()
 		{
-			return $this->validate()->_get();
+			return $this->validate()->get();
 		}
 
 		/**
@@ -172,5 +157,5 @@
 		/**
 		 * @return string
 		 */
-		abstract public function _get();
+		abstract public function get();
 	}

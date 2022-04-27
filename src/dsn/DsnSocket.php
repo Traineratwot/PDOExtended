@@ -2,7 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\dsn;
 
-	class Socket extends dsn
+	use Traineratwot\PDOExtended\PDOE;
+
+	class DsnSocket extends dsn
 	{
 
 		private $socket;
@@ -19,6 +21,9 @@
 
 		public function get()
 		{
+			if ($this->driver === PDOE::DRIVER_SQLite) {
+				return $this->driver . ":" . $this->socket;
+			}
 			$dsn = "{$this->driver}:unix_socket={$this->socket}:{$this->port};";
 			if ($this->database) {
 				$dsn .= "dbname={$this->database};";

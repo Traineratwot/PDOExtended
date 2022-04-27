@@ -11,7 +11,7 @@
 		/**
 		 * @param PDOE $connection
 		 */
-		public function __construct(PDOE $connection)
+		private function __construct(PDOE $connection)
 		{
 			$this->connection = $connection;
 		}
