@@ -3,25 +3,14 @@
 	namespace Traineratwot\PDOExtended;
 
 	use PDO;
+	use Traineratwot\PDOExtended\dsn\dsn;
+	use Traineratwot\PDOExtended\dsn\DsnException;
 
 
 	class PDOE extends PDO
 	{
-		/**
-		 * PostgreSQL
-		 * <img src="https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png" width="50" height="50" />
-		 */
-		public const PostgreSQL = 'pgsql';
-		/**
-		 * SQLite
-		 * <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/sqlite_logo_icon_169724.png" width="50" height="50" />
-		 */
-		public const SQLite = 'sqlite';
-		/**
-		 * PostgreSQL
-		 * <img src="https://img-blog.csdnimg.cn/20200828185219514.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" width="50" height="50" />
-		 */
-		public const MySQL = 'mysql';
+
+		public const utf8 = 'utf8';
 
 		/**
 		 * @var array|false
@@ -29,56 +18,20 @@
 		private $query_count = 0;
 
 		/**
-		 * @var array|null
+		 * @var dsn
 		 */
 		private $dsn;
 
 		/**
-		 * @param $dsn
-		 * @param $username
-		 * @param $password
-		 * @param $driverOptions
+		 * @param dsn   $dsn
+		 * @param array $driverOptions
+		 * @throws DsnException
 		 */
-		public function __construct($dsn, $username = NULL, $password = NULL, $driverOptions = [])
+		public function __construct(dsn $dsn, $driverOptions = [])
 		{
-			parent::__construct($dsn, $username, $password, $driverOptions);
-			$this->dsn = $this->ParseDsn($dsn, $username, $password);
+			$this->dsn = $dsn;
+			parent::__construct($dsn->get(), $dsn->getUsername(), $dsn->getPassword(), $driverOptions);
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
-		}
-
-		/**
-		 * @param string $dsn
-		 * @param string $username
-		 * @param string $password
-		 * @return array|null
-		 */
-		private function ParseDsn($dsn, $username, $password)
-		{
-			$this->dsn = [
-				'driver'   => '',
-				'user'     => '',
-				'password' => '',
-				'host'     => 'localhost',
-				'port'     => 3306,
-				'database' => '',
-			];
-			if ($dsn === '') {
-				return $this->dsn;
-			}
-			$a = explode(':', $dsn);
-			if ($a > 1) {
-				$this->dsn['driver'] = $a[0];
-			} else {
-				return $this->dsn;
-			}
-			$b = explode(';', $a[1]);
-			foreach ($b as $c) {
-				$c                = explode('=', $c);
-				$this->dsn[$c[0]] = $c[1];
-			}
-			$this->dsn['user'] = $username;
-			$this->dsn['pass'] = $password;
-			return $this->dsn;
 		}
 
 		/**
@@ -130,7 +83,7 @@
 		 */
 		public function getAllTables()
 		{
-			if ($this->dsn['driver'] === 'sqlite') {
+			if ($this->dsn->getDriver() === dsn::DRIVER_SQLite) {
 				return $this->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
 			}
 			return $this->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
@@ -202,6 +155,14 @@
 		public function __isset($name)
 		{
 			return $name === 'query_count';
+		}
+
+		/**
+		 * @return array|false
+		 */
+		public function getQueryCount()
+		{
+			return $this->query_count;
 		}
 
 	}

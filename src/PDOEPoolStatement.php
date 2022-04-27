@@ -33,6 +33,11 @@
 			return $this;
 		}
 
+		/**
+		 * @param $query
+		 * @param $params
+		 * @return string
+		 */
 		public function interpolateQuery($query, $params)
 		{
 			$keys         = [];

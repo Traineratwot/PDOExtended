@@ -8,11 +8,18 @@
 	{
 		private $connection;
 
+		/**
+		 * @param PDOE $connection
+		 */
 		public function __construct(PDOE $connection)
 		{
 			$this->connection = $connection;
 		}
 
+		/**
+		 * @param $input_parameters
+		 * @return bool
+		 */
 		public function execute($input_parameters = NULL)
 		{
 			$this->connection->queryCountIncrement();
