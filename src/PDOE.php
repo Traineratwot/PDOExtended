@@ -3,8 +3,9 @@
 	namespace Traineratwot\PDOExtended;
 
 	use PDO;
-	use Traineratwot\PDOExtended\dsn\dsn;
-	use Traineratwot\PDOExtended\dsn\DsnException;
+	use PDOException;
+	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 
 
 	class PDOE extends PDO
@@ -27,7 +28,6 @@
 		public const CHARSET_utf8    = 'utf8';
 		public const CHARSET_utf8mb4 = 'utf8mb4';
 
-
 		/**
 		 * @var array|false
 		 */
@@ -36,17 +36,21 @@
 		/**
 		 * @var dsn
 		 */
-		private $dsn;
+		public $dsn;
 
 		/**
-		 * @param dsn   $dsn
+		 * @param Dsn   $dsn
 		 * @param array $driverOptions
 		 * @throws DsnException
 		 */
-		public function __construct(dsn $dsn, $driverOptions = [])
+		public function __construct(DsnInterface $dsn, $driverOptions = [])
 		{
 			$this->dsn = $dsn;
-			parent::__construct($dsn->_get(), $dsn->getUsername(), $dsn->getPassword(), $driverOptions);
+			try {
+				parent::__construct($dsn->get(), $dsn->getUsername(), $dsn->getPassword(), $driverOptions);
+			} catch (PDOException $e) {
+				throw new DsnException($dsn->get(), $e->getCode(), $e);
+			}
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 		}
 
@@ -80,6 +84,7 @@
 		 * Проверяет существование таблицы в базе. возврящет ее правильное название с учетом регистра | FALSE
 		 * @param string $table
 		 * @return FALSE|string
+		 * @throws DsnException
 		 */
 		public function tableExists($table)
 		{
@@ -96,11 +101,15 @@
 
 		/**
 		 * @return array
+		 * @throws DsnException
 		 */
 		public function getAllTables()
 		{
 			if ($this->dsn->getDriver() === self::DRIVER_SQLite) {
 				return $this->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+			}
+			if ($this->dsn->getDriver() === self::DRIVER_PostgreSQL) {
+				return $this->query("SELECT table_name FROM information_schema.tables")->fetchAll(PDO::FETCH_COLUMN);
 			}
 			return $this->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
 		}

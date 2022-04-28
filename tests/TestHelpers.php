@@ -2,7 +2,8 @@
 
 
 	use PHPUnit\Framework\TestCase;
-	use Traineratwot\PDOExtended\dsn\DsnHost;
+	use Traineratwot\PDOExtended\Dsn;
+	use Traineratwot\PDOExtended\exception\DsnException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 
@@ -24,20 +25,30 @@
 			$this->assertEquals("SELECT * FROM issues WHERE tag::jsonb ?? 150;", $sql3_, 'test');
 		}
 
+		/**
+		 * @throws DsnException
+		 */
 		public function testDsn()
 		{
-			define('WT_HOST_DB', 'C:\light.db');
-			define('WT_PORT_DB', '');
-			define('WT_DATABASE_DB', '');
-			define('WT_TYPE_DB', 'sqlite');
-			define('WT_USER_DB', '');
-			define('WT_PASS_DB', '');
-			define('WT_CHARSET_DB', '');
-			define('WT_DSN_DB', WT_TYPE_DB . ":" . WT_HOST_DB);
-
-			$dns = new DsnHost();
+			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_SQLite);
 			$dns->setHost('C:\light.db');
-			$this->assertEquals(WT_DSN_DB, $dns->get(), 'sqlite');
+			$this->assertEquals("sqlite:C:\light.db", $dns->get(), 'sqlite');
+
+			$dns = new Dsn();
+			$dns->setDriver(PDOE::DRIVER_MySQL);
+			$dns->setHost('localhost');
+			$dns->setUsername('root');
+			$dns->setPassword('');
+			$dns->setDatabase('test');
+			$this->assertEquals("mysql:host=localhost:3306;dbname=test;charset=utf8;", $dns->get(), 'sqlite');
+
+			$dns = new Dsn();
+			$dns->setDriver(PDOE::DRIVER_PostgreSQL);
+			$dns->setHost('127.0.0.1');
+			$dns->setUsername('postgres');
+			$dns->setPassword('');
+			$dns->setDatabase('test');
+			$this->assertEquals("pgsql:host=127.0.0.1;port=5432;dbname=test;", $dns->get(), 'sqlite');
 		}
 	}

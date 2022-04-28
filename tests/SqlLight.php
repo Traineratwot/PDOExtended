@@ -2,27 +2,31 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\PDOExtended\Dsn;
+	use Traineratwot\PDOExtended\exception\DsnException;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class SqlLight extends TestCase
 	{
-		public function setUp(): void
+		/**
+		 * @throws DsnException
+		 */
+		public function setUp()
+		: void
 		{
 			parent::setUp();
-			define('WT_HOST_DB', 'C:\light.db');
-			define('WT_PORT_DB', '');
-			define('WT_DATABASE_DB', '');
-			define('WT_TYPE_DB', PDOE::SQLite);
-			define('WT_USER_DB', '');
-			define('WT_PASS_DB', '');
-			define('WT_CHARSET_DB', '');
-			define('WT_DSN_DB', WT_TYPE_DB . ":" . WT_HOST_DB);
-			$this->db = new PDOE(WT_DSN_DB, WT_USER_DB, WT_PASS_DB);
+			$dns = new Dsn();
+			$dns->setDriver(PDOE::DRIVER_SQLite);
+			$dns->setHost('C:\light.db');
+			$this->db = new PDOE($dns);
 		}
 
+		/**
+		 * @throws DsnException
+		 */
 		public function testConnect()
 		{
 			$tables = $this->db->getAllTables();
-			$this->assertEquals('test', $tables[0], 'test');
+			$this->assertEquals('test', $tables[0], 'Connect');
 		}
 	}

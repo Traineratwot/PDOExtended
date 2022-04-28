@@ -1,12 +1,17 @@
 <?php
 
+	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\Helpers;
+	use Traineratwot\PDOExtended\PDOE;
 
 	require __DIR__. '/vendor/autoload.php';
 
 
+	$dns = new Dsn();
+	$dns->setDriver(PDOE::DRIVER_PostgreSQL);
+	$dns->setHost('localhost');
+	$dns->setUsername('root');
+	$dns->setPassword('');
+	$dns->setDatabase('test');
 	echo '<pre>';
-	var_dump(Helpers::prepare($sql1, ['calories' => 150, 'colour' => 'red'])			);
-	var_dump(Helpers::prepare($sql2, [150, 'red'])										);
-	var_dump(Helpers::prepare($sql3, [150, 'red'])										);
-	die;
+	var_dump($dns->get()); die;

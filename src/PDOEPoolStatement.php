@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended;
 
 	use PDOStatement;
+	use Traineratwot\PDOExtended\exception\DsnException;
 
 	class PDOEPoolStatement extends PDOStatement
 	{
@@ -91,11 +92,12 @@
 		 * sqlite cannot execute more than one query at a time
 		 * @param int $limit //count of query from chunk; default 10
 		 * @return Array<PDOEStatement>
+		 * @throws DsnException
 		 */
 		public function run($limit = 10)
 		{
 			//sqlite cannot execute more than one query at a time
-			if ($this->connection->dsn['driver'] === "sqlite") {
+			if ($this->connection->dsn->getDriver() === PDOE::DRIVER_SQLite) {
 				$limit = 1;
 			}
 			$pools   = array_chunk($this->pool, $limit);
