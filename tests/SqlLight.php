@@ -3,7 +3,7 @@
 
 	use PHPUnit\Framework\TestCase;
 	use Traineratwot\PDOExtended\Dsn;
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class SqlLight extends TestCase
@@ -37,9 +37,9 @@
 		/**
 		 * @throws DsnException
 		 */
-		public function testConnect()
+		public function testGetAllTables()
 		{
-			$tables = $this->db->getAllTables();
-			$this->assertEquals('test', $tables[0], 'Connect');
+			$tables = $this->db->getTablesList();
+			$this->assertEquals('test', $tables[0], 'getAllTables');
 		}
 	}

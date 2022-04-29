@@ -4,13 +4,16 @@
 
 	use PDO;
 	use PDOException;
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\drivers\SQLite;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
+	use Traineratwot\PDOExtended\exceptions\PDOEException;
+	use Traineratwot\PDOExtended\interfaces\Driver;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
 
 
-	class PDOE extends PDO
+	class PDOE extends PDO implements Driver
 	{
 		/**
 		 * PostgreSQL
@@ -29,7 +32,12 @@
 		public const DRIVER_MySQL    = 'mysql';
 		public const CHARSET_utf8    = 'utf8';
 		public const CHARSET_utf8mb4 = 'utf8mb4';
-
+		public const DRIVER_classes
+									 = [
+				self::DRIVER_PostgreSQL => '',
+				self::DRIVER_SQLite     => SQLite::class,
+				self::DRIVER_MySQL      => '',
+			];
 		/**
 		 * @var array|false
 		 */
@@ -39,12 +47,17 @@
 		 * @var dsn
 		 */
 		public $dsn;
+		/**
+		 * @var Driver
+		 */
+		private Driver $driver;
 
 		/**
 		 * @inheritDoc
 		 * @param Dsn   $dsn
 		 * @param array $driverOptions
 		 * @throws DsnException
+		 * @throws PDOEException
 		 */
 		public function __construct(DsnInterface $dsn, $driverOptions = [])
 		{
@@ -55,6 +68,12 @@
 				throw new DsnException($dsn->get(), $e->getCode(), $e);
 			}
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
+			$driverClass = self::DRIVER_classes[$this->dsn->getDriver()];
+			if (!class_exists($driverClass)) {
+				throw new PDOEException('Invalid driver class: ' . $driverClass);
+			}
+			$this->driver = new $driverClass();
+
 		}
 
 		/**
@@ -91,7 +110,7 @@
 		 */
 		public function tableExists($table)
 		{
-			$list = $this->getAllTables();
+			$list = $this->getTablesList();
 			$find = FALSE;
 			foreach ($list as $t) {
 				if (mb_strtolower($t) === mb_strtolower($table)) {
@@ -106,7 +125,7 @@
 		 * @return array
 		 * @throws DsnException
 		 */
-		public function getAllTables()
+		public function getTablesList()
 		{
 			if ($this->dsn->getDriver() === self::DRIVER_SQLite) {
 				return $this->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);

@@ -1,6 +1,6 @@
 <?php
 
-	namespace Traineratwot\PDOExtended\exception;
+	namespace Traineratwot\PDOExtended\exceptions;
 
 	use Exception;
 

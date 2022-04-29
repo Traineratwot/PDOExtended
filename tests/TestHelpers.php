@@ -3,7 +3,7 @@
 
 	use PHPUnit\Framework\TestCase;
 	use Traineratwot\PDOExtended\Dsn;
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 
@@ -50,5 +50,18 @@
 			$dns->setPassword('');
 			$dns->setDatabase('test');
 			$this->assertEquals("pgsql:host=127.0.0.1;port=5432;dbname=test;", $dns->get(), 'sqlite');
+
+			try {
+				$dns = new Dsn();
+				$dns->setDriver(PDOE::DRIVER_SQLite);
+				$dns->setHost('C:\light.db');
+				$dns->setSocket('C:\light.db');
+				$this->assertEquals("sqlite:C:\light.db", $dns->get(), 'sqlite');
+				$this->fail();
+			} catch (DsnException $e) {
+				$this->assertTrue(true,$e->getMessage());
+			} catch (Exception $e) {
+				$this->fail($e->getMessage());
+			}
 		}
 	}

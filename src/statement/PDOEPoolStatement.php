@@ -3,7 +3,7 @@
 	namespace Traineratwot\PDOExtended\statement;
 
 	use PDOStatement;
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 

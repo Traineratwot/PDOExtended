@@ -2,7 +2,7 @@
 
 	namespace Traineratwot\PDOExtended;
 
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 
 	class Dsn implements DsnInterface
@@ -48,7 +48,7 @@
 		 * @return string
 		 * @throws DsnException
 		 */
-		public function get()
+		public function get():string
 		{
 			return $this->validate()->_get();
 		}
@@ -144,7 +144,7 @@
 		/**
 		 * @return string
 		 */
-		public function getPassword()
+		public function getPassword():string
 		{
 			return $this->password;
 		}
@@ -162,7 +162,7 @@
 		/**
 		 * @return string
 		 */
-		public function getUsername()
+		public function getUsername():string
 		{
 			return $this->username;
 		}
@@ -181,7 +181,7 @@
 		 * @return string
 		 * @throws DsnException
 		 */
-		public function getDriver()
+		public function getDriver():string
 		{
 			if (is_null($this->charset)) {
 				throw new DsnException('"driver" is not set');

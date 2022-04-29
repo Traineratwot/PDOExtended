@@ -3,7 +3,7 @@
 
 	use PHPUnit\Framework\TestCase;
 	use Traineratwot\PDOExtended\Dsn;
-	use Traineratwot\PDOExtended\exception\DsnException;
+	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class MySql extends TestCase
@@ -29,7 +29,7 @@
 		 */
 		public function testConnect()
 		{
-			$tables = $this->db->getAllTables();
+			$tables = $this->db->getTablesList();
 			$this->assertEquals('test', $tables[0], 'Connect');
 		}
 	}

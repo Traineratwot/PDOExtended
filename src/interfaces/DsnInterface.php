@@ -7,17 +7,24 @@
 		/**
 		 * @return string
 		 */
-		public function get();
+		public function get()
+		: string;
+
 		/**
 		 * @return string
 		 */
-		public function getDriver();
+		public function getDriver()
+		: string;
+
 		/**
 		 * @return string
 		 */
-		public function getPassword();
+		public function getPassword()
+		: string;
+
 		/**
 		 * @return string
 		 */
-		public function getUsername();
+		public function getUsername()
+		: string;
 	}
