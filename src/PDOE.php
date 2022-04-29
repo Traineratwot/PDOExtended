@@ -7,13 +7,13 @@
 	use Traineratwot\PDOExtended\drivers\SQLite;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
-	use Traineratwot\PDOExtended\interfaces\Driver;
+	use Traineratwot\PDOExtended\interfaces\DriverInterface;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
 
 
-	class PDOE extends PDO implements Driver
+	class PDOE extends PDO implements DriverInterface
 	{
 		/**
 		 * PostgreSQL
@@ -48,9 +48,9 @@
 		 */
 		public $dsn;
 		/**
-		 * @var Driver
+		 * @var DriverInterface
 		 */
-		private Driver $driver;
+		private DriverInterface $driver;
 
 		/**
 		 * @inheritDoc
@@ -72,7 +72,7 @@
 			if (!class_exists($driverClass)) {
 				throw new PDOEException('Invalid driver class: ' . $driverClass);
 			}
-			$this->driver = new $driverClass();
+			$this->driver = new $driverClass($this);
 
 		}
 
@@ -103,37 +103,14 @@
 		}
 
 		/**
-		 * Проверяет существование таблицы в базе. возврящет ее правильное название с учетом регистра | FALSE
-		 * @param string $table
-		 * @return FALSE|string
-		 * @throws DsnException
+		 * @throws PDOEException
 		 */
-		public function tableExists($table)
+		public function __call($name, $arguments)
 		{
-			$list = $this->getTablesList();
-			$find = FALSE;
-			foreach ($list as $t) {
-				if (mb_strtolower($t) === mb_strtolower($table)) {
-					$find = TRUE;
-					break;
-				}
+			if (method_exists($this->driver, $name)) {
+				return $this->driver->{$name}(...$arguments);
 			}
-			return $find ? $t : FALSE;
-		}
-
-		/**
-		 * @return array
-		 * @throws DsnException
-		 */
-		public function getTablesList()
-		{
-			if ($this->dsn->getDriver() === self::DRIVER_SQLite) {
-				return $this->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-			}
-			if ($this->dsn->getDriver() === self::DRIVER_PostgreSQL) {
-				return $this->query("SELECT table_name FROM information_schema.tables")->fetchAll(PDO::FETCH_COLUMN);
-			}
-			return $this->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+			throw new PDOEException("Method $name is not exists");
 		}
 
 		/**
@@ -211,5 +188,16 @@
 			return $this->query_count;
 		}
 
+
+		public function getTablesList()
+		: array
+		{
+			return $this->driver->getTablesList();
+		}
+
+		public function tableExists(string $table)
+		{
+			return $this->driver->tableExists($table);
+		}
 	}
 

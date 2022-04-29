@@ -19,12 +19,10 @@
 		/**
 		 * @return string
 		 */
-		public function getPassword()
-		: string;
+		public function getPassword();
 
 		/**
 		 * @return string
 		 */
-		public function getUsername()
-		: string;
+		public function getUsername();
 	}

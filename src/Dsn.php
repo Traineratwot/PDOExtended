@@ -48,7 +48,8 @@
 		 * @return string
 		 * @throws DsnException
 		 */
-		public function get():string
+		public function get()
+		: string
 		{
 			return $this->validate()->_get();
 		}
@@ -144,7 +145,7 @@
 		/**
 		 * @return string
 		 */
-		public function getPassword():string
+		public function getPassword()
 		{
 			return $this->password;
 		}
@@ -162,7 +163,7 @@
 		/**
 		 * @return string
 		 */
-		public function getUsername():string
+		public function getUsername()
 		{
 			return $this->username;
 		}
@@ -181,7 +182,8 @@
 		 * @return string
 		 * @throws DsnException
 		 */
-		public function getDriver():string
+		public function getDriver()
+		: string
 		{
 			if (is_null($this->charset)) {
 				throw new DsnException('"driver" is not set');
