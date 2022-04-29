@@ -15,10 +15,23 @@
 		: void
 		{
 			parent::setUp();
+			$sqLight = __DIR__ . '/test.db';
+			if (file_exists($sqLight)) {
+				unlink($sqLight);
+			}
+			$f = fopen($sqLight, 'wb');
+			fclose($f);
+
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_SQLite);
-			$dns->setHost('C:\light.db');
+			$dns->setHost($sqLight);
 			$this->db = new PDOE($dns);
+			$this->db->exec("CREATE TABLE test
+(
+    id    INTEGER NOT NULL,
+    value INTEGER
+);
+");
 		}
 
 		/**

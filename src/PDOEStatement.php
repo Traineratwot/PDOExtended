@@ -17,6 +17,7 @@
 		}
 
 		/**
+		 * @inheritDoc
 		 * @param $input_parameters
 		 * @return bool
 		 */

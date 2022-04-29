@@ -36,8 +36,9 @@
 					}
 				}
 			}
-			$sql = implode(' ', $words);
-			if (substr($str, strlen($str) - strlen($search)) !== ';') {
+			$sql    = implode(' ', $words);
+			$search = ';';
+			if (substr($sql, strlen($sql) - strlen($search)) !== $search) {
 				$sql .= ';';
 			}
 			return $sql;
