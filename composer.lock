@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "43b8f11548526f766006d8fe3f58de7d",
-    "packages": [],
+    "content-hash": "5d7d454eff4377bf03c2706b4be9d76f",
+    "packages": [
+        {
+            "name": "traineratwot/cache",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Traineratwot/cache.git",
+                "reference": "cefef9c4cdf2b36082f98b2adb66d797069cff0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Traineratwot/cache/zipball/cefef9c4cdf2b36082f98b2adb66d797069cff0c",
+                "reference": "cefef9c4cdf2b36082f98b2adb66d797069cff0c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "jetbrains/phpstorm-attributes": "dev-master",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Traineratwot\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kirill",
+                    "email": "Traineratwot@yandex.ru"
+                }
+            ],
+            "description": "simple cache system",
+            "homepage": "https://github.com/traineratwot/cache",
+            "keywords": [
+                "PSR-4",
+                "Simple",
+                "cache"
+            ],
+            "support": {
+                "issues": "https://github.com/Traineratwot/cache/issues",
+                "source": "https://github.com/Traineratwot/cache/tree/1.0.2"
+            },
+            "time": "2022-04-29T19:07:23+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -2648,5 +2699,5 @@
         "php": ">=7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }

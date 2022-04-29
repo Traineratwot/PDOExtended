@@ -2,9 +2,9 @@
 
 	namespace Traineratwot\PDOExtended;
 
-	use Composer\Cache;
 	use PDO;
 	use PDOException;
+	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\drivers\SQLite;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -202,18 +202,22 @@
 		}
 
 		/**
+		 * @param DsnInterface $dsn
+		 * @param array        $driverOptions
+		 * @param string       $var return global variable name
 		 * @return self
+		 * @throws DsnException
+		 * @throws PDOEException
 		 */
-		public static function init(DsnInterface $dsn, $driverOptions = [])
+		public static function init(DsnInterface $dsn, $driverOptions = [], &$var = '')
 		{
-			Cache::getK
-			if (array_key_exists('core', $GLOBALS)) {
-				return $GLOBALS['core'];
+			$key = Cache::getKey([$dsn->get(), $driverOptions]);
+			$var = 'PDOE_' . $key;
+			if (array_key_exists($var, $GLOBALS)) {
+				return $GLOBALS[$var];
 			}
-
-			global $core;
-			$core = new self();
-			return $core;
+			$GLOBALS[$var] = new self($dsn, $driverOptions);
+			return $GLOBALS[$var];
 		}
 	}
 
