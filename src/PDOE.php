@@ -6,6 +6,8 @@
 	use PDOException;
 	use Traineratwot\PDOExtended\exception\DsnException;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
+	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
+	use Traineratwot\PDOExtended\statement\PDOEStatement;
 
 
 	class PDOE extends PDO

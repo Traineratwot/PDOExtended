@@ -13,6 +13,7 @@
 		 */
 		public static function prepare($sql, $values, $escape = NULL)
 		{
+			$sql   = trim(trim($sql),';');
 			$words = preg_split('@\s+@', $sql);
 			$i     = -1;
 			$a     = [];
@@ -36,11 +37,7 @@
 					}
 				}
 			}
-			$sql    = implode(' ', $words);
-			$search = ';';
-			if (substr($sql, strlen($sql) - strlen($search)) !== $search) {
-				$sql .= ';';
-			}
-			return $sql;
+			$sql = implode(' ', $words) . ';';
+			return preg_replace('/;+\s*$/', ';', $sql);
 		}
 	}

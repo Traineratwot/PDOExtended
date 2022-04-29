@@ -12,8 +12,8 @@
 
 		public function testPrepare()
 		{
-			$sql1 = "SELECT `name`, 'colour test', calories FROM fruit WHERE `calories` < :calories AND colour = :colour";
-			$sql2 = 'SELECT "name", colour, calories FROM fruit WHERE calories < ? AND colour = ?';
+			$sql1 = "SELECT `name`, 'colour test', calories FROM fruit WHERE `calories` < :calories AND colour = :colour;;;;";
+			$sql2 = '  SELECT "name", colour, calories FROM fruit WHERE calories < ? AND colour = ?;   ';
 			$sql3 = "SELECT * FROM issues WHERE tag::jsonb ?? ?";
 
 			$sql1_ = Helpers::prepare($sql1, ['calories' => 150, 'colour' => 'red']);

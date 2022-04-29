@@ -1,8 +1,9 @@
 <?php
 
-	namespace Traineratwot\PDOExtended;
+	namespace Traineratwot\PDOExtended\statement;
 
 	use PDOStatement;
+	use Traineratwot\PDOExtended\PDOE;
 
 	class PDOEStatement extends PDOStatement
 	{
