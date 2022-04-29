@@ -12,7 +12,6 @@
 		: array
 		{
 			return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-
 		}
 	}
 

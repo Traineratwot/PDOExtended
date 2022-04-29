@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended;
 
+	use Composer\Cache;
 	use PDO;
 	use PDOException;
 	use Traineratwot\PDOExtended\drivers\SQLite;
@@ -198,6 +199,21 @@
 		public function tableExists(string $table)
 		{
 			return $this->driver->tableExists($table);
+		}
+
+		/**
+		 * @return self
+		 */
+		public static function init(DsnInterface $dsn, $driverOptions = [])
+		{
+			Cache::getK
+			if (array_key_exists('core', $GLOBALS)) {
+				return $GLOBALS['core'];
+			}
+
+			global $core;
+			$core = new self();
+			return $core;
 		}
 	}
 

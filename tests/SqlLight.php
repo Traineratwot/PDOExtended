@@ -17,14 +17,8 @@
 		{
 			parent::setUp();
 			$sqLight = __DIR__ . '/test.db';
-			unset($this->db);
-			if (file_exists($sqLight)) {
-				unlink($sqLight);
-			}
-
-			$f = fopen($sqLight, 'wb');
+			$f       = fopen($sqLight, 'wb');
 			fclose($f);
-
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_SQLite);
 			$dns->setHost($sqLight);
@@ -37,9 +31,15 @@
 ");
 		}
 
-		/**
-		 * @throws DsnException
-		 */
+		public function tearDown()
+		: void
+		{
+			unset($this->db);
+			if (file_exists($sqLight)) {
+				unlink($sqLight);
+			}
+		}
+
 		public function testGetAllTables()
 		{
 			$tables = $this->db->getTablesList();
