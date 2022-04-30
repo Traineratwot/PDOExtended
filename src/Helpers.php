@@ -18,7 +18,7 @@
 		{
 			$sql      = trim(trim($sql), ';');
 			$words    = preg_split(<<<REGEXP
-@[\s(),."`']+@
+@[\s\(\)\,\.\"\`\>\=\<\!\~\*\%\;\$\#\@']+@
 REGEXP
 				, $sql);
 			$i        = -1;

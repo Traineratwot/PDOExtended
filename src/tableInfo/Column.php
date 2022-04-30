@@ -6,10 +6,9 @@
 
 	class Column
 	{
-		private string  $db_dataType;
-		private string  $php_dataType;
-		private string  $name;
-		private ?string $links = NULL;
+		private string $db_dataType;
+		private string $php_dataType;
+		private string $name;
 
 		private bool     $isPrimary    = FALSE;
 		private bool     $isUnique     = FALSE;
@@ -33,6 +32,7 @@
 
 		/**
 		 * @param string $db_dataType
+		 * @return Column
 		 */
 		public function setDbDataType(string $db_dataType)
 		: self
@@ -52,6 +52,7 @@
 
 		/**
 		 * @param string $php_dataType
+		 * @return Column
 		 */
 		public function setPhpDataType(string $php_dataType)
 		: self
@@ -71,30 +72,12 @@
 
 		/**
 		 * @param string $name
+		 * @return Column
 		 */
 		public function setName(string $name)
 		: self
 		{
 			$this->name = $name;
-			return $this;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function getLinks()
-		: string
-		{
-			return $this->links;
-		}
-
-		/**
-		 * @param string $links
-		 */
-		public function setLinks(string $links)
-		: self
-		{
-			$this->links = $links;
 			return $this;
 		}
 
@@ -130,6 +113,7 @@
 
 		/**
 		 * @param bool $isPrimary
+		 * @return Column
 		 */
 		public function setIsPrimary(bool $isPrimary)
 		: self
@@ -168,6 +152,7 @@
 
 		/**
 		 * @param bool $canBeNull
+		 * @return Column
 		 */
 		public function setCanBeNull(bool $canBeNull)
 		: self
@@ -206,6 +191,7 @@
 
 		/**
 		 * @param string $comment
+		 * @return Column
 		 */
 		public function setComment(string $comment)
 		: self
@@ -225,6 +211,7 @@
 
 		/**
 		 * @param DataType $validator
+		 * @return Column
 		 */
 		public function setValidator(DataType $validator)
 		: self
@@ -246,7 +233,6 @@
 				'db_dataType'  => $this->db_dataType,
 				'php_dataType' => $this->php_dataType,
 				'name'         => $this->name,
-				'links'        => $this->links,
 				'isPrimary'    => $this->isPrimary,
 				'isUnique'     => $this->isUnique,
 				'canBeNull'    => $this->canBeNull,
@@ -268,9 +254,6 @@
 					break;
 				case 'name':
 					$this->setName($value);
-					break;
-				case 'links':
-					$this->setLinks($value);
 					break;
 				case 'isPrimary':
 					$this->setIsPrimary($value);

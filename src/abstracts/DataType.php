@@ -9,7 +9,8 @@
 		/**
 		 * @var mixed
 		 */
-		public $value;
+		public        $value;
+		public string $originalType ='';
 
 		public string $phpName   = 'mixed';
 		public bool   $canBeNull = TRUE;
@@ -77,5 +78,23 @@
 				$a->$key = $value;
 			}
 			return $a;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getOriginalType()
+		: string
+		{
+			return $this->originalType;
+		}
+
+		/**
+		 * @param string $originalType
+		 */
+		public function setOriginalType(string $originalType)
+		: void
+		{
+			$this->originalType = $originalType;
 		}
 	}

@@ -40,7 +40,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-			},                 600, $this->connection->getKey());
+			},                 1, $this->connection->getKey());
 		}
 
 		/**
@@ -56,6 +56,7 @@
 			return Cache::call('Scheme_' . $table, function () use ($table) {
 				$columns    = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes_db = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
+				$links_db   = $this->connection->prepareQuery("SELECT * FROM pragma_foreign_key_list(:table);", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes    = [];
 				foreach ($indexes_db as $index) {
 					$ind                   = $this->connection->prepareQuery("SELECT * FROM pragma_index_info(:index)", ['index' => $index['name']])->fetch(PDO::FETCH_ASSOC);
@@ -64,22 +65,30 @@
 				$Scheme = new Scheme();
 				foreach ($columns as $column) {
 					$col = new Column();
+					try {
+						$a         = $this->findDataType($column['type'] ?: 'string');
+						$validator = new $a();
+						$col->setCanBeNull(!$column['notnull'])
+							->setDbDataType($column['type'])
+							->setDefault($column['dflt_value'])
+							->setIsSetDefault(!is_null($column['dflt_value']))
+							->setValidator($validator)
+							->setName($column['name'])
+						;
+						if (array_key_exists($column['name'], $indexes)) {
+							$col->setIsUnique();
+						}
+						$Scheme->addColumn($col);
+					} catch (\Exception $e) {
 
-					$a         = $this->findDataType($column['type']);
-					$validator = new $a();
-					$col->setCanBeNull(!$column['notnull'])
-						->setDbDataType($column['type'])
-						->setDefault($column['dflt_value'])
-						->setValidator($validator)
-						->setName($column['name'])
-					;
-					if (array_key_exists($column['name'], $indexes)) {
-						$col->setIsUnique();
 					}
-					$Scheme->addColumn($col);
 				}
+				foreach ($links_db as $link) {
+					$Scheme->addLink($link['table'], $link['from'], $link['to']);
+				}
+
 				return $Scheme;
-			},                 600, $this->connection->getKey().'/tables');
+			},                 1, $this->connection->getKey() . '/tables');
 		}
 	}
 

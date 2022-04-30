@@ -6,6 +6,7 @@
 	{
 
 		public array $columns;
+		public array $links = [];
 
 		public function addColumn(Column $column)
 		: self
@@ -32,5 +33,14 @@
 				$res[$name] = $column->toArray();
 			}
 			return $res;
+		}
+
+		public function addLink($table, $masterField, $slaveField)
+		: void
+		{
+			$this->links[$table] = [
+				'masterField' => $masterField,
+				'slaveField'  => $slaveField,
+			];
 		}
 	}

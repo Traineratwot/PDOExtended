@@ -38,6 +38,8 @@ CREATE TABLE test
 		: void
 		{
 			$sqLight = __DIR__ . '/test.db';
+			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
+			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
 			if (file_exists($sqLight)) {
@@ -63,7 +65,42 @@ CREATE TABLE test
 		: void
 		{
 			$table = $this->db->getScheme('test');
+			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256);
+			$this->assertStringEqualsFile('test.json', $json, 'getScheme');
+		}
 
-			$this->assertStringEqualsFile('test.json', json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256), 'getScheme');
+		/**
+		 */
+		public function testPool()
+		: void
+		{
+			$pool = $this->db->poolPrepare('INSERT INTO test (`value`)VALUES(:value)');
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->execute(['value' => random_int(0, 1000)]);
+			$pool->run();
+			$c=  $this->db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
+			$this->assertEquals(24, $c);
 		}
 	}
