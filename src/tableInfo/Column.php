@@ -6,17 +6,21 @@
 
 	class Column
 	{
-		private string   $db_dataType;
-		private string   $php_dataType;
-		private string   $name;
-		private string   $links;
-		private string   $default;
-		private bool     $isPrimary;
-		private bool     $isUnique;
-		private bool     $canBeNull;
-		private bool     $isSetDefault;
-		private string   $comment = '';
+		private string  $db_dataType;
+		private string  $php_dataType;
+		private string  $name;
+		private ?string $links = NULL;
+
+		private bool     $isPrimary    = FALSE;
+		private bool     $isUnique     = FALSE;
+		private bool     $canBeNull    = FALSE;
+		private bool     $isSetDefault = FALSE;
+		private string   $comment      = '';
 		private DataType $validator;
+		/**
+		 * @var mixed|null
+		 */
+		private $default;
 
 		/**
 		 * @return string
@@ -31,9 +35,10 @@
 		 * @param string $db_dataType
 		 */
 		public function setDbDataType(string $db_dataType)
-		: void
+		: self
 		{
 			$this->db_dataType = $db_dataType;
+			return $this;
 		}
 
 		/**
@@ -49,9 +54,10 @@
 		 * @param string $php_dataType
 		 */
 		public function setPhpDataType(string $php_dataType)
-		: void
+		: self
 		{
 			$this->php_dataType = $php_dataType;
+			return $this;
 		}
 
 		/**
@@ -67,9 +73,10 @@
 		 * @param string $name
 		 */
 		public function setName(string $name)
-		: void
+		: self
 		{
 			$this->name = $name;
+			return $this;
 		}
 
 		/**
@@ -85,9 +92,10 @@
 		 * @param string $links
 		 */
 		public function setLinks(string $links)
-		: void
+		: self
 		{
 			$this->links = $links;
+			return $this;
 		}
 
 		/**
@@ -100,12 +108,15 @@
 		}
 
 		/**
-		 * @param string $default
+		 * @param $default
+		 * @return Column
 		 */
-		public function setDefault(string $default)
-		: void
+		public function setDefault($default)
+		: self
 		{
+			$this->setIsSetDefault();
 			$this->default = $default;
+			return $this;
 		}
 
 		/**
@@ -121,9 +132,10 @@
 		 * @param bool $isPrimary
 		 */
 		public function setIsPrimary(bool $isPrimary)
-		: void
+		: self
 		{
 			$this->isPrimary = $isPrimary;
+			return $this;
 		}
 
 		/**
@@ -138,10 +150,11 @@
 		/**
 		 * @param bool $isUnique
 		 */
-		public function setIsUnique(bool $isUnique)
-		: void
+		public function setIsUnique(?bool $isUnique = TRUE)
+		: self
 		{
 			$this->isUnique = $isUnique;
+			return $this;
 		}
 
 		/**
@@ -157,9 +170,10 @@
 		 * @param bool $canBeNull
 		 */
 		public function setCanBeNull(bool $canBeNull)
-		: void
+		: self
 		{
 			$this->canBeNull = $canBeNull;
+			return $this;
 		}
 
 		/**
@@ -174,10 +188,11 @@
 		/**
 		 * @param bool $isSetDefault
 		 */
-		public function setIsSetDefault(bool $isSetDefault)
-		: void
+		public function setIsSetDefault(?bool $isSetDefault = TRUE)
+		: self
 		{
 			$this->isSetDefault = $isSetDefault;
+			return $this;
 		}
 
 		/**
@@ -193,9 +208,10 @@
 		 * @param string $comment
 		 */
 		public function setComment(string $comment)
-		: void
+		: self
 		{
 			$this->comment = $comment;
+			return $this;
 		}
 
 		/**
@@ -211,9 +227,81 @@
 		 * @param DataType $validator
 		 */
 		public function setValidator(DataType $validator)
-		: void
+		: self
 		{
+			$validator->setDefault($this->canBeNull, $this->default);
 			$this->validator = $validator;
+			$this->setPhpDataType($validator->phpName);
+			return $this;
 		}
 
+
+		/**
+		 * @return array
+		 */
+		public function toArray()
+		: array
+		{
+			return [
+				'db_dataType'  => $this->db_dataType,
+				'php_dataType' => $this->php_dataType,
+				'name'         => $this->name,
+				'links'        => $this->links,
+				'isPrimary'    => $this->isPrimary,
+				'isUnique'     => $this->isUnique,
+				'canBeNull'    => $this->canBeNull,
+				'isSetDefault' => $this->isSetDefault,
+				'comment'      => $this->comment,
+				'validator'    => get_class($this->validator),
+				'default'      => $this->default,
+			];
+		}
+
+		public function __set($name, $value)
+		{
+			switch ($name) {
+				case 'db_dataType':
+					$this->setDbDataType($value);
+					break;
+				case 'php_dataType':
+					$this->setPhpDataType($value);
+					break;
+				case 'name':
+					$this->setName($value);
+					break;
+				case 'links':
+					$this->setLinks($value);
+					break;
+				case 'isPrimary':
+					$this->setIsPrimary($value);
+					break;
+				case 'isUnique':
+					$this->setIsUnique($value);
+					break;
+				case 'canBeNull':
+					$this->setCanBeNull($value);
+					break;
+				case 'isSetDefault':
+					$this->setIsSetDefault($value);
+					break;
+				case 'comment':
+					$this->setComment($value);
+					break;
+				case 'validator':
+					$this->setValidator($value);
+					break;
+				case 'default':
+					$this->setDefault($value);
+					break;
+			}
+		}
+
+		public static function __set_state($an_array)
+		{
+			$a = new self();
+			foreach ($an_array as $key => $val) {
+				$a->$key = $val;
+			}
+			return $a;
+		}
 	}

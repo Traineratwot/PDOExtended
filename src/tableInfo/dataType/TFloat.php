@@ -7,4 +7,21 @@
 	class TFloat extends DataType
 	{
 
+		/**
+		 * @inheritDoc
+		 */
+		public function validate()
+		: void
+		{
+			// TODO: Implement validate() method.
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function convert()
+		: void
+		{
+			// TODO: Implement convert() method.
+		}
 	}

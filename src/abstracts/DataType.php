@@ -9,7 +9,7 @@
 		/**
 		 * @var mixed
 		 */
-		protected $value;
+		public $value;
 
 		public string $phpName   = 'mixed';
 		public bool   $canBeNull = TRUE;
@@ -17,7 +17,7 @@
 		 * @var mixed|null
 		 */
 		public      $default;
-		public bool $isSet   = FALSE;
+		public bool $isSet = FALSE;
 
 		/**
 		 * validate input value
@@ -67,5 +67,15 @@
 				return $this->value;
 			}
 			return $this->default;
+		}
+
+		public static function __set_state($an_array)
+		{
+			$cls = static::class;
+			$a   = new $cls();
+			foreach ($an_array as $key => $value) {
+				$a->$key = $value;
+			}
+			return $a;
 		}
 	}

@@ -7,4 +7,15 @@
 	class TBool extends DataType
 	{
 
+		public function validate()
+		: void
+		{
+			// TODO: Implement validate() method.
+		}
+
+		public function convert()
+		: void
+		{
+			// TODO: Implement convert() method.
+		}
 	}

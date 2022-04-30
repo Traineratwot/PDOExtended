@@ -4,8 +4,11 @@
 
 
 	use PDO;
+	use Traineratwot\Cache\Cache;
+	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
+	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBool;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TDate;
@@ -14,6 +17,7 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TUnixTime;
+	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
 	class SQLite extends Driver
 	{
@@ -26,7 +30,7 @@
 				TDatetime::class => ['DATETIME'],
 				TDate::class     => ['DATE'],
 				TInt::class      => ['INTEGER', 'INT'],
-				TFloat::class    => ['DOUBLE', 'REAL', 'NUMERIC'],
+				TFloat::class    => ['DOUBLE', 'REAL', 'NUMERIC', 'DECIMAL'],
 				TUnixTime::class => ['TIME'],
 			];
 
@@ -38,18 +42,37 @@
 
 		/**
 		 * @throws DataTypeException
+		 * @throws CacheException
 		 */
 		public function getScheme(string $table)
 		{
-			$columns = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
-			$indexes = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
-			foreach ($columns as $column) {
-				$a         = $this->findDataType($column['type']);
-				$validator = new $a();
-			}
-//			var_dump($indexes);
-			die;
+			return Cache::call('Scheme_' . $table, function () use ($table) {
+				$columns    = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
+				$indexes_db = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
+				$indexes    = [];
+				foreach ($indexes_db as $index) {
+					$ind                   = $this->connection->prepareQuery("SELECT * FROM pragma_index_info(:index)", ['index' => $index['name']])->fetch(PDO::FETCH_ASSOC);
+					$indexes[$ind['name']] = $ind;
+				}
+				$Scheme = new Scheme();
+				foreach ($columns as $column) {
+					$col = new Column();
 
+					$a         = $this->findDataType($column['type']);
+					$validator = new $a();
+					$col->setCanBeNull(!$column['notnull'])
+						->setDbDataType($column['type'])
+						->setDefault($column['dflt_value'])
+						->setValidator($validator)
+						->setName($column['name'])
+					;
+					if (array_key_exists($column['name'], $indexes)) {
+						$col->setIsUnique();
+					}
+					$Scheme->addColumn($col);
+				}
+				return $Scheme;
+			},600,'PDOE/tables');
 		}
 	}
 
