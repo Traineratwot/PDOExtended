@@ -8,6 +8,7 @@
 	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
+	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBool;
@@ -37,15 +38,21 @@
 		public function getTablesList()
 		: array
 		{
-			return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+			return Cache::call('tablesList', function () {
+				return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+			},                 600, $this->connection->getKey());
 		}
 
 		/**
 		 * @throws DataTypeException
-		 * @throws CacheException
+		 * @throws CacheException|PDOEException
 		 */
 		public function getScheme(string $table)
+		: Scheme
 		{
+			if (!$this->tableExists($table)) {
+				throw new PDOEException('table: "' . $table . '" is not exist');
+			}
 			return Cache::call('Scheme_' . $table, function () use ($table) {
 				$columns    = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes_db = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
@@ -72,7 +79,7 @@
 					$Scheme->addColumn($col);
 				}
 				return $Scheme;
-			},600,'PDOE/tables');
+			},                 600, $this->connection->getKey().'/tables');
 		}
 	}
 

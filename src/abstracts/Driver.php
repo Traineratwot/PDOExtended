@@ -33,6 +33,7 @@
 		 * @return false|string
 		 */
 		public function tableExists($table)
+		: string
 		{
 			$list = $this->getTablesList();
 			$find = FALSE;

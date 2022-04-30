@@ -58,4 +58,12 @@ CREATE TABLE test
 			$table = $this->db->tableExists('TeSt');
 			$this->assertEquals('test', $table, 'tableExists');
 		}
+
+		public function testGetScheme()
+		: void
+		{
+			$table = $this->db->getScheme('test');
+
+			$this->assertStringEqualsFile('test.json', json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256), 'getScheme');
+		}
 	}

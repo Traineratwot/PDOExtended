@@ -12,11 +12,9 @@
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
+	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
 
-	/**
-	 * @method getScheme()
-	 */
 	class PDOE extends PDO implements DriverInterface
 	{
 		/**
@@ -55,6 +53,7 @@
 		 * @var DriverInterface
 		 */
 		private DriverInterface $driver;
+		private string           $key;
 
 		/**
 		 * @inheritDoc
@@ -77,6 +76,7 @@
 				throw new PDOEException('Invalid driver class: ' . $driverClass);
 			}
 			$this->driver = new $driverClass($this);
+			$this->key    = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
 		}
 
 		/**
@@ -212,24 +212,10 @@
 			return $this->driver->tableExists($table);
 		}
 
-		/**
-		 * @param DsnInterface $dsn
-		 * @param array        $driverOptions
-		 * @param string|null  $var return global variable name
-		 * @return self
-		 * @throws DsnException
-		 * @throws PDOEException
-		 */
-		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
-		: PDOE
+		public function getScheme(string $table)
+		: Scheme
 		{
-			$key = Cache::getKey([$dsn->get(), $driverOptions]);
-			$var = 'PDOE_' . $key;
-			global $$var;
-			if (!isset($$var) || is_null($$var)) {
-				$$var = new self($dsn, $driverOptions);
-			}
-			return $$var;
+			return $this->driver->getScheme($table);
 		}
 
 		/**
@@ -256,6 +242,34 @@
 				}
 			}
 			return parent::quote($string, $type);
+		}
+
+		/**
+		 * @param DsnInterface $dsn
+		 * @param array        $driverOptions
+		 * @param string|null  $var return global variable name
+		 * @return self
+		 * @throws DsnException
+		 * @throws PDOEException
+		 */
+		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
+		: PDOE
+		{
+			$var = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
+			global $$var;
+			if (!isset($$var) || is_null($$var)) {
+				$$var = new self($dsn, $driverOptions);
+			}
+			return $$var;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getKey()
+		: string
+		{
+			return $this->key;
 		}
 	}
 
