@@ -3,12 +3,18 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 
+	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\interfaces\DriverInterface;
 	use Traineratwot\PDOExtended\PDOE;
 
 	abstract class Driver implements DriverInterface
 	{
-		protected $connection;
+		protected PDOE $connection;
+		/**
+		 * php data type=> sql data types[]
+		 * @var array
+		 */
+		public array $dataTypes;
 
 		/**
 		 * @param PDOE $connection
@@ -30,6 +36,7 @@
 		{
 			$list = $this->getTablesList();
 			$find = FALSE;
+			$t    = NULL;
 			foreach ($list as $t) {
 				if (mb_strtolower($t) === mb_strtolower($table)) {
 					$find = TRUE;
@@ -37,5 +44,26 @@
 				}
 			}
 			return $find ? $t : FALSE;
+		}
+
+
+		/**
+		 * @template T of DataType
+		 * @param string $type
+		 * @return class-string<T>
+		 * @throws DataTypeException
+		 */
+		public function findDataType(string $type)
+		: string
+		{
+			$type = strtolower($type);
+			foreach ($this->dataTypes as $dataType => $dataTypesList) {
+				foreach ($dataTypesList as $dt) {
+					if (strtolower($dt) === $type) {
+						return $dataType;
+					}
+				}
+			}
+			throw new DataTypeException('Unknown data type:' . $type);
 		}
 	}

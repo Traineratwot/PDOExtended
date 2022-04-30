@@ -7,22 +7,23 @@
 
 	class Dsn implements DsnInterface
 	{
-		public  $DRIVERS
+		public array   $DRIVERS
 						  = [
 				PDOE::DRIVER_PostgreSQL => 5432,
 				PDOE::DRIVER_MySQL      => 3306,
 				PDOE::DRIVER_SQLite     => '',
 			];
-		private $password;
-		private $username;
-		private $host;
-		private $socket;
-		private $driver   = '';
-		private $database = '';
-		private $charset  = PDOE::CHARSET_utf8;
-		private $port;
+		private string $password='';
+		private string $username='';
+		private        $host;
+		private        $socket;
+		private string $driver   = '';
+		private string $database = '';
+		private string $charset  = PDOE::CHARSET_utf8;
+		private int    $port;
 
 		public function toArray()
+		: array
 		{
 			return [
 				'password' => $this->password,
@@ -40,6 +41,7 @@
 		 * @return Dsn
 		 */
 		private function validate()
+		: Dsn
 		{
 			return $this;
 		}
@@ -51,14 +53,15 @@
 		public function get()
 		: string
 		{
-			return $this->validate()->_get();
+			return $this->validate()->_getDsn();
 		}
 
 		/**
 		 * @return string
 		 * @throws DsnException
 		 */
-		private function _get()
+		private function _getDsn()
+		: string
 		{
 			if ($this->host) {
 				//вызов метода по имени метода
@@ -73,6 +76,7 @@
 		 * @throws DsnException
 		 */
 		private function pgsql_host()
+		: string
 		{
 			$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
 			if ($this->database) {
@@ -85,6 +89,7 @@
 		 * @throws DsnException
 		 */
 		private function pgsql_socket()
+		: string
 		{
 			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
 			if ($this->database) {
@@ -97,6 +102,7 @@
 		 * @throws DsnException
 		 */
 		private function sqlite_host()
+		: string
 		{
 			return $this->getDriver() . ":" . $this->getHost();
 		}
@@ -105,6 +111,7 @@
 		 * @throws DsnException
 		 */
 		private function sqlite_socket()
+		: string
 		{
 			return $this->getDriver() . ":" . $this->getSocket();
 		}
@@ -113,6 +120,7 @@
 		 * @throws DsnException
 		 */
 		private function mysql_host()
+		: string
 		{
 			$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";
 			if ($this->database) {
@@ -128,6 +136,7 @@
 		 * @throws DsnException
 		 */
 		private function mysql_socket()
+		: string
 		{
 			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
 			if ($this->database) {
@@ -146,6 +155,7 @@
 		 * @return string
 		 */
 		public function getPassword()
+		: string
 		{
 			return $this->password;
 		}
@@ -155,6 +165,7 @@
 		 * @return dsn
 		 */
 		public function setPassword(string $password)
+		: Dsn
 		{
 			$this->password = $password;
 			return $this;
@@ -164,6 +175,7 @@
 		 * @return string
 		 */
 		public function getUsername()
+		: string
 		{
 			return $this->username;
 		}
@@ -173,6 +185,7 @@
 		 * @return dsn
 		 */
 		public function setUsername(string $username)
+		: Dsn
 		{
 			$this->username = $username;
 			return $this;
@@ -205,6 +218,7 @@
 		 * @return dsn
 		 */
 		public function setDriver(string $driver)
+		: Dsn
 		{
 			$this->driver = $driver;
 			return $this;
@@ -214,6 +228,7 @@
 		 * @return string
 		 */
 		public function getDatabase()
+		: string
 		{
 			return $this->database;
 		}
@@ -223,6 +238,7 @@
 		 * @return dsn
 		 */
 		public function setDatabase(string $database)
+		: Dsn
 		{
 			$this->database = $database;
 			return $this;
@@ -232,6 +248,7 @@
 		 * @return string
 		 */
 		public function getCharset()
+		: string
 		{
 			return $this->charset;
 		}
@@ -241,6 +258,7 @@
 		 * @return dsn
 		 */
 		public function setCharset(string $charset)
+		: Dsn
 		{
 			$this->charset = $charset;
 			return $this;
@@ -251,6 +269,7 @@
 		 * @throws DsnException
 		 */
 		public function getPort()
+		: int
 		{
 			if (is_null($this->port)) {
 				return $this->DRIVERS[$this->getDriver()];
@@ -263,6 +282,7 @@
 		 * @return dsn
 		 */
 		public function setPort(int $port)
+		: Dsn
 		{
 			$this->port = $port;
 			return $this;
@@ -285,6 +305,7 @@
 		 * @throws DsnException
 		 */
 		public function setHost($host)
+		: void
 		{
 			if (!is_null($this->socket)) {
 				throw new DsnException('You must`t set "host" and "socket" at same time');
@@ -310,6 +331,7 @@
 		 * @throws DsnException
 		 */
 		public function setSocket($socket)
+		: void
 		{
 			if (!is_null($this->host)) {
 				throw new DsnException('You must`t set "socket" and "host" at same time');

@@ -6,12 +6,10 @@
 
 	require __DIR__. '/vendor/autoload.php';
 
-
+	$sqLight = 'C:\light.db';
 	$dns = new Dsn();
-	$dns->setDriver(PDOE::DRIVER_PostgreSQL);
-	$dns->setHost('localhost');
-	$dns->setUsername('root');
-	$dns->setPassword('');
-	$dns->setDatabase('test');
-	echo '<pre>';
-	var_dump($dns->get()); die;
+	$dns->setDriver(PDOE::DRIVER_SQLite);
+	$dns->setHost($sqLight);
+	$db = new PDOE($dns);
+	var_dump($db->getScheme('type_test'));
+	
