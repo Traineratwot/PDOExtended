@@ -7,20 +7,20 @@
 
 	class Dsn implements DsnInterface
 	{
-		public array   $DRIVERS
-						  = [
+		public array    $DRIVERS
+								  = [
 				PDOE::DRIVER_PostgreSQL => 5432,
 				PDOE::DRIVER_MySQL      => 3306,
 				PDOE::DRIVER_SQLite     => '',
 			];
-		private string $password='';
-		private string $username='';
-		private        $host;
-		private        $socket;
-		private string $driver   = '';
-		private string $database = '';
-		private string $charset  = PDOE::CHARSET_utf8;
-		private int    $port;
+		private string  $password = '';
+		private string  $username = '';
+		private ?string $host     = NULL;
+		private ?string $socket   = NULL;
+		private string  $driver   = '';
+		private string  $database = '';
+		private string  $charset  = PDOE::CHARSET_utf8;
+		private ?int    $port     = NULL;
 
 		public function toArray()
 		: array
