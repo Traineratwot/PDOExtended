@@ -11,7 +11,7 @@
 		public function validate()
 		: void
 		{
-			if(($this->value && $this->canBeNull) && !is_string($this->value)){
+			if (($this->value && $this->canBeNull) && !is_string($this->value)) {
 				throw new DataTypeException("invalid string");
 			}
 		}

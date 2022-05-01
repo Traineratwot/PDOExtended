@@ -1,8 +1,10 @@
 <?php
 
-	namespace Traineratwot\PDOExtended\drivers\SQLite;
+	namespace Traineratwot\PDOExtended\drivers\MySQL;
 
-	class Select extends \Traineratwot\PDOExtended\abstracts\builders\Select
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Select;
+
+	class Select extends Abstract_Select
 	{
 
 	}

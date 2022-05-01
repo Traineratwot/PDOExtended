@@ -2,9 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\drivers\SQLite;
 
-	use Traineratwot\PDOExtended\abstracts\builder;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Update;
 
-	class Update extends \Traineratwot\PDOExtended\abstracts\builders\Update
+	class Update extends Abstract_Update
 	{
 
 	}

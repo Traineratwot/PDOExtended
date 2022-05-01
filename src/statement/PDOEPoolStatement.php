@@ -25,7 +25,7 @@
 		 */
 		public function execute($input_parameters = NULL, bool $return = FALSE)
 		{
-			$type = $return ? 'query' : 'exec';
+			$type                = $return ? 'query' : 'exec';
 			$this->pool[$type][] = Helpers::prepare($this->queryString, $input_parameters);
 			return $this;
 		}
@@ -45,7 +45,7 @@
 //			if ($this->connection->dsn->getDriver() === PDOE::DRIVER_SQLite) {
 //				$limit = 1;
 //			}
-			$out   = [];
+			$out = [];
 			foreach ($this->pool as $type => $pool) {
 				$pool = array_chunk($pool, $limit);
 				foreach ($pool as $queries) {

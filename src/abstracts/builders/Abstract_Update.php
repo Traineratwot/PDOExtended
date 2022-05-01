@@ -4,7 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\builder;
 
-	abstract class Update extends Builder
+	abstract class Abstract_Update extends Builder
 	{
 
 	}

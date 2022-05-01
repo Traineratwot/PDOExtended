@@ -6,7 +6,7 @@
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\Helpers;
 
-	abstract class Where
+	abstract class Abstract_Where
 	{
 		private array   $_where = [];
 		private array   $values = [];
@@ -33,6 +33,19 @@
 		}
 
 		/**
+		 * @param string $column
+		 * @param        $value
+		 * @return $this
+		 */
+		public function eq(string $column, $value)
+		{
+			$key            = $this->setValue($value);
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->eq($column, $key)->get();
+			return $this;
+		}
+
+		/**
 		 * @param $values
 		 * @return string
 		 */
@@ -45,15 +58,12 @@
 		}
 
 		/**
-		 * @param string $column
-		 * @param        $value
-		 * @return $this
+		 * @return string
 		 */
-		public function eq(string $column, $value)
+		public function get()
+		: string
 		{
-			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->eq($column, $key)->get();
-			return $this;
+			return implode(' ', $this->_where);
 		}
 
 		/**
@@ -64,7 +74,8 @@
 		public function notEq(string $column, $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->notEq($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->notEq($column, $key)->get();
 			return $this;
 		}
 
@@ -76,7 +87,8 @@
 		public function greater(string $column, $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->greater($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->greater($column, $key)->get();
 			return $this;
 		}
 
@@ -88,7 +100,8 @@
 		public function greaterEq(string $column, $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->greaterEq($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->greaterEq($column, $key)->get();
 			return $this;
 		}
 
@@ -100,7 +113,8 @@
 		public function less(string $column, $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->less($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->less($column, $key)->get();
 			return $this;
 		}
 
@@ -112,7 +126,8 @@
 		public function lessEq(string $column, $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->lessEq($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->lessEq($column, $key)->get();
 			return $this;
 		}
 
@@ -125,7 +140,8 @@
 		{
 
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->in($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->in($column, $key)->get();
 			return $this;
 		}
 
@@ -137,7 +153,8 @@
 		public function notIn(string $column, array $value)
 		{
 			$key            = $this->setValue($value);
-			$this->_where[] = (new WherePart($this->driver, $this->scope))->notIn($column, $key)->get();
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this->scope))->notIn($column, $key)->get();
 			return $this;
 		}
 
@@ -160,28 +177,19 @@
 		}
 
 		/**
-		 * @return array
-		 */
-		public function getValues()
-		{
-			return $this->values;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function get()
-		: string
-		{
-			return implode(' ', $this->_where);
-		}
-
-		/**
 		 * @return string
 		 */
 		public function toSql()
 		: string
 		{
 			return Helpers::prepare($this->get(), $this->getValues(), $this->driver->connection, '');
+		}
+
+		/**
+		 * @return array
+		 */
+		public function getValues()
+		{
+			return $this->values;
 		}
 	}

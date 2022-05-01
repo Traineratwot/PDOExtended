@@ -2,9 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\drivers\SQLite;
 
-	use Traineratwot\PDOExtended\abstracts\builder;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Insert;
 
-	class Insert extends \Traineratwot\PDOExtended\abstracts\builders\Insert
+	class Insert extends Abstract_Insert
 	{
 
 	}

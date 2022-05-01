@@ -4,7 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\builder;
 
-	abstract class Insert extends Builder
+	abstract class Abstract_Insert extends Builder
 	{
 
 	}

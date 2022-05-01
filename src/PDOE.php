@@ -45,17 +45,16 @@
 				self::DRIVER_SQLite => SQLite::class,
 				self::DRIVER_MySQL  => MySQL::class,
 			];
+		/**
+		 * @var dsn
+		 */
+		public $dsn;
 		private int $query_count = 0;
 		/**
 		 * All query time in microseconds
 		 * @var int
 		 */
 		private int $query_time = 0;
-
-		/**
-		 * @var dsn
-		 */
-		public $dsn;
 		/**
 		 * @var DriverInterface
 		 */
@@ -87,21 +86,30 @@
 		}
 
 		/**
-		 * @return int
+		 * @return string
 		 */
-		public function queryCount()
-		: int
+		public function getKey()
+		: string
 		{
-			return $this->query_count;
+			return $this->key;
 		}
 
 		/**
-		 * @return int
+		 * @param DsnInterface $dsn
+		 * @param array        $driverOptions
+		 * @param string|null  $var return global variable name
+		 * @return self
+		 * @throws DsnException
 		 */
-		public function queryTime()
-		: int
+		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
+		: PDOE
 		{
-			return $this->query_time;
+			$var = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
+			global $$var;
+			if (!isset($$var) || is_null($$var)) {
+				$$var = new self($dsn, $driverOptions);
+			}
+			return $$var;
 		}
 
 		/**
@@ -146,6 +154,23 @@
 			throw new PDOEException("Method $name is not exists");
 		}
 
+		public function prepareQuery($sql, $values = [])
+		{
+			$sql = Helpers::prepare($sql, $values, $this);
+			$arg = func_get_args();
+			$arg = array_slice($arg, 2);
+			return $this->query($sql, ...$arg);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function prepare($query, $options = NULL)
+		{
+			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
+			return parent::prepare($query, $options);
+		}
+
 		/**
 		 * @inheritDoc
 		 */
@@ -158,14 +183,6 @@
 			return $return;
 		}
 
-		public function prepareQuery($sql, $values = [])
-		{
-			$sql = Helpers::prepare($sql, $values, $this);
-			$arg = func_get_args();
-			$arg = array_slice($arg, 2);
-			return $this->query($sql, ...$arg);
-		}
-
 		/**
 		 * @param string $statement SQL request
 		 * @param array  $driver_options
@@ -175,15 +192,6 @@
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEPoolStatement::class, [$this]]);
 			return parent::prepare($statement, $driver_options);
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function prepare($query, $options = NULL)
-		{
-			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
-			return parent::prepare($query, $options);
 		}
 
 		/**
@@ -214,6 +222,24 @@
 		}
 
 		/**
+		 * @return int
+		 */
+		public function queryCount()
+		: int
+		{
+			return $this->query_count;
+		}
+
+		/**
+		 * @return int
+		 */
+		public function queryTime()
+		: int
+		{
+			return $this->query_time;
+		}
+
+		/**
 		 * @param string $name
 		 * @return bool
 		 */
@@ -229,7 +255,6 @@
 		{
 			return $this->query_count;
 		}
-
 
 		/**
 		 * return list all tables in database
@@ -292,33 +317,6 @@
 				return implode(',', $value);
 			}
 			return parent::quote($value, $type);
-		}
-
-		/**
-		 * @param DsnInterface $dsn
-		 * @param array        $driverOptions
-		 * @param string|null  $var return global variable name
-		 * @return self
-		 * @throws DsnException
-		 */
-		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
-		: PDOE
-		{
-			$var = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
-			global $$var;
-			if (!isset($$var) || is_null($$var)) {
-				$$var = new self($dsn, $driverOptions);
-			}
-			return $$var;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function getKey()
-		: string
-		{
-			return $this->key;
 		}
 	}
 

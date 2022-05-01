@@ -6,7 +6,7 @@
 	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
 	use Traineratwot\PDOExtended\Helpers;
 
-	abstract class Select extends Builder
+	abstract class Abstract_Select extends Builder
 	{
 		private array  $columns = [];
 		private string $limit   = '';
@@ -30,7 +30,7 @@
 
 		/**
 		 * @param array $orders
-		 * @return Select
+		 * @return Abstract_Select
 		 * @throws SqlBuildException
 		 */
 		public function orderBy(array $orders)

@@ -2,10 +2,10 @@
 
 	namespace Traineratwot\PDOExtended\tableInfo;
 
-	use Traineratwot\PDOExtended\abstracts\builders\Delete;
-	use Traineratwot\PDOExtended\abstracts\builders\Insert;
-	use Traineratwot\PDOExtended\abstracts\builders\Select;
-	use Traineratwot\PDOExtended\abstracts\builders\Update;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Delete;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Insert;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Select;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Update;
 	use Traineratwot\PDOExtended\abstracts\driver;
 
 	class PDOEBdObject
@@ -22,30 +22,34 @@
 		}
 
 		public function select()
-		: Select
+		: Abstract_Select
 		{
-			return (new Select($this->driver))->setTable($this->name);
+			$cls = $this->driver->tools['Select'];
+			return (new $cls($this->driver))->setTable($this->name);
 
 		}
 
 		public function update()
-		: Update
+		: Abstract_Update
 		{
-			return (new Update($this->driver))->setTable($this->name);
+			$cls = $this->driver->tools['Update'];
+			return (new $cls($this->driver))->setTable($this->name);
 
 		}
 
 		public function insert()
-		: Insert
+		: Abstract_Insert
 		{
-			return (new Insert($this->driver))->setTable($this->name);
+			$cls = $this->driver->tools['Insert'];
+			return (new $cls($this->driver))->setTable($this->name);
 
 		}
 
 		public function delete()
-		: Delete
+		: Abstract_Delete
 		{
-			return (new Delete($this->driver))->setTable($this->name);
+			$cls = $this->driver->tools['Delete'];
+			return (new $cls($this->driver))->setTable($this->name);
 
 		}
 	}

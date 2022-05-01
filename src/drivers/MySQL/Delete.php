@@ -2,7 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\drivers\MySQL;
 
-	class Delete extends \Traineratwot\PDOExtended\abstracts\builders\Delete
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Delete;
+
+	class Delete extends Abstract_Delete
 	{
 
 	}

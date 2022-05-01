@@ -2,13 +2,13 @@
 
 	namespace Traineratwot\PDOExtended\abstracts;
 
-	use Traineratwot\PDOExtended\abstracts\builders\Where;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Where;
 
 	abstract class builder
 	{
-		public string $table = '';
-		public Driver $driver;
-		public ?Where $where = NULL;
+		public string          $table = '';
+		public Driver          $driver;
+		public ?Abstract_Where $where = NULL;
 
 		public function __construct(Driver $driver)
 		{
@@ -27,9 +27,10 @@
 		}
 
 		public function where($callback = NULL)
-		: Where
+		: Abstract_Where
 		{
-			$this->where = new Where($this, $this->driver, $callback);
+			$cls         = $this->driver->tools['Where'];
+			$this->where = new $cls($this, $this->driver, $callback);
 			return $this->where;
 		}
 

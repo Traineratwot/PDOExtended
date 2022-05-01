@@ -21,6 +21,15 @@
 		 */
 		private $default;
 
+		public static function __set_state($an_array)
+		{
+			$a = new self();
+			foreach ($an_array as $key => $val) {
+				$a->$key = $val;
+			}
+			return $a;
+		}
+
 		/**
 		 * @return string
 		 */
@@ -222,7 +231,6 @@
 			return $this;
 		}
 
-
 		/**
 		 * @return array
 		 */
@@ -277,14 +285,5 @@
 					$this->setDefault($value);
 					break;
 			}
-		}
-
-		public static function __set_state($an_array)
-		{
-			$a = new self();
-			foreach ($an_array as $key => $val) {
-				$a->$key = $val;
-			}
-			return $a;
 		}
 	}

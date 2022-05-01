@@ -3,7 +3,6 @@
 	namespace Traineratwot\PDOExtended\tableInfo\dataType;
 
 	use Traineratwot\PDOExtended\abstracts\DataType;
-	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
 	class TSet extends DataType
 	{

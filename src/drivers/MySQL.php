@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\drivers;
 
+	use Exception;
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
@@ -78,7 +79,7 @@
 							$col->setIsUnique();
 						}
 						$Scheme->addColumn($col);
-					} catch (\Exception $e) {
+					} catch (Exception $e) {
 
 					}
 				}

@@ -1,8 +1,10 @@
 <?php
 
-	namespace Traineratwot\PDOExtended\drivers\MySQL;
+	namespace Traineratwot\PDOExtended\drivers\SQLite;
 
-	class Delete extends \Traineratwot\PDOExtended\abstracts\builders\Delete
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Delete;
+
+	class Delete extends Abstract_Delete
 	{
 
 	}

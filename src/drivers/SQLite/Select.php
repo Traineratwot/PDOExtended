@@ -2,7 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\drivers\SQLite;
 
-	class Select extends \Traineratwot\PDOExtended\abstracts\builders\Select
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Select;
+
+	class Select extends Abstract_Select
 	{
 
 	}

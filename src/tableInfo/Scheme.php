@@ -8,14 +8,6 @@
 		public array $columns;
 		public array $links = [];
 
-		public function addColumn(Column $column)
-		: self
-		{
-			$name                 = $column->getName();
-			$this->columns[$name] = $column;
-			return $this;
-		}
-
 		public static function __set_state($an_array)
 		{
 			$a = new self();
@@ -23,6 +15,14 @@
 				$a->addColumn($column);
 			}
 			return $a;
+		}
+
+		public function addColumn(Column $column)
+		: self
+		{
+			$name                 = $column->getName();
+			$this->columns[$name] = $column;
+			return $this;
 		}
 
 		public function toArray()

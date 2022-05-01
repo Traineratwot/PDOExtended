@@ -10,7 +10,7 @@
 		 * @var mixed
 		 */
 		public        $value;
-		public string $originalType ='';
+		public string $originalType = '';
 
 		public string $phpName   = 'mixed';
 		public bool   $canBeNull = TRUE;
@@ -20,19 +20,15 @@
 		public      $default;
 		public bool $isSet = FALSE;
 
-		/**
-		 * validate input value
-		 * @return void
-		 */
-		abstract public function validate()
-		: void;
-
-		/**
-		 * if validate convert value to correct data type
-		 * @return void
-		 */
-		abstract public function convert()
-		: void;
+		public static function __set_state($an_array)
+		{
+			$cls = static::class;
+			$a   = new $cls();
+			foreach ($an_array as $key => $value) {
+				$a->$key = $value;
+			}
+			return $a;
+		}
 
 		/**
 		 * @inheritDoc
@@ -48,6 +44,20 @@
 			$this->convert();
 			return $this;
 		}
+
+		/**
+		 * validate input value
+		 * @return void
+		 */
+		abstract public function validate()
+		: void;
+
+		/**
+		 * if validate convert value to correct data type
+		 * @return void
+		 */
+		abstract public function convert()
+		: void;
 
 		/**
 		 * @param bool $canBeNull
@@ -68,16 +78,6 @@
 				return $this->value;
 			}
 			return $this->default;
-		}
-
-		public static function __set_state($an_array)
-		{
-			$cls = static::class;
-			$a   = new $cls();
-			foreach ($an_array as $key => $value) {
-				$a->$key = $value;
-			}
-			return $a;
 		}
 
 		/**

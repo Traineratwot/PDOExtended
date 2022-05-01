@@ -3,6 +3,12 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 
+	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
+	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
+	use Traineratwot\PDOExtended\drivers\MySQL\Select;
+	use Traineratwot\PDOExtended\drivers\MySQL\Update;
+	use Traineratwot\PDOExtended\drivers\MySQL\Where;
+	use Traineratwot\PDOExtended\drivers\MySQL\WherePart;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\interfaces\DriverInterface;
 	use Traineratwot\PDOExtended\PDOE;
@@ -10,6 +16,17 @@
 
 	abstract class Driver implements DriverInterface
 	{
+		public array $tools
+			= [
+				"Delete"    => Delete::class,
+				"Insert"    => Insert::class,
+				"Select"    => Select::class,
+				"Update"    => Update::class,
+				"Where"     => Where::class,
+				"WherePart" => WherePart::class,
+			];
+
+
 		public string $eq        = '=';
 		public string $notEq     = '<>';
 		public string $greater   = '<';
@@ -35,10 +52,6 @@
 			$this->connection = $connection;
 		}
 
-		abstract public function getTablesList()
-		: array;
-
-
 		/**
 		 * @inheritDoc
 		 * @return false|string
@@ -58,6 +71,8 @@
 			return $find ? $t : FALSE;
 		}
 
+		abstract public function getTablesList()
+		: array;
 
 		/**
 		 * @template T of DataType
@@ -87,16 +102,6 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function escapeTable(string $table)
-		: string
-		{
-			$table = trim($table, '`');
-			return "`$table`";
-		}
-
-		/**
-		 * @inheritDoc
-		 */
 		public function escapeColumn(string $column, string $table = NULL)
 		: string
 		{
@@ -105,5 +110,15 @@
 				return $this->escapeTable($table) . ".`$column`";
 			}
 			return "`$column`";
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function escapeTable(string $table)
+		: string
+		{
+			$table = trim($table, '`');
+			return "`$table`";
 		}
 	}

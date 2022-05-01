@@ -38,15 +38,6 @@
 		}
 
 		/**
-		 * @return Dsn
-		 */
-		private function validate()
-		: Dsn
-		{
-			return $this;
-		}
-
-		/**
 		 * @return string
 		 * @throws DsnException
 		 */
@@ -70,86 +61,49 @@
 			return [$this, $this->getDriver() . '_socket']();
 		}
 
+		/**
+		 * @return string
+		 * @throws DsnException
+		 */
+		public function getDriver()
+		: string
+		{
+			if (is_null($this->charset)) {
+				throw new DsnException('"driver" is not set');
+			}
+			if (
+				!in_array($this->driver, [
+					PDOE::DRIVER_PostgreSQL,
+					PDOE::DRIVER_MySQL,
+					PDOE::DRIVER_SQLite,
+				],        TRUE)
+			) {
+				throw new DsnException('Driver "' . $this->driver . '" is unknown');
+			}
+			return $this->driver;
+		}
+
 // 		dsn builders
 
 		/**
-		 * @throws DsnException
+		 * @param string $driver
+		 * @return dsn
 		 */
-		private function pgsql_host()
-		: string
+		public function setDriver(string $driver)
+		: Dsn
 		{
-			$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
-			if ($this->database) {
-				$dsn .= "dbname={$this->getDatabase()};";
-			}
-			return $dsn;
+			$this->driver = $driver;
+			return $this;
 		}
 
 		/**
-		 * @throws DsnException
+		 * @return Dsn
 		 */
-		private function pgsql_socket()
-		: string
+		private function validate()
+		: Dsn
 		{
-			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
-			if ($this->database) {
-				$dsn .= "dbname={$this->getDatabase()};";
-			}
-			return $dsn;
+			return $this;
 		}
-
-		/**
-		 * @throws DsnException
-		 */
-		private function sqlite_host()
-		: string
-		{
-			return $this->getDriver() . ":" . $this->getHost();
-		}
-
-		/**
-		 * @throws DsnException
-		 */
-		private function sqlite_socket()
-		: string
-		{
-			return $this->getDriver() . ":" . $this->getSocket();
-		}
-
-		/**
-		 * @throws DsnException
-		 */
-		private function mysql_host()
-		: string
-		{
-			$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";
-			if ($this->database) {
-				$dsn .= "dbname={$this->getDatabase()};";
-			}
-			if ($this->charset) {
-				$dsn .= "charset={$this->getCharset()};";
-			}
-			return $dsn;
-		}
-
-		/**
-		 * @throws DsnException
-		 */
-		private function mysql_socket()
-		: string
-		{
-			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
-			if ($this->database) {
-				$dsn .= "dbname={$this->getDatabase()};";
-			}
-			if ($this->charset) {
-				$dsn .= "charset={$this->getCharset()};";
-			}
-			return $dsn;
-		}
-
-
-//		setters and getters
 
 		/**
 		 * @return string
@@ -191,101 +145,20 @@
 			return $this;
 		}
 
+
+//		setters and getters
+
 		/**
-		 * @return string
 		 * @throws DsnException
 		 */
-		public function getDriver()
+		private function pgsql_host()
 		: string
 		{
-			if (is_null($this->charset)) {
-				throw new DsnException('"driver" is not set');
+			$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
+			if ($this->database) {
+				$dsn .= "dbname={$this->getDatabase()};";
 			}
-			if (
-				!in_array($this->driver, [
-					PDOE::DRIVER_PostgreSQL,
-					PDOE::DRIVER_MySQL,
-					PDOE::DRIVER_SQLite,
-				],        TRUE)
-			) {
-				throw new DsnException('Driver "' . $this->driver . '" is unknown');
-			}
-			return $this->driver;
-		}
-
-		/**
-		 * @param string $driver
-		 * @return dsn
-		 */
-		public function setDriver(string $driver)
-		: Dsn
-		{
-			$this->driver = $driver;
-			return $this;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function getDatabase()
-		: string
-		{
-			return $this->database;
-		}
-
-		/**
-		 * @param string $database
-		 * @return dsn
-		 */
-		public function setDatabase(string $database)
-		: Dsn
-		{
-			$this->database = $database;
-			return $this;
-		}
-
-		/**
-		 * @return string
-		 */
-		public function getCharset()
-		: string
-		{
-			return $this->charset;
-		}
-
-		/**
-		 * @param string $charset
-		 * @return dsn
-		 */
-		public function setCharset(string $charset)
-		: Dsn
-		{
-			$this->charset = $charset;
-			return $this;
-		}
-
-		/**
-		 * @return int
-		 * @throws DsnException
-		 */
-		public function getPort()
-		: int
-		{
-			if (is_null($this->port)) {
-				return $this->DRIVERS[$this->getDriver()];
-			}
-			return $this->port;
-		}
-
-		/**
-		 * @param int $port
-		 * @return dsn
-		 */
-		public function setPort(int $port)
-		: Dsn
-		{
-			$this->port = $port;
-			return $this;
+			return $dsn;
 		}
 
 		/**
@@ -314,6 +187,63 @@
 		}
 
 		/**
+		 * @return int
+		 * @throws DsnException
+		 */
+		public function getPort()
+		: int
+		{
+			if (is_null($this->port)) {
+				return $this->DRIVERS[$this->getDriver()];
+			}
+			return $this->port;
+		}
+
+		/**
+		 * @param int $port
+		 * @return dsn
+		 */
+		public function setPort(int $port)
+		: Dsn
+		{
+			$this->port = $port;
+			return $this;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getDatabase()
+		: string
+		{
+			return $this->database;
+		}
+
+		/**
+		 * @param string $database
+		 * @return dsn
+		 */
+		public function setDatabase(string $database)
+		: Dsn
+		{
+			$this->database = $database;
+			return $this;
+		}
+
+		/**
+		 * @throws DsnException
+		 */
+		private function pgsql_socket()
+		: string
+		{
+			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
+			if ($this->database) {
+				$dsn .= "dbname={$this->getDatabase()};";
+			}
+			return $dsn;
+		}
+
+		/**
 		 * @return mixed
 		 * @throws DsnException
 		 */
@@ -337,5 +267,75 @@
 				throw new DsnException('You must`t set "socket" and "host" at same time');
 			}
 			$this->socket = $socket;
+		}
+
+		/**
+		 * @throws DsnException
+		 */
+		private function sqlite_host()
+		: string
+		{
+			return $this->getDriver() . ":" . $this->getHost();
+		}
+
+		/**
+		 * @throws DsnException
+		 */
+		private function sqlite_socket()
+		: string
+		{
+			return $this->getDriver() . ":" . $this->getSocket();
+		}
+
+		/**
+		 * @throws DsnException
+		 */
+		private function mysql_host()
+		: string
+		{
+			$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";
+			if ($this->database) {
+				$dsn .= "dbname={$this->getDatabase()};";
+			}
+			if ($this->charset) {
+				$dsn .= "charset={$this->getCharset()};";
+			}
+			return $dsn;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getCharset()
+		: string
+		{
+			return $this->charset;
+		}
+
+		/**
+		 * @param string $charset
+		 * @return dsn
+		 */
+		public function setCharset(string $charset)
+		: Dsn
+		{
+			$this->charset = $charset;
+			return $this;
+		}
+
+		/**
+		 * @throws DsnException
+		 */
+		private function mysql_socket()
+		: string
+		{
+			$dsn = "{$this->getDriver()}:unix_socket={$this->getSocket()};";
+			if ($this->database) {
+				$dsn .= "dbname={$this->getDatabase()};";
+			}
+			if ($this->charset) {
+				$dsn .= "charset={$this->getCharset()};";
+			}
+			return $dsn;
 		}
 	}

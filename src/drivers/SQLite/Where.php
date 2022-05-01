@@ -2,11 +2,9 @@
 
 	namespace Traineratwot\PDOExtended\drivers\SQLite;
 
-	use Traineratwot\PDOExtended\abstracts\builder;
-	use Traineratwot\PDOExtended\abstracts\Driver;
-	use Traineratwot\PDOExtended\Helpers;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Where;
 
-	class Where extends \Traineratwot\PDOExtended\abstracts\builders\Where
+	class Where extends Abstract_Where
 	{
 
 	}

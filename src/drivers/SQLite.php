@@ -3,11 +3,11 @@
 	namespace Traineratwot\PDOExtended\drivers;
 
 
+	use Exception;
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\abstracts\Driver;
-	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
@@ -79,7 +79,7 @@
 							$col->setIsUnique();
 						}
 						$Scheme->addColumn($col);
-					} catch (\Exception $e) {
+					} catch (Exception $e) {
 
 					}
 				}

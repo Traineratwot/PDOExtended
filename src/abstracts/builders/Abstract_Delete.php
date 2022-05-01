@@ -4,7 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\builder;
 
-	abstract class Delete extends Builder
+	abstract class Abstract_Delete extends Builder
 	{
 
 	}
