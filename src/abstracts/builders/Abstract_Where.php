@@ -175,23 +175,6 @@
 		}
 
 		/**
-		 * add or condition
-		 * @return $this
-		 */
-		public function or(?callable $callback = NULL)
-		{
-			if (!empty($this->_where)) {
-				$this->_where[] = $this->driver->or;
-			}
-			if ($callback) {
-				$this->block();
-				$callback($this);
-				$this->endBlock();
-			}
-			return $this;
-		}
-
-		/**
 		 * start rule block
 		 * @return $this
 		 */
@@ -208,6 +191,23 @@
 		public function endBlock()
 		{
 			$this->_where[] = $this->driver->endBlock;
+			return $this;
+		}
+
+		/**
+		 * add or condition
+		 * @return $this
+		 */
+		public function or(?callable $callback = NULL)
+		{
+			if (!empty($this->_where)) {
+				$this->_where[] = $this->driver->or;
+			}
+			if ($callback) {
+				$this->block();
+				$callback($this);
+				$this->endBlock();
+			}
 			return $this;
 		}
 

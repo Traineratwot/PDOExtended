@@ -37,6 +37,21 @@
 			return $this->scope;
 		}
 
+		public function _join($column = NULL, $column2 = NULL)
+		{
+			if (is_null($column)) {
+				foreach ($this->scope->scheme->links as $tblName => $link) {
+					if ($this->joinTable->table === $tblName) {
+						$this->_join($link['masterField'], $link['slaveField']);
+						return;
+					}
+				}
+				throw new SqlBuildException("Missing join field and unknown sql link");
+			}
+			$this->column  = $this->driver->escapeColumn($column, $this->scope->table);
+			$this->column2 = $this->driver->escapeColumn($column2, $this->joinTable->table);
+		}
+
 		public function inner(?string $column = NULL, ?string $innerColumn = NULL)
 		{
 			if (!empty($this->type)) {
@@ -55,21 +70,6 @@
 			$this->_join($column, $rightColumn);
 			$this->type = "RIGHT";
 			return $this->scope;
-		}
-
-		public function _join($column = NULL, $column2 = NULL)
-		{
-			if (is_null($column)) {
-				foreach ($this->scope->scheme->links as $tblName => $link) {
-					if ($this->joinTable->table === $tblName) {
-						$this->_join($link['masterField'], $link['slaveField']);
-						return;
-					}
-				}
-				throw new SqlBuildException("Missing join field and unknown sql link");
-			}
-			$this->column  = $this->driver->escapeColumn($column, $this->scope->table);
-			$this->column2 = $this->driver->escapeColumn($column2, $this->joinTable->table);
 		}
 
 		public function end()
