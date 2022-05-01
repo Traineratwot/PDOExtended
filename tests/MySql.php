@@ -117,6 +117,6 @@ SQL
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') or `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
 		}
 	}

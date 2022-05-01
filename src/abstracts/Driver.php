@@ -5,6 +5,8 @@
 
 	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
 	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
+	use Traineratwot\PDOExtended\drivers\MySQL\Join;
+	use Traineratwot\PDOExtended\drivers\MySQL\JoinOn;
 	use Traineratwot\PDOExtended\drivers\MySQL\Select;
 	use Traineratwot\PDOExtended\drivers\MySQL\Update;
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
@@ -23,6 +25,8 @@
 				"Update"    => Update::class,
 				"Where"     => Where::class,
 				"WherePart" => WherePart::class,
+				"Join"      => Join::class,
+				"JoinOn"    => JoinOn::class,
 			];
 
 
@@ -32,7 +36,7 @@
 		public string $greaterEq = '<=';
 		public string $less      = '>';
 		public string $lessEq    = '>=';
-		public string $in        = 'in';
+		public string $in        = 'IN';
 		public string $notIn     = 'NOT IN';
 		public string $and       = 'AND';
 		public string $or        = 'OR';

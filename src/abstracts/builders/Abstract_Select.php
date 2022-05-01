@@ -64,12 +64,20 @@
 			}
 			$columns = implode(', ', $this->columns);
 			$v       = [];
+			$j       = '';
+			if (!empty($this->join)) {
+				$j = [];
+				foreach ($this->join as $join) {
+					$j[] = $join->get();
+				}
+				$j = implode(' ', $j);
+			}
 			if ($this->where) {
 				$w   = $this->where->get();
 				$v   = $this->where->getValues();
-				$sql = "SELECT {$columns} FROM {$this->table} WHERE {$w} {$this->order} {$this->limit}";
+				$sql = "SELECT {$columns} FROM {$this->table} {$j} WHERE {$w} {$this->order} {$this->limit}";
 			} else {
-				$sql = "SELECT {$columns} FROM {$this->table} {$this->order} {$this->limit}";
+				$sql = "SELECT {$columns} FROM {$this->table} {$j} {$this->order} {$this->limit}";
 			}
 			return Helpers::prepare($sql, $v, $this->driver->connection);
 		}

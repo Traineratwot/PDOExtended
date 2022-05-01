@@ -7,30 +7,29 @@
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Select;
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Update;
 	use Traineratwot\PDOExtended\abstracts\driver;
-	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
 	use Traineratwot\PDOExtended\Helpers;
 
 	class PDOEBdObject
 	{
 		public Scheme $scheme;
-		public string $name;
+		public string $table;
 		public driver $driver;
 
-		public function __construct(driver $driver, string $name)
+		public function __construct(driver $driver, string $table)
 		{
-			if (!$driver->tableExists($name)) {
-				Helpers::warn("Table '$name' does not exist");
+			if (!$driver->tableExists($table)) {
+				Helpers::warn("Table '$table' does not exist");
 			}
-			$this->name   = $name;
+			$this->table  = $table;
 			$this->driver = $driver;
-			$this->scheme = $driver->getScheme($name);
+			$this->scheme = $driver->getScheme($table);
 		}
 
 		public function select()
 		: Abstract_Select
 		{
 			$cls = $this->driver->tools['Select'];
-			return (new $cls($this))->setTable($this->name);
+			return (new $cls($this))->setTable($this->table);
 
 		}
 
@@ -38,7 +37,7 @@
 		: Abstract_Update
 		{
 			$cls = $this->driver->tools['Update'];
-			return (new $cls($this))->setTable($this->name);
+			return (new $cls($this))->setTable($this->table);
 
 		}
 
@@ -46,7 +45,7 @@
 		: Abstract_Insert
 		{
 			$cls = $this->driver->tools['Insert'];
-			return (new $cls($this))->setTable($this->name);
+			return (new $cls($this))->setTable($this->table);
 
 		}
 
@@ -54,7 +53,12 @@
 		: Abstract_Delete
 		{
 			$cls = $this->driver->tools['Delete'];
-			return (new $cls($this))->setTable($this->name);
+			return (new $cls($this))->setTable($this->table);
 
+		}
+
+		public function __toString()
+		{
+			return $this->table;
 		}
 	}

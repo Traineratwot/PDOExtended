@@ -1,6 +1,5 @@
 <?php
 
-	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\PDOE;
 
@@ -29,21 +28,27 @@
 //							 ->and()
 //							 ->notEq('id',5)
 //							 ->toSql();
+//	$sql = $db->table('test_link_master')->select()
+//		->where(function (Where $w) {
+//			$w->and(function (Where $w) {
+//				$w->eq('id', 5);
+//			});
+//			$w->or(function (Where $w) {
+//				$w->notEq('id', 8);
+//				$w->and();
+//				$w->notEq('id', 9);
+//			});
+//
+//		})->end()
+//		->toSql();
+//	;
+
+
 	$sql = $db->table('test_link_master')->select()
-		->where(function (Where $w) {
-			$w->and(function (Where $w) {
-				$w->eq('id', 5);
-			});
-			$w->or(function (Where $w) {
-				$w->notEq('id', 8);
-				$w->and();
-				$w->notEq('id', 9);
-			});
-
-		})->end()
-		->toSql();
-	;
-
+			  ->joinLeft('test_link_slave')
+//			  ->join('test_link_slave')->left()
+			  ->toSql()
+	;;
 	echo '<pre>';
 	var_dump($sql);
 	die;

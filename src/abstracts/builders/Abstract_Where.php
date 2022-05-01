@@ -8,16 +8,16 @@
 
 	abstract class Abstract_Where
 	{
-		private array   $_where = [];
-		private array   $values = [];
-		private int     $i      = 0;
-		private Driver  $driver;
-		private builder $scope;
+		public array   $_where = [];
+		public array   $values = [];
+		public int     $i      = 0;
+		public Driver  $driver;
+		public Builder $scope;
 
-		public function __construct(Builder $scope, Driver $driver, $callback = NULL)
+		public function __construct(Builder $scope, $callback = NULL)
 		{
-			$this->driver = $driver;
 			$this->scope  = $scope;
+			$this->driver = $scope->driver;
 
 			if (is_callable($callback)) {
 				$callback($this);
@@ -25,7 +25,7 @@
 		}
 
 		/**
-		 * @return builder
+		 * @return Builder
 		 */
 		public function end()
 		{
@@ -41,7 +41,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->eq($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->eq($column, $key)->get();
 			return $this;
 		}
 
@@ -75,7 +75,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->notEq($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->notEq($column, $key)->get();
 			return $this;
 		}
 
@@ -88,7 +88,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->greater($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->greater($column, $key)->get();
 			return $this;
 		}
 
@@ -101,7 +101,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->greaterEq($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->greaterEq($column, $key)->get();
 			return $this;
 		}
 
@@ -114,7 +114,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->less($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->less($column, $key)->get();
 			return $this;
 		}
 
@@ -127,7 +127,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->lessEq($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->lessEq($column, $key)->get();
 			return $this;
 		}
 
@@ -141,7 +141,7 @@
 
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->in($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->in($column, $key)->get();
 			return $this;
 		}
 
@@ -154,7 +154,7 @@
 		{
 			$key            = $this->setValue($value);
 			$cls            = $this->driver->tools['WherePart'];
-			$this->_where[] = (new $cls($this->driver, $this->scope))->notIn($column, $key)->get();
+			$this->_where[] = (new $cls($this->driver, $this))->notIn($column, $key)->get();
 			return $this;
 		}
 
