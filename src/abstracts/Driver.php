@@ -33,9 +33,11 @@
 		public string $less      = '>';
 		public string $lessEq    = '>=';
 		public string $in        = 'in';
-		public string $notIn     = 'not in';
-		public string $and       = 'and';
-		public string $or        = 'or';
+		public string $notIn     = 'NOT IN';
+		public string $and       = 'AND';
+		public string $or        = 'OR';
+		public string $block     = '(';
+		public string $endBlock  = ')';
 		public PDOE   $connection;
 		/**
 		 * php data type=> sql data types[]

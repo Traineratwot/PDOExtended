@@ -8,6 +8,7 @@
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Update;
 	use Traineratwot\PDOExtended\abstracts\driver;
 	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
+	use Traineratwot\PDOExtended\Helpers;
 
 	class PDOEBdObject
 	{
@@ -18,7 +19,7 @@
 		public function __construct(driver $driver, string $name)
 		{
 			if (!$driver->tableExists($name)) {
-				throw new SqlBuildException("Table '$name' does not exist");
+				Helpers::warn("Table '$name' does not exist");
 			}
 			$this->name   = $name;
 			$this->driver = $driver;

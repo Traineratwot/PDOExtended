@@ -161,18 +161,65 @@
 		/**
 		 * @return $this
 		 */
-		public function and()
+		public function and(?callable $callback = NULL)
 		{
-			$this->_where[] = $this->driver->and;
+			if (!empty($this->_where)) {
+				$this->_where[] = $this->driver->and;
+			}
+			if ($callback) {
+				$this->block();
+				$callback($this);
+				$this->endBlock();
+			}
 			return $this;
 		}
 
 		/**
+		 * add or condition
 		 * @return $this
 		 */
-		public function or()
+		public function or(?callable $callback = NULL)
 		{
-			$this->_where[] = $this->driver->or;
+			if (!empty($this->_where)) {
+				$this->_where[] = $this->driver->or;
+			}
+			if ($callback) {
+				$this->block();
+				$callback($this);
+				$this->endBlock();
+			}
+			return $this;
+		}
+
+		/**
+		 * start rule block
+		 * @return $this
+		 */
+		public function block()
+		{
+			$this->_where[] = $this->driver->block;
+			return $this;
+		}
+
+		/**
+		 * End rule block
+		 * @return $this
+		 */
+		public function endBlock()
+		{
+			$this->_where[] = $this->driver->endBlock;
+			return $this;
+		}
+
+		/**
+		 * ##NOT SAFE
+		 * add custom text to where
+		 * @param string $string
+		 * @return $this
+		 */
+		public function add(string $string)
+		{
+			$this->_where[] = $string;
 			return $this;
 		}
 

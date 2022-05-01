@@ -79,4 +79,9 @@ REGEXP
 			}
 			return $value;
 		}
+
+		public static function warn(string $string, $flags = E_USER_WARNING)
+		{
+			trigger_error($string, $flags);
+		}
 	}

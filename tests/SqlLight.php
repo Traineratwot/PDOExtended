@@ -2,6 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -40,7 +41,7 @@ CREATE TABLE test
 			$sqLight = __DIR__ . '/test.db';
 			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
 			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
-			echo '------------------'. PHP_EOL;
+			echo '------------------' . PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
 			if (file_exists($sqLight)) {
@@ -66,7 +67,7 @@ CREATE TABLE test
 		: void
 		{
 			$table = $this->db->getScheme('test');
-			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256|JSON_PRETTY_PRINT);
+			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256 | JSON_PRETTY_PRINT);
 			$this->assertStringEqualsFile('SqlLight_testGetScheme.json', $json, 'getScheme');
 		}
 
@@ -101,11 +102,12 @@ CREATE TABLE test
 			$pool->execute(['value' => random_int(0, 1000)]);
 			$pool->execute(['value' => random_int(0, 1000)]);
 			$pool->run();
-			$c=  $this->db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
+			$c = $this->db->query("SELECT COUNT(*) FROM test")->fetch(PDO::FETCH_COLUMN);
 			$this->assertEquals(24, $c);
 		}
 
-		public function testSelect(){
+		public function testSelect()
+		{
 			$sql = $this->db->table('test')->select()
 							->addColumn('id')
 							->addColumn('value')
@@ -121,6 +123,26 @@ CREATE TABLE test
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') or `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+		}
+
+		public function testWhereCondition()
+		{
+			$sql = $this->db->table('test')->select()
+							->where(function (Where $w) {
+								$w->and(function (Where $w) {
+									$w->eq('id', 5);
+								});
+								$w->or(function (Where $w) {
+									$w->notEq('id', 8);
+									$w->and();
+									$w->notEq('id', 9);
+								});
+
+							})->end()
+							->toSql()
+			;
+			$this->assertEquals("SELECT * FROM `test` WHERE ( `test`.`id` = '5' ) OR ( `test`.`id` <> '8' AND `test`.`id` <> '9' );", $sql);
+
 		}
 	}

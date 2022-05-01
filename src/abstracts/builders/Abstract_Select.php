@@ -15,12 +15,11 @@
 		/**
 		 * @param $column
 		 * @return $this
-		 * @throws SqlBuildException
 		 */
 		public function addColumn($column)
 		{
 			if (!$this->scheme->columnExists($column)) {
-				throw new SqlBuildException("Column '$column' does not exist");
+				Helpers::warn("Column '$column' does not exist in table {$this->table}");
 			}
 			$this->columns[] = $this->driver->escapeColumn($column, $this->table);
 			return $this;

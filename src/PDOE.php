@@ -79,7 +79,7 @@
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			$driverClass = self::DRIVER_classes[$this->dsn->getDriver()];
 			if (!class_exists($driverClass)) {
-				trigger_error('Invalid driver class: ' . $driverClass, E_USER_WARNING);
+				Helpers::warn('Invalid driver class: ' . $driverClass);
 				$driverClass = MySQL::class;
 			}
 			$this->driver = new $driverClass($this);
