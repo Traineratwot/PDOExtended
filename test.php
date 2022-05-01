@@ -1,10 +1,10 @@
 <?php
 
 	use Traineratwot\PDOExtended\Dsn;
-	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 
-	require __DIR__. '/vendor/autoload.php';
+	require __DIR__ . '/vendor/autoload.php';
+
 
 	$dns = new Dsn();
 
@@ -22,16 +22,28 @@
 	$dns->setPassword('');
 	$dns->setDatabase('test');
 	$db = new PDOE($dns);
-	$pool = $db->poolPrepare('INSERT INTO test (`value`)VALUES(:value)');
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->execute(['value' => random_int(0, 1000)]);
-	$pool->run();
-	$c=  $db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
-	$this->assertSame($c, 8);
-	
+//	$sql = $db->table('test')->select()
+//							 ->where()
+//							 ->in('id',[5,6,8])
+//							 ->and()
+//							 ->notEq('id',5)
+//							 ->toSql();
+	$sql = $db->table('test')->select()
+			  ->addColumn('id')
+			  ->addColumn('value')
+			  ->limit(1,2)
+			  ->orderBy([
+				  'id'=>"asc"
+						])
+			  ->where(function ($w) {
+				  $w->in('id', [5, 6, 8])
+					->or()
+					->less('id', 5)
+				  ;
+			  })->end()
+			  ->toSql()
+	;
+
+	echo '<pre>';
+	var_dump($sql);
+	die;

@@ -9,6 +9,7 @@
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
+	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBool;
@@ -43,7 +44,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-			},                 1, $this->connection->getKey());
+			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey());
 		}
 
 		/**
@@ -86,6 +87,7 @@
 					$Scheme->addLink($index['REFERENCED_TABLE_NAME'], $index['COLUMN_NAME'], $index['REFERENCED_COLUMN_NAME']);
 				}
 				return $Scheme;
-			},                 1, $this->connection->getKey() . '/tables');
+			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
 		}
+
 	}

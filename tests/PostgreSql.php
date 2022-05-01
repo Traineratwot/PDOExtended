@@ -25,9 +25,9 @@
 		}
 
 		/**
-		 * @throws DsnException
 		 */
 		public function testConnect()
+		: void
 		{
 			$tables = $this->db->getTablesList();
 			$this->assertEquals('test', $tables[0], 'Connect');

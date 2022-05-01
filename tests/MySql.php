@@ -91,4 +91,12 @@ SQL
 			$c=  $this->db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
 			$this->assertEquals(24, $c);
 		}
+
+		public function testGetScheme()
+		: void
+		{
+			$table = $this->db->getScheme('test');
+			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256|JSON_PRETTY_PRINT);
+			$this->assertStringEqualsFile('MySql_testGetScheme.json', $json, 'getScheme');
+		}
 	}

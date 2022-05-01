@@ -13,11 +13,16 @@
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
+	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
-
-	class PDOE extends PDO implements DriverInterface
+	/**
+	 * @implements DriverInterface
+	 */
+	class PDOE extends PDO
 	{
+		public const CACHE_EXPIRATION = 1;
+
 		/**
 		 * PostgreSQL
 		 * <img src="https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png" width="50" height="50" />
@@ -37,9 +42,8 @@
 		public const CHARSET_utf8mb4 = 'utf8mb4';
 		public const DRIVER_classes
 									 = [
-				self::DRIVER_PostgreSQL => '',
-				self::DRIVER_SQLite     => SQLite::class,
-				self::DRIVER_MySQL      => MySQL::class,
+				self::DRIVER_SQLite => SQLite::class,
+				self::DRIVER_MySQL  => MySQL::class,
 			];
 		private int $query_count = 0;
 		/**
@@ -63,7 +67,6 @@
 		 * @param Dsn   $dsn
 		 * @param array $driverOptions
 		 * @throws DsnException
-		 * @throws PDOEException
 		 */
 		public function __construct(DsnInterface $dsn, $driverOptions = [])
 		{
@@ -76,10 +79,11 @@
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			$driverClass = self::DRIVER_classes[$this->dsn->getDriver()];
 			if (!class_exists($driverClass)) {
-				throw new PDOEException('Invalid driver class: ' . $driverClass);
+				trigger_error('Invalid driver class: ' . $driverClass, E_USER_WARNING);
+				$driverClass = MySQL::class;
 			}
 			$this->driver = new $driverClass($this);
-			$this->key    = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
+			$this->key    = 'PDOE_' . Cache::getKey([$this->dsn->get(), $driverOptions]);
 		}
 
 		/**
@@ -243,6 +247,15 @@
 			return $this->driver->tableExists($table);
 		}
 
+		/**
+		 * @param string $table
+		 * @return PDOEBdObject
+		 */
+		public function table(string $table)
+		{
+			return $this->driver->table($table);
+		}
+
 		public function getScheme(string $table)
 		: Scheme
 		{
@@ -253,7 +266,7 @@
 		 * (PHP 5 &gt;= 5.1.0, PHP 7, PECL pdo &gt;= 0.2.1)<br/>
 		 * Quotes a string for use in a query.
 		 * @link https://php.net/manual/en/pdo.quote.php
-		 * @param mixed $string <p>
+		 * @param mixed $value  <p>
 		 *                      The string to be quoted.
 		 *                      </p>
 		 * @param ?int  $type   [optional] <p>
@@ -263,16 +276,22 @@
 		 *                      SQL statement. Returns <b>FALSE</b> if the driver does not support quoting in
 		 *                      this way.
 		 */
-		public function quote($string, $type = NULL)
+		public function quote($value, $type = NULL)
 		{
 			if (is_null($type)) {
-				if (is_numeric($string)) {
+				if (is_numeric($value)) {
 					$type = self::PARAM_INT;
 				} else {
 					$type = self::PARAM_STR;
 				}
 			}
-			return parent::quote($string, $type);
+			if (is_array($value)) {
+				foreach ($value as $key => $val) {
+					$value[$key] = parent::quote($val);
+				}
+				return implode(',', $value);
+			}
+			return parent::quote($value, $type);
 		}
 
 		/**
@@ -281,7 +300,6 @@
 		 * @param string|null  $var return global variable name
 		 * @return self
 		 * @throws DsnException
-		 * @throws PDOEException
 		 */
 		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
 		: PDOE

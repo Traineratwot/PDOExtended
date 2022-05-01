@@ -1,0 +1,26 @@
+{
+    "id": {
+        "db_dataType": "INTEGER",
+        "php_dataType": "mixed",
+        "name": "id",
+        "isPrimary": false,
+        "isUnique": false,
+        "canBeNull": true,
+        "isSetDefault": false,
+        "comment": "",
+        "validator": "Traineratwot\\PDOExtended\\tableInfo\\dataType\\TInt",
+        "default": null
+    },
+    "value": {
+        "db_dataType": "TEXT",
+        "php_dataType": "mixed",
+        "name": "value",
+        "isPrimary": false,
+        "isUnique": false,
+        "canBeNull": true,
+        "isSetDefault": false,
+        "comment": "",
+        "validator": "Traineratwot\\PDOExtended\\tableInfo\\dataType\\TString",
+        "default": null
+    }
+}

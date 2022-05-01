@@ -6,10 +6,21 @@
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\interfaces\DriverInterface;
 	use Traineratwot\PDOExtended\PDOE;
+	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
 
 	abstract class Driver implements DriverInterface
 	{
-		protected PDOE $connection;
+		public string $eq        = '=';
+		public string $notEq     = '<>';
+		public string $greater   = '<';
+		public string $greaterEq = '<=';
+		public string $less      = '>';
+		public string $lessEq    = '>=';
+		public string $in        = 'in';
+		public string $notIn     = 'not in';
+		public string $and       = 'and';
+		public string $or        = 'or';
+		public PDOE   $connection;
 		/**
 		 * php data type=> sql data types[]
 		 * @var array
@@ -66,5 +77,33 @@
 				}
 			}
 			throw new DataTypeException('Unknown data type:' . $type);
+		}
+
+		public function table(string $table)
+		{
+			return new PDOEBdObject($this, $table);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function escapeTable(string $table)
+		: string
+		{
+			$table = trim($table, '`');
+			return "`$table`";
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function escapeColumn(string $column, string $table = NULL)
+		: string
+		{
+			$column = trim($column, '`');
+			if ($table) {
+				return $this->escapeTable($table) . ".`$column`";
+			}
+			return "`$column`";
 		}
 	}

@@ -11,9 +11,10 @@
 		 * @param string            $sql
 		 * @param array             $values
 		 * @param Callable|PDO|null $escape
+		 * @param string            $end ';'
 		 * @return string
 		 */
-		public static function prepare(string $sql, array $values, $escape = NULL)
+		public static function prepare(string $sql, array $values, $escape = NULL, string $end = ';')
 		: string
 		{
 			$sql      = trim(trim($sql), ';');
@@ -43,7 +44,7 @@ REGEXP
 					continue;
 				}
 				$value = self::getValue($escape, $value);
-				$sql = str_replace($word, $value, $sql);
+				$sql   = str_replace($word, $value, $sql);
 			}
 			foreach ($question as $i) {
 				if (array_key_exists($i, $values)) {
@@ -52,11 +53,11 @@ REGEXP
 					continue;
 				}
 				$value = self::getValue($escape, $value);
-				$sql = preg_replace('@([^?](\?)[^?])|([^?](\?)$)@', ' ' . $value . ' ', $sql, 1);
+				$sql   = preg_replace('@([^?](\?)[^?])|([^?](\?)$)@', ' ' . $value . ' ', $sql, 1);
 
 			}
 			$sql = trim($sql);
-			$sql .= ';';
+			$sql .= $end;
 			return preg_replace('/;+\s*$/', ';', $sql);
 		}
 

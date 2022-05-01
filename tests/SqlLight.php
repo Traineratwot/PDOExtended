@@ -65,8 +65,8 @@ CREATE TABLE test
 		: void
 		{
 			$table = $this->db->getScheme('test');
-			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256);
-			$this->assertStringEqualsFile('test.json', $json, 'getScheme');
+			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256|JSON_PRETTY_PRINT);
+			$this->assertStringEqualsFile('SqlLight_testGetScheme.json', $json, 'getScheme');
 		}
 
 		/**
