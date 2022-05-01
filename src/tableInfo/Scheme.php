@@ -43,4 +43,9 @@
 				'slaveField'  => $slaveField,
 			];
 		}
+
+		public function columnExists($column)
+		{
+			return isset($this->columns[$column]);
+		}
 	}

@@ -40,6 +40,7 @@ CREATE TABLE test
 			$sqLight = __DIR__ . '/test.db';
 			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
 			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
+			echo '------------------'. PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
 			if (file_exists($sqLight)) {
@@ -102,5 +103,24 @@ CREATE TABLE test
 			$pool->run();
 			$c=  $this->db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
 			$this->assertEquals(24, $c);
+		}
+
+		public function testSelect(){
+			$sql = $this->db->table('test')->select()
+							->addColumn('id')
+							->addColumn('value')
+							->limit(1, 2)
+							->orderBy([
+										  'id' => "asc",
+									  ])
+							->where(function ($w) {
+								$w->in('id', [5, 6, 8])
+								  ->or()
+								  ->less('id', 5)
+								;
+							})->end()
+							->toSql()
+			;
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') or `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
 		}
 	}

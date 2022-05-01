@@ -43,6 +43,7 @@ SQL
 		{
 			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
 			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
+			echo '------------------'. PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
 		}
@@ -98,5 +99,24 @@ SQL
 			$table = $this->db->getScheme('test');
 			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256|JSON_PRETTY_PRINT);
 			$this->assertStringEqualsFile('MySql_testGetScheme.json', $json, 'getScheme');
+		}
+
+		public function testSelect(){
+			$sql = $this->db->table('test')->select()
+							->addColumn('id')
+							->addColumn('value')
+							->limit(1, 2)
+							->orderBy([
+										  'id' => "asc",
+									  ])
+							->where(function ($w) {
+								$w->in('id', [5, 6, 8])
+								  ->or()
+								  ->less('id', 5)
+								;
+							})->end()
+							->toSql()
+			;
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') or `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
 		}
 	}

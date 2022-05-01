@@ -2,9 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\abstracts;
 
-	use Traineratwot\PDOExtended\interfaces\DataTypeInterface;
-
-	abstract class DataType implements DataTypeInterface
+	abstract class DataType
 	{
 		/**
 		 * @var mixed

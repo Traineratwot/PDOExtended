@@ -12,8 +12,16 @@
 		private string $limit   = '';
 		private string $order   = '';
 
+		/**
+		 * @param $column
+		 * @return $this
+		 * @throws SqlBuildException
+		 */
 		public function addColumn($column)
 		{
+			if (!$this->scheme->columnExists($column)) {
+				throw new SqlBuildException("Column '$column' does not exist");
+			}
 			$this->columns[] = $this->driver->escapeColumn($column, $this->table);
 			return $this;
 		}

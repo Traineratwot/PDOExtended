@@ -5,6 +5,7 @@
 	use PDO;
 	use PDOException;
 	use Traineratwot\Cache\Cache;
+	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\drivers\MySQL;
 	use Traineratwot\PDOExtended\drivers\SQLite;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
@@ -48,7 +49,7 @@
 		/**
 		 * @var dsn
 		 */
-		public $dsn;
+		public      $dsn;
 		private int $query_count = 0;
 		/**
 		 * All query time in microseconds
@@ -58,8 +59,8 @@
 		/**
 		 * @var DriverInterface
 		 */
-		private DriverInterface $driver;
-		private string          $key;
+		private Driver $driver;
+		private string $key;
 
 		/**
 		 * @inheritDoc

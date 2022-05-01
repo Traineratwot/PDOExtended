@@ -10,11 +10,10 @@
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\drivers\MySQL\WherePart;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
-	use Traineratwot\PDOExtended\interfaces\DriverInterface;
 	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
 
-	abstract class Driver implements DriverInterface
+	abstract class Driver
 	{
 		public array $tools
 			= [
