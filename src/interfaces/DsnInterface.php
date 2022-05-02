@@ -19,6 +19,12 @@
 		/**
 		 * @return string
 		 */
+		public function getDriverClass()
+		: string;
+
+		/**
+		 * @return string
+		 */
 		public function getPassword();
 
 		/**

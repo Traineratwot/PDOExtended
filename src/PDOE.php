@@ -7,7 +7,6 @@
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\drivers\MySQL;
-	use Traineratwot\PDOExtended\drivers\SQLite;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
@@ -41,11 +40,6 @@
 		public const DRIVER_MySQL    = 'mysql';
 		public const CHARSET_utf8    = 'utf8';
 		public const CHARSET_utf8mb4 = 'utf8mb4';
-		public const DRIVER_classes
-									 = [
-				self::DRIVER_SQLite => SQLite::class,
-				self::DRIVER_MySQL  => MySQL::class,
-			];
 		/**
 		 * @var dsn
 		 */
@@ -88,7 +82,7 @@
 				throw new DsnException($dsn->get(), $e->getCode(), $e);
 			}
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
-			$driverClass = self::DRIVER_classes[$this->dsn->getDriver()];
+			$driverClass = $dsn->getDriverClass();
 			if (!class_exists($driverClass)) {
 				Helpers::warn('Invalid driver class: ' . $driverClass);
 				$driverClass = MySQL::class;
@@ -164,7 +158,7 @@
 			if ($name === 'log') {
 				if ($this->LogEnabled) {
 					$logClass = $this->logClass;
-					($logClass::init())->log($arguments[0], $this);
+					($logClass::init())->log($this, $arguments[0]);
 				}
 				return NULL;
 			}
@@ -212,12 +206,12 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function query(...$arg)
+		public function query($statement, ...$arg)
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
 			$this->log($arg[0]);
-			$return = parent::query(...$arg);
+			$return = parent::query($statement, ...$arg);
 			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
 		}
@@ -356,6 +350,11 @@
 				return implode(',', $value);
 			}
 			return parent::quote($value, $type);
+		}
+
+		public function __destruct()
+		{
+			$this->driver->closeConnection();
 		}
 	}
 

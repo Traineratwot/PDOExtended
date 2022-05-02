@@ -17,12 +17,11 @@
 		: void
 		{
 			parent::setUp();
-			$sqLight = __DIR__ . '/test.db';
-			$f       = fopen($sqLight, 'wb');
-			fclose($f);
+			$this->sqLight = __DIR__ . '/test.' . random_int(0, 1000) . '.db';
+			file_put_contents($this->sqLight, '');
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_SQLite);
-			$dns->setHost($sqLight);
+			$dns->setHost($this->sqLight);
 			$this->db = new PDOE($dns);
 			$this->db->exec("
 CREATE TABLE test
@@ -38,14 +37,14 @@ CREATE TABLE test
 		public function tearDown()
 		: void
 		{
-			$sqLight = __DIR__ . '/test.db';
 			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
 			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
 			echo '------------------' . PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
-			if (file_exists($sqLight)) {
-				unlink($sqLight);
+			sleep(1);
+			if (file_exists($this->sqLight)) {
+				unlink($this->sqLight);
 			}
 		}
 

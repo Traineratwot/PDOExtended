@@ -16,6 +16,8 @@
 
 	abstract class Driver
 	{
+		public static string $driver = '';
+
 		public array $tools
 			= [
 				"Delete"    => Delete::class,
@@ -123,5 +125,11 @@
 		{
 			$table = trim($table, '`');
 			return "`$table`";
+		}
+
+		public function closeConnection()
+		: void
+		{
+
 		}
 	}

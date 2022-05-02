@@ -24,7 +24,7 @@
 			return $$var;
 		}
 
-		public function log(string $sql, PDOE $PDOE)
+		public function log(PDOE $PDOE, ?string $sql = '')
 		: void
 		{
 			$this->PDOE = $PDOE;

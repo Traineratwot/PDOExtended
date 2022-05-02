@@ -27,6 +27,9 @@
 
 	class MySQL extends Driver
 	{
+		public static string $driver = 'mysql';
+		public static string $port   = '3306';
+
 		public array $dataTypes
 			= [
 				TString::class   => ['CHAR', 'TEXT', 'VARCHAR', 'STRING', 'LONGTEXT', 'TINYTEXT', 'MEDIUMTEXT', 'BINARY', 'VARBINARY'],
@@ -98,4 +101,9 @@
 			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
 		}
 
+		public function closeConnection()
+		: void
+		{
+			$this->connection->query('KILL CONNECTION_ID()');
+		}
 	}

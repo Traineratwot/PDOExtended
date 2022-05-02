@@ -24,6 +24,8 @@
 
 	class SQLite extends Driver
 	{
+		public static string $driver = 'sqlite';
+		public static string $port = '';
 
 		public array $dataTypes
 			= [

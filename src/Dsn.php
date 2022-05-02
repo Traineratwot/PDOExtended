@@ -2,17 +2,14 @@
 
 	namespace Traineratwot\PDOExtended;
 
+	use Traineratwot\PDOExtended\drivers\MySQL;
+	use Traineratwot\PDOExtended\drivers\SQLite;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 
 	class Dsn implements DsnInterface
 	{
-		public array    $DRIVERS
-								  = [
-				PDOE::DRIVER_PostgreSQL => 5432,
-				PDOE::DRIVER_MySQL      => 3306,
-				PDOE::DRIVER_SQLite     => '',
-			];
+		public array    $DRIVERS  = [];
 		private string  $password = '';
 		private string  $username = '';
 		private ?string $host     = NULL;
@@ -21,6 +18,15 @@
 		private string  $database = '';
 		private string  $charset  = PDOE::CHARSET_utf8;
 		private ?int    $port     = NULL;
+
+		public function __construct()
+		{
+			$this->DRIVERS = [
+				PDOE::DRIVER_PostgreSQL => ['class' => '', "port" => 5432],
+				PDOE::DRIVER_MySQL      => ['class' => MySQL::class, "port" => MySQL::$port],
+				PDOE::DRIVER_SQLite     => ['class' => SQLite::class, "port" => SQLite::$port],
+			];
+		}
 
 		public function toArray()
 		: array
@@ -63,35 +69,30 @@
 
 		/**
 		 * @return string
-		 * @throws DsnException
 		 */
 		public function getDriver()
 		: string
 		{
-			if (is_null($this->charset)) {
-				throw new DsnException('"driver" is not set');
-			}
-			if (
-				!in_array($this->driver, [
-					PDOE::DRIVER_PostgreSQL,
-					PDOE::DRIVER_MySQL,
-					PDOE::DRIVER_SQLite,
-				],        TRUE)
-			) {
-				throw new DsnException('Driver "' . $this->driver . '" is unknown');
-			}
 			return $this->driver;
 		}
-
+		public function getDriverClass()
+		: string
+		{
+			return $this->DRIVERS[$this->driver]['class'];
+		}
 // 		dsn builders
 
 		/**
 		 * @param string $driver
+		 * @param null   $class
 		 * @return dsn
 		 */
-		public function setDriver(string $driver)
+		public function setDriver(string $driver, $class = NULL)
 		: Dsn
 		{
+			if ($class) {
+				$this->DRIVERS[$driver] = ['class' => $class, "port" => ''];
+			}
 			$this->driver = $driver;
 			return $this;
 		}
@@ -188,13 +189,12 @@
 
 		/**
 		 * @return int
-		 * @throws DsnException
 		 */
 		public function getPort()
 		: int
 		{
 			if (is_null($this->port)) {
-				return $this->DRIVERS[$this->getDriver()];
+				return $this->DRIVERS[$this->getDriver()]['port'];
 			}
 			return $this->port;
 		}
