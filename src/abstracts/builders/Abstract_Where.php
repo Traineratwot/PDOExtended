@@ -4,6 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\builder;
 	use Traineratwot\PDOExtended\abstracts\Driver;
+	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
 	use Traineratwot\PDOExtended\Helpers;
 
 	abstract class Abstract_Where
@@ -19,8 +20,16 @@
 			$this->scope  = $scope;
 			$this->driver = $scope->driver;
 
-			if (is_callable($callback)) {
-				$callback($this);
+			if (!is_null($callback)) {
+				if (is_callable($callback)) {
+					$callback($this);
+				} else {
+					$column = $this->scope->scheme->getPrimaryKey();
+					if (!$column) {
+						throw new SqlBuildException("Table '{$this->scope->scheme->name}'");
+					}
+					$this->eq($column->getName(), $callback);
+				}
 			}
 		}
 
@@ -236,6 +245,7 @@
 		 * @return array
 		 */
 		public function getValues()
+		: array
 		{
 			return $this->values;
 		}

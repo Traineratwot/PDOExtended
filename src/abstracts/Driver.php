@@ -6,7 +6,6 @@
 	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
 	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
 	use Traineratwot\PDOExtended\drivers\MySQL\Join;
-	use Traineratwot\PDOExtended\drivers\MySQL\JoinOn;
 	use Traineratwot\PDOExtended\drivers\MySQL\Select;
 	use Traineratwot\PDOExtended\drivers\MySQL\Update;
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
@@ -26,7 +25,6 @@
 				"Where"     => Where::class,
 				"WherePart" => WherePart::class,
 				"Join"      => Join::class,
-				"JoinOn"    => JoinOn::class,
 			];
 
 
@@ -58,7 +56,7 @@
 		}
 
 		/**
-		 * @inheritDoc
+		 *
 		 * @return false|string
 		 */
 		public function tableExists($table)

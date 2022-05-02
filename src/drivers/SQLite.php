@@ -9,6 +9,7 @@
 	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
+	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
@@ -54,25 +55,30 @@
 				throw new PDOEException('table: "' . $table . '" is not exist');
 			}
 			return Cache::call('Scheme_' . $table, function () use ($table) {
+				$Helpers    = Helpers::class;
 				$columns    = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes_db = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$links_db   = $this->connection->prepareQuery("SELECT * FROM pragma_foreign_key_list(:table);", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes    = [];
 				foreach ($indexes_db as $index) {
 					$ind                   = $this->connection->prepareQuery("SELECT * FROM pragma_index_info(:index)", ['index' => $index['name']])->fetch(PDO::FETCH_ASSOC);
+					$ind                   = array_map($Helpers . '::strtolower', $ind);
 					$indexes[$ind['name']] = $ind;
 				}
-				$Scheme = new Scheme();
+
+				$Scheme       = new Scheme();
+				$Scheme->name = $table;
 				foreach ($columns as $column) {
-					$col = new Column();
+					$column = array_map($Helpers . '::strtolower', $column);
+					$col    = new Column();
 					try {
 						$a         = $this->findDataType($column['type'] ?: 'string');
 						$validator = new $a();
-						$col->setCanBeNull(!$column['notnull'])
+						$col->setValidator($validator)
+							->setCanBeNull(!$column['notnull'])
 							->setDbDataType($column['type'])
 							->setDefault($column['dflt_value'])
 							->setIsSetDefault(!is_null($column['dflt_value']))
-							->setValidator($validator)
 							->setName($column['name'])
 						;
 						if (array_key_exists($column['name'], $indexes)) {

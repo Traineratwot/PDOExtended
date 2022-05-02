@@ -2,6 +2,8 @@
 
 	namespace Traineratwot\PDOExtended\abstracts;
 
+	use Traineratwot\PDOExtended\exceptions\DataTypeException;
+
 	abstract class DataType
 	{
 		/**
@@ -29,44 +31,49 @@
 		}
 
 		/**
-		 * @inheritDoc
 		 * @param $value
 		 * @return $this
+		 * @throws DataTypeException
 		 */
 		public function set($value)
 		: self
 		{
-			$this->value = $value;
 			$this->isSet = TRUE;
-			$this->validate();
-			$this->convert();
+			$this->validate($value);
+			$value       = $this->convert($value);
+			$this->value = $value;
 			return $this;
 		}
 
 		/**
 		 * validate input value
+		 * @param mixed $value
 		 * @return void
+		 * @throws DataTypeException
 		 */
-		abstract public function validate()
+		abstract public function validate($value)
 		: void;
 
 		/**
 		 * if validate convert value to correct data type
-		 * @return void
+		 * @param mixed $value
+		 * @return mixed
 		 */
-		abstract public function convert()
-		: void;
+		abstract public function convert($value);
 
 		/**
 		 * @param bool $canBeNull
 		 * @param      $default
 		 * @return $this
+		 * @throws DataTypeException
 		 */
 		public function setDefault(bool $canBeNull, $default = NULL)
 		: self
 		{
 			$this->canBeNull = $canBeNull;
-			$this->default   = $default;
+			$this->validate($default);
+			$default       = $this->convert($default);
+			$this->default = $default;
 			return $this;
 		}
 

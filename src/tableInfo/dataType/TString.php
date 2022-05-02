@@ -7,18 +7,21 @@
 
 	class TString extends DataType
 	{
+		public string $phpName = 'string';
 
-		public function validate()
+		public function validate($value)
 		: void
 		{
-			if (($this->value && $this->canBeNull) && !is_string($this->value)) {
+			if (($value && $this->canBeNull) && !is_string($value)) {
 				throw new DataTypeException("invalid string");
 			}
 		}
 
-		public function convert()
-		: void
+		/**
+		 * @inheritDoc
+		 */
+		public function convert($value)
 		{
-			// TODO: Implement convert() method.
+			return is_null($value)?null: $value;
 		}
 	}

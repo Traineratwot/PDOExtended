@@ -6,6 +6,7 @@
 
 	class TUnixTime extends DataType
 	{
+		public string $phpName = 'int';
 
 		/**
 		 * @inheritDoc
@@ -19,9 +20,8 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function convert()
-		: void
+		public function convert($value)
 		{
-			// TODO: Implement convert() method.
+			return is_null($value)?null: $value;
 		}
 	}

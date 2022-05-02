@@ -6,6 +6,7 @@
 
 	class TBool extends DataType
 	{
+		public string $phpName = 'bool';
 
 		public function validate()
 		: void
@@ -13,9 +14,11 @@
 			// TODO: Implement validate() method.
 		}
 
-		public function convert()
-		: void
+		/**
+		 * @inheritDoc
+		 */
+		public function convert($value)
 		{
-			// TODO: Implement convert() method.
+			return is_null($value)?null: (bool)$value;
 		}
 	}

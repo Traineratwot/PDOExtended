@@ -1,10 +1,10 @@
 {
     "id": {
         "db_dataType": "int",
-        "php_dataType": "mixed",
+        "php_dataType": "int",
         "name": "id",
-        "isPrimary": false,
-        "isUnique": false,
+        "isPrimary": true,
+        "isUnique": true,
         "canBeNull": false,
         "isSetDefault": false,
         "comment": "",
@@ -13,7 +13,7 @@
     },
     "value": {
         "db_dataType": "varchar",
-        "php_dataType": "mixed",
+        "php_dataType": "string",
         "name": "value",
         "isPrimary": false,
         "isUnique": false,
@@ -22,5 +22,17 @@
         "comment": "",
         "validator": "Traineratwot\\PDOExtended\\tableInfo\\dataType\\TString",
         "default": "0"
+    },
+    "int": {
+        "db_dataType": "int",
+        "php_dataType": "int",
+        "name": "int",
+        "isPrimary": false,
+        "isUnique": false,
+        "canBeNull": true,
+        "isSetDefault": true,
+        "comment": "",
+        "validator": "Traineratwot\\PDOExtended\\tableInfo\\dataType\\TInt",
+        "default": 123
     }
 }

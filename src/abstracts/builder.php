@@ -37,11 +37,15 @@
 			return $this;
 		}
 
-		public function where(?callable $callback = NULL)
+		/**
+		 * @param callable|null|mixed $keyOrCallback callback or primary key value
+		 * @return Abstract_Where
+		 */
+		public function where($keyOrCallback = NULL)
 		: Abstract_Where
 		{
 			$cls         = $this->driver->tools['Where'];
-			$this->where = new $cls($this, $callback);
+			$this->where = new $cls($this, $keyOrCallback);
 			return $this->where;
 		}
 

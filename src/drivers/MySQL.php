@@ -10,6 +10,7 @@
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
+	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
@@ -59,24 +60,30 @@
 				throw new PDOEException('table: "' . $table . '" is not exist');
 			}
 			return Cache::call('Scheme_' . $table, function () use ($table) {
-				$columns = $this->connection->prepareQuery("SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_SCHEMA=:database AND TABLE_NAME=:table ORDER BY ORDINAL_POSITION;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
-				$Scheme  = new Scheme();
+				$Helpers      = Helpers::class;
+				$columns      = $this->connection->prepareQuery("SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_SCHEMA=:database AND TABLE_NAME=:table ORDER BY ORDINAL_POSITION;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
+				$Scheme       = new Scheme();
+				$Scheme->name = $table;
 				foreach ($columns as $column) {
-					$col = new Column();
+					$column = array_map($Helpers . '::strtolower', $column);
+					$col    = new Column();
 					try {
 						$a = $this->findDataType($column['DATA_TYPE']);
 						/** @var DataType $validator */
 						$validator = new $a();
 						$validator->setOriginalType($column['DATA_TYPE']);
-						$col->setCanBeNull(strtolower($column['IS_NULLABLE']) === 'yes')
+						$col->setValidator($validator)
+							->setCanBeNull(strtolower($column['IS_NULLABLE']) === 'yes')
 							->setDbDataType($column['DATA_TYPE'])
 							->setDefault($column['COLUMN_DEFAULT'])
 							->setIsSetDefault(!is_null($column['COLUMN_DEFAULT']))
 							->setName($column['COLUMN_NAME'])
-							->setValidator($validator)
 						;
 						if (in_array($column['COLUMN_KEY'], ['pri', 'uni'])) {
 							$col->setIsUnique();
+							if ($column['COLUMN_KEY'] === 'pri') {
+								$col->setIsPrimary();
+							}
 						}
 						$Scheme->addColumn($col);
 					} catch (Exception $e) {

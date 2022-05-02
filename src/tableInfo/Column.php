@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended\tableInfo;
 
 	use Traineratwot\PDOExtended\abstracts\DataType;
+	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
 	class Column
 	{
@@ -20,6 +21,15 @@
 		 * @var mixed|null
 		 */
 		private $default;
+
+		/**
+		 * @throws DataTypeException
+		 */
+		public function validate($value)
+		{
+			$this->validator->set($value);
+			return $this->validator->get();
+		}
 
 		public static function __set_state($an_array)
 		{
@@ -102,11 +112,14 @@
 		/**
 		 * @param $default
 		 * @return Column
+		 * @throws DataTypeException
 		 */
 		public function setDefault($default)
 		: self
 		{
 			$this->setIsSetDefault();
+			$this->validator->validate($default);
+			$default       = $this->validator->convert($default);
 			$this->default = $default;
 			return $this;
 		}
@@ -124,7 +137,7 @@
 		 * @param bool $isPrimary
 		 * @return Column
 		 */
-		public function setIsPrimary(bool $isPrimary)
+		public function setIsPrimary(bool $isPrimary = TRUE)
 		: self
 		{
 			$this->isPrimary = $isPrimary;

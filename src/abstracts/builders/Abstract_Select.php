@@ -75,10 +75,11 @@
 			if ($this->where) {
 				$w   = $this->where->get();
 				$v   = $this->where->getValues();
-				$sql = "SELECT {$columns} FROM {$this->table} {$j} WHERE {$w} {$this->order} {$this->limit}";
+				$sql = implode('', ['SELECT', $columns, 'FROM', $this->table, $j, 'WHERE', $w, $this->order, $this->limit]);
 			} else {
-				$sql = "SELECT {$columns} FROM {$this->table} {$j} {$this->order} {$this->limit}";
+				$sql = implode('', ['SELECT', $columns, 'FROM', $this->table, $j, $this->order, $this->limit]);
 			}
+			$sql = preg_replace("/+/u",' ', $sql);
 			return Helpers::prepare($sql, $v, $this->driver->connection);
 		}
 	}

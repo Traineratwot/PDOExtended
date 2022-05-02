@@ -7,7 +7,8 @@
 
 	class TEnum extends DataType
 	{
-		public array $values = [];
+		public string $phpName = 'string';
+		public array  $values  = [];
 
 		public function validate()
 		: void
@@ -17,9 +18,11 @@
 			}
 		}
 
-		public function convert()
-		: void
+		/**
+		 * @inheritDoc
+		 */
+		public function convert($value)
 		{
-			// TODO: Implement convert() method.
+			return is_null($value)?null: $value;
 		}
 	}

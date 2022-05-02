@@ -44,8 +44,8 @@
 //	;
 
 
-	$sql = $db->table('test_link_master')->select()
-			  ->joinLeft('test_link_slave')
+	$sql = $db->table('test_link_master')->update()
+			  ->set('master','t')
 //			  ->join('test_link_slave')->left()
 			  ->toSql()
 	;;

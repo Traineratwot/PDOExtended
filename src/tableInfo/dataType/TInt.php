@@ -7,18 +7,21 @@
 
 	class TInt extends DataType
 	{
+		public string $phpName = 'int';
 
-		public function validate()
+		public function validate($value)
 		: void
 		{
-			if (($this->value && $this->canBeNull) && (!is_numeric($this->value) || !is_int($this->value + 0))) {
+			if (($value && $this->canBeNull) && (!is_numeric($value) || !is_int($value + 0))) {
 				throw new DataTypeException("invalid string");
 			}
 		}
 
-		public function convert()
-		: void
+		/**
+		 * @inheritDoc
+		 */
+		public function convert($value)
 		{
-			// TODO: Implement convert() method.
+			return is_null($value) ? NULL : (int)$value;
 		}
 	}

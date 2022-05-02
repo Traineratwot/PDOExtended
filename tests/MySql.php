@@ -2,6 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -28,11 +29,16 @@
 			$this->db->exec(
 				<<<SQL
 DROP TABLE IF EXISTS `test`;
-CREATE TABLE IF NOT EXISTS `test` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `value` VARCHAR(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `test` (
+	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`value` VARCHAR(50) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_unicode_ci',
+	`int` INT(10) NULL DEFAULT '123',
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+;
+
 SQL
 
 			);
@@ -43,7 +49,7 @@ SQL
 		{
 			echo 'queryCount:' . $this->db->queryCount() . PHP_EOL;
 			echo 'queryTime:' . $this->db->queryTime() . PHP_EOL;
-			echo '------------------'. PHP_EOL;
+			echo '------------------' . PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
 		}
@@ -89,7 +95,7 @@ SQL
 			$pool->execute(['value' => random_int(0, 1000)]);
 			$pool->execute(['value' => random_int(0, 1000)]);
 			$pool->run();
-			$c=  $this->db->query("SELECT count(*) from test")->fetch(PDO::FETCH_COLUMN);
+			$c = $this->db->query("SELECT COUNT(*) FROM test")->fetch(PDO::FETCH_COLUMN);
 			$this->assertEquals(24, $c);
 		}
 
@@ -97,11 +103,13 @@ SQL
 		: void
 		{
 			$table = $this->db->getScheme('test');
-			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256|JSON_PRETTY_PRINT);
+			$json  = json_encode($table->toArray(), JSON_THROW_ON_ERROR | 256 | JSON_PRETTY_PRINT);
+//			file_put_contents('MySql_testGetScheme.json',$json);
 			$this->assertStringEqualsFile('MySql_testGetScheme.json', $json, 'getScheme');
 		}
 
-		public function testSelect(){
+		public function testSelect()
+		{
 			$sql = $this->db->table('test')->select()
 							->addColumn('id')
 							->addColumn('value')
@@ -117,6 +125,16 @@ SQL
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` in ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+		}
+
+		public function testUpdate()
+		{
+			$sql = $this->db->table('test_link_master')->update()
+							->set('master', 2)
+							->where(3)->end()
+							->toSql()
+			;
+			$this->assertEquals("UPDATE `test_link_master` SET `test_link_master`.`master` = '2' WHERE `test_link_master`.`id` = '3';", $sql);
 		}
 	}

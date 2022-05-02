@@ -84,4 +84,12 @@ REGEXP
 		{
 			trigger_error($string, $flags);
 		}
+
+		public static function strtolower($v)
+		{
+			if (is_string($v)) {
+				return strtolower($v);
+			}
+			return $v;
+		}
 	}

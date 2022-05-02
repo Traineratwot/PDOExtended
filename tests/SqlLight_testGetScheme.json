@@ -1,7 +1,7 @@
 {
     "id": {
-        "db_dataType": "INTEGER",
-        "php_dataType": "mixed",
+        "db_dataType": "integer",
+        "php_dataType": "int",
         "name": "id",
         "isPrimary": false,
         "isUnique": false,
@@ -12,8 +12,8 @@
         "default": null
     },
     "value": {
-        "db_dataType": "TEXT",
-        "php_dataType": "mixed",
+        "db_dataType": "text",
+        "php_dataType": "string",
         "name": "value",
         "isPrimary": false,
         "isUnique": false,
