@@ -79,7 +79,7 @@
 			} else {
 				$sql = implode('', ['SELECT', $columns, 'FROM', $this->table, $j, $this->order, $this->limit]);
 			}
-			$sql = preg_replace("/+/u",' ', $sql);
+			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $v, $this->driver->connection);
 		}
 	}

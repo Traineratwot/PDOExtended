@@ -22,15 +22,6 @@
 		 */
 		private $default;
 
-		/**
-		 * @throws DataTypeException
-		 */
-		public function validate($value)
-		{
-			$this->validator->set($value);
-			return $this->validator->get();
-		}
-
 		public static function __set_state($an_array)
 		{
 			$a = new self();
@@ -38,6 +29,15 @@
 				$a->$key = $val;
 			}
 			return $a;
+		}
+
+		/**
+		 * @throws DataTypeException
+		 */
+		public function validate($value)
+		{
+			$this->validator->set($value);
+			return $this->validator->get();
 		}
 
 		/**

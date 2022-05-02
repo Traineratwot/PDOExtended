@@ -7,7 +7,7 @@
 	class TSet extends DataType
 	{
 		public string $phpName = 'string';
-		public array $values = [];
+		public array  $values  = [];
 
 		public function validate()
 		: void
@@ -23,6 +23,6 @@
 		 */
 		public function convert($value)
 		{
-			return is_null($value)?null: $value;
+			return is_null($value) ? NULL : $value;
 		}
 	}

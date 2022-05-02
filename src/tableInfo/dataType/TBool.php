@@ -19,6 +19,6 @@
 		 */
 		public function convert($value)
 		{
-			return is_null($value)?null: (bool)$value;
+			return is_null($value) ? NULL : (bool)$value;
 		}
 	}

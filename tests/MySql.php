@@ -13,7 +13,7 @@
 
 
 		/**
-		 * @throws DsnException|PDOEException
+		 * @throws DsnException
 		 */
 		public function setUp()
 		: void
@@ -26,6 +26,7 @@
 			$dns->setPassword('');
 			$dns->setDatabase('test');
 			$this->db = new PDOE($dns);
+			$this->db->logOn();
 			$this->db->exec(
 				<<<SQL
 DROP TABLE IF EXISTS `test`;

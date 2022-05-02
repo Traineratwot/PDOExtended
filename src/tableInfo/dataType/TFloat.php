@@ -7,6 +7,7 @@
 	class TFloat extends DataType
 	{
 		public string $phpName = 'float';
+
 		/**
 		 * @inheritDoc
 		 */
@@ -21,6 +22,6 @@
 		 */
 		public function convert($value)
 		{
-			return is_null($value)?null: (float)$value;
+			return is_null($value) ? NULL : (float)$value;
 		}
 	}

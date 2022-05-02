@@ -48,7 +48,7 @@
 			  ->set('master','t')
 //			  ->join('test_link_slave')->left()
 			  ->toSql()
-	;;
+	;
 	echo '<pre>';
 	var_dump($sql);
 	die;

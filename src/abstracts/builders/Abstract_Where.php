@@ -34,14 +34,6 @@
 		}
 
 		/**
-		 * @return Builder
-		 */
-		public function end()
-		{
-			return $this->scope;
-		}
-
-		/**
 		 * @param string $column
 		 * @param        $value
 		 * @return $this
@@ -73,6 +65,14 @@
 		: string
 		{
 			return implode(' ', $this->_where);
+		}
+
+		/**
+		 * @return Builder
+		 */
+		public function end()
+		{
+			return $this->scope;
 		}
 
 		/**

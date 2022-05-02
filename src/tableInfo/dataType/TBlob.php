@@ -18,6 +18,6 @@
 		 */
 		public function convert($value)
 		{
-			return is_null($value)?null: $value;
+			return is_null($value) ? NULL : $value;
 		}
 	}
