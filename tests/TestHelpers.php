@@ -13,7 +13,6 @@
 
 		/**
 		 * @throws DsnException
-		 * @throws PDOEException
 		 */
 		public function testInit()
 		: void
