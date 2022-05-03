@@ -4,6 +4,7 @@
 
 	use PDO;
 	use PDOException;
+	use PDOStatement;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\drivers\MySQL;
@@ -118,18 +119,6 @@
 			$this->LogEnabled = FALSE;
 		}
 
-		/**
-		 * @inheritDoc
-		 */
-		public function exec($statement)
-		{
-			$this->queryCountIncrement();
-			$tStart = microtime(TRUE);
-			$this->log($statement);
-			$return = parent::exec($statement);
-			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
-			return $return;
-		}
 
 		/**
 		 * @return void
@@ -193,6 +182,7 @@
 			$arg = array_slice($arg, 2);
 			return $this->query($sql, ...$arg);
 		}
+//----------------- PDO --------------
 
 		/**
 		 * @inheritDoc
@@ -217,6 +207,47 @@
 		}
 
 		/**
+		 * @param $filepath
+		 * @return false|PDOStatement
+		 * @throws PDOEException
+		 */
+		public function queryFile($filepath)
+		{
+			if (!file_exists($filepath)) {
+				throw new PDOEException('file "' . $filepath . '" is not exist');
+			}
+			$statement = file_get_contents($filepath);
+			return $this->query($statement);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function exec($statement)
+		{
+			$this->queryCountIncrement();
+			$tStart = microtime(TRUE);
+			$this->log($statement);
+			$return = parent::exec($statement);
+			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
+			return $return;
+		}
+
+		/**
+		 * @param $filepath
+		 * @return false|int
+		 * @throws PDOEException
+		 */
+		public function execFile($filepath)
+		{
+			if (!file_exists($filepath)) {
+				throw new PDOEException('file "' . $filepath . '" is not exist');
+			}
+			$statement = file_get_contents($filepath);
+			return $this->exec($statement);
+		}
+
+		/**
 		 * @param string $statement SQL request
 		 * @param array  $driver_options
 		 * @return bool|PDOEPoolStatement
@@ -226,6 +257,7 @@
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEPoolStatement::class, [$this]]);
 			return parent::prepare($statement, $driver_options);
 		}
+//----------------- PDO --------------
 
 		/**
 		 * @param string $name

@@ -16,10 +16,10 @@
 
 	abstract class Driver
 	{
-		public static string $driver = '';
-
-		public array $tools
-			= [
+		public static string $driver    = '';
+		public array         $schemes   = [];
+		public array         $tools
+										= [
 				"Delete"    => Delete::class,
 				"Insert"    => Insert::class,
 				"Select"    => Select::class,
@@ -28,21 +28,19 @@
 				"WherePart" => WherePart::class,
 				"Join"      => Join::class,
 			];
-
-
-		public string $eq        = '=';
-		public string $notEq     = '<>';
-		public string $greater   = '<';
-		public string $greaterEq = '<=';
-		public string $less      = '>';
-		public string $lessEq    = '>=';
-		public string $in        = 'IN';
-		public string $notIn     = 'NOT IN';
-		public string $and       = 'AND';
-		public string $or        = 'OR';
-		public string $block     = '(';
-		public string $endBlock  = ')';
-		public PDOE   $connection;
+		public string        $eq        = '=';
+		public string        $notEq     = '<>';
+		public string        $greater   = '<';
+		public string        $greaterEq = '<=';
+		public string        $less      = '>';
+		public string        $lessEq    = '>=';
+		public string        $in        = 'IN';
+		public string        $notIn     = 'NOT IN';
+		public string        $and       = 'AND';
+		public string        $or        = 'OR';
+		public string        $block     = '(';
+		public string        $endBlock  = ')';
+		public PDOE          $connection;
 		/**
 		 * php data type=> sql data types[]
 		 * @var array

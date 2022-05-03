@@ -238,7 +238,6 @@
 		public function setValidator(DataType $validator)
 		: self
 		{
-			$validator->setDefault($this->canBeNull, $this->default);
 			$this->validator = $validator;
 			$this->setPhpDataType($validator->phpName);
 			return $this;

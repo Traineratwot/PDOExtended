@@ -42,10 +42,6 @@ CREATE TABLE test
 			echo '------------------' . PHP_EOL;
 			unset($this->db);
 			gc_collect_cycles();
-			sleep(1);
-			if (file_exists($this->sqLight)) {
-				unlink($this->sqLight);
-			}
 		}
 
 		public function testGetAllTables()

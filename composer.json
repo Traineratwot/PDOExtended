@@ -5,7 +5,8 @@
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
-		"up:release": "gh release create \"1.0.2\" --generate-notes"
+		"test": "phpunit ./tests",
+		"up:release": "gh release create \"1.0.0\" --generate-notes"
 	},
 	"readme"           :"./README.md",
 	"homepage"         :"https://github.com/traineratwot/PDOExtended",

@@ -2,7 +2,6 @@
 
 
 	use PHPUnit\Framework\TestCase;
-	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -14,6 +13,7 @@
 
 		/**
 		 * @throws DsnException
+		 * @throws PDOEException
 		 */
 		public function setUp()
 		: void
@@ -27,22 +27,7 @@
 			$dns->setDatabase('test');
 			$this->db = new PDOE($dns);
 			$this->db->logOn();
-			$this->db->exec(
-				<<<SQL
-DROP TABLE IF EXISTS `test`;
-CREATE TABLE `test` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`value` VARCHAR(50) NOT NULL DEFAULT '0' COLLATE 'utf8mb4_unicode_ci',
-	`int` INT(10) NULL DEFAULT '123',
-	PRIMARY KEY (`id`) USING BTREE
-)
-COLLATE='utf8mb4_unicode_ci'
-ENGINE=InnoDB
-;
-
-SQL
-
-			);
+			$this->db->execFile(__DIR__ . DIRECTORY_SEPARATOR . 'mysql.sql');
 		}
 
 		public function tearDown()
@@ -127,6 +112,17 @@ SQL
 							->toSql()
 			;
 			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+		}
+
+		public function testSelectLeftJoin()
+		{
+			$sql = $this->db->table('test_link_master')->select()
+							->addColumn('id')
+							->addColumn('slave', 'test_link_slave')
+							->joinLeft('test_link_slave')
+							->toSql()
+			;
+			$this->assertEquals("SELECT `test_link_master`.`id`, `test_link_slave`.`slave` FROM `test_link_master` LEFT JOIN test_link_slave ON `test_link_master`.`master` = `test_link_slave`.`id`;", $sql);
 		}
 
 		public function testUpdate()

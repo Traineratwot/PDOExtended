@@ -13,15 +13,23 @@
 		private string $order   = '';
 
 		/**
-		 * @param $column
+		 * @param      $column
+		 * @param null $from
 		 * @return $this
+		 * @noinspection NestedPositiveIfStatementsInspection
 		 */
-		public function addColumn($column)
+		public function addColumn($column, $from = NULL)
 		{
-			if (!$this->scheme->columnExists($column)) {
-				Helpers::warn("Column '$column' does not exist in table {$this->table}");
+			if (is_null($from)) {
+				if (!$this->scheme->columnExists($column)) {
+					Helpers::warn("Column '$column' does not exist in table {$this->table}");
+				}
+			} else {
+				if (!$this->driver->table($from)->scheme->columnExists($column)) {
+					Helpers::warn("Column '$column' does not exist in table {$this->table}");
+				}
 			}
-			$this->columns[] = $this->driver->escapeColumn($column, $this->table);
+			$this->columns[] = $this->driver->escapeColumn($column, $from ?: $this->table);
 			return $this;
 		}
 

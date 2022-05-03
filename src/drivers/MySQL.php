@@ -59,10 +59,13 @@
 		public function getScheme(string $table)
 		: Scheme
 		{
-			if (!$this->tableExists($table)) {
-				throw new PDOEException('table: "' . $table . '" is not exist');
+			if (isset($this->schemes[$table])) {
+				return $this->schemes[$table];
 			}
-			return Cache::call('Scheme_' . $table, function () use ($table) {
+			$this->schemes[$table] =  Cache::call('Scheme_' . $table, function () use ($table) {
+				if (!$this->tableExists($table)) {
+					throw new PDOEException('table: "' . $table . '" is not exist');
+				}
 				$Helpers      = Helpers::class;
 				$columns      = $this->connection->prepareQuery("SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_SCHEMA=:database AND TABLE_NAME=:table ORDER BY ORDINAL_POSITION;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
 				$Scheme       = new Scheme();
@@ -99,6 +102,7 @@
 				}
 				return $Scheme;
 			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
+			return $this->schemes[$table];
 		}
 
 		public function closeConnection()

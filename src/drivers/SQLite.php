@@ -25,7 +25,7 @@
 	class SQLite extends Driver
 	{
 		public static string $driver = 'sqlite';
-		public static string $port = '';
+		public static string $port   = '';
 
 		public array $dataTypes
 			= [
@@ -53,10 +53,13 @@
 		public function getScheme(string $table)
 		: Scheme
 		{
-			if (!$this->tableExists($table)) {
-				throw new PDOEException('table: "' . $table . '" is not exist');
+			if (isset($this->schemes[$table])) {
+				return $this->schemes[$table];
 			}
-			return Cache::call('Scheme_' . $table, function () use ($table) {
+			$this->schemes[$table] = Cache::call('Scheme_' . $table, function () use ($table) {
+				if (!$this->tableExists($table)) {
+					throw new PDOEException('table: "' . $table . '" is not exist');
+				}
 				$Helpers    = Helpers::class;
 				$columns    = $this->connection->prepareQuery("SELECT * FROM pragma_table_info(:table)", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
 				$indexes_db = $this->connection->prepareQuery("SELECT * FROM pragma_index_list(:table) WHERE origin != 'pk'", ['table' => $table])->fetchAll(PDO::FETCH_ASSOC);
@@ -96,7 +99,8 @@
 				}
 
 				return $Scheme;
-			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
+			},                                   PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
+			return $this->schemes[$table];
 		}
 	}
 
