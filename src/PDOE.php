@@ -102,25 +102,6 @@
 		}
 
 		/**
-		 * Enable logging
-		 * @return void
-		 */
-		public function logOn()
-		{
-			$this->LogEnabled = TRUE;
-		}
-
-		/**
-		 * Disable logging
-		 * @return void
-		 */
-		public function logOff()
-		{
-			$this->LogEnabled = FALSE;
-		}
-
-
-		/**
 		 * @return void
 		 */
 		public function queryCountIncrement()
@@ -137,24 +118,6 @@
 		: void
 		{
 			$this->query_time += abs($t * 1000);
-		}
-
-		/**
-		 * @throws PDOEException
-		 */
-		public function __call(string $name, array $arguments = [])
-		{
-			if ($name === 'log') {
-				if ($this->LogEnabled) {
-					$logClass = $this->logClass;
-					($logClass::init())->log($this, $arguments[0]);
-				}
-				return NULL;
-			}
-			if (method_exists($this->driver, $name)) {
-				return $this->driver->{$name}(...$arguments);
-			}
-			throw new PDOEException("Method $name is not exists");
 		}
 
 		/**
@@ -175,14 +138,38 @@
 			return $$var;
 		}
 
-		public function prepareQuery($sql, $values = [])
+		/**
+		 * (PHP 5 &gt;= 5.1.0, PHP 7, PECL pdo &gt;= 0.2.1)<br/>
+		 * Quotes a string for use in a query.
+		 * @link https://php.net/manual/en/pdo.quote.php
+		 * @param mixed $value  <p>
+		 *                      The string to be quoted.
+		 *                      </p>
+		 * @param ?int  $type   [optional] <p>
+		 *                      Provides a data type hint for drivers that have alternate quoting styles.
+		 *                      </p>
+		 * @return string|false a quoted string that is theoretically safe to pass into an
+		 *                      SQL statement. Returns <b>FALSE</b> if the driver does not support quoting in
+		 *                      this way.
+		 */
+		public function quote($value, $type = NULL)
 		{
-			$sql = Helpers::prepare($sql, $values, $this);
-			$arg = func_get_args();
-			$arg = array_slice($arg, 2);
-			return $this->query($sql, ...$arg);
+			if (is_null($type)) {
+				if (is_numeric($value)) {
+					$type = self::PARAM_INT;
+				} else {
+					$type = self::PARAM_STR;
+				}
+			}
+			if (is_array($value)) {
+				foreach ($value as $key => $val) {
+					$value[$key] = parent::quote($val);
+				}
+				return implode(',', $value);
+			}
+			return parent::quote($value, $type);
 		}
-//----------------- PDO --------------
+//---------------------------------------------- PDO -------------------------------------------------
 
 		/**
 		 * @inheritDoc
@@ -191,6 +178,20 @@
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			return parent::prepare($query, $options);
+		}
+
+		/**
+		 * prepare adn run sql query, safe
+		 * @param       $sql
+		 * @param array $values
+		 * @return false|PDOStatement
+		 */
+		public function prepareQuery($sql, array $values = [])
+		{
+			$sql = Helpers::prepare($sql, $values, $this);
+			$arg = func_get_args();
+			$arg = array_slice($arg, 2);
+			return $this->query($sql, ...$arg);
 		}
 
 		/**
@@ -257,33 +258,24 @@
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEPoolStatement::class, [$this]]);
 			return parent::prepare($statement, $driver_options);
 		}
-//----------------- PDO --------------
-
+//---------------------------------------------- PDO -------------------------------------------------
+//----------------------------------------- opportunities --------------------------------------------
 		/**
-		 * @param string $name
-		 * @return array|false|int|null
+		 * Enable logging
+		 * @return void
 		 */
-		public function __get(string $name)
+		public function logOn()
 		{
-			switch ($name) {
-				case 'query_count':
-				case 'queryCount':
-					return $this->queryCount();
-				case 'query_time':
-				case 'queryTime':
-					return $this->queryTime();
-			}
-			return NULL;
+			$this->LogEnabled = TRUE;
 		}
 
 		/**
-		 * @param string $name
-		 * @param        $value
-		 * @return false
+		 * Disable logging
+		 * @return void
 		 */
-		public function __set(string $name, $value)
+		public function logOff()
 		{
-			return FALSE;
+			$this->LogEnabled = FALSE;
 		}
 
 		/**
@@ -302,23 +294,6 @@
 		: int
 		{
 			return $this->query_time;
-		}
-
-		/**
-		 * @param string $name
-		 * @return bool
-		 */
-		public function __isset(string $name)
-		{
-			return $name === 'query_count';
-		}
-
-		/**
-		 * @return array|false
-		 */
-		public function getQueryCount()
-		{
-			return $this->query_count;
 		}
 
 		/**
@@ -351,42 +326,67 @@
 		{
 			return $this->driver->getScheme($table);
 		}
+//----------------------------------------- opportunities --------------------------------------------
+//-------------------------------------------- magick ------------------------------------------------
 
 		/**
-		 * (PHP 5 &gt;= 5.1.0, PHP 7, PECL pdo &gt;= 0.2.1)<br/>
-		 * Quotes a string for use in a query.
-		 * @link https://php.net/manual/en/pdo.quote.php
-		 * @param mixed $value  <p>
-		 *                      The string to be quoted.
-		 *                      </p>
-		 * @param ?int  $type   [optional] <p>
-		 *                      Provides a data type hint for drivers that have alternate quoting styles.
-		 *                      </p>
-		 * @return string|false a quoted string that is theoretically safe to pass into an
-		 *                      SQL statement. Returns <b>FALSE</b> if the driver does not support quoting in
-		 *                      this way.
+		 * @param string $name
+		 * @return array|false|int|null
 		 */
-		public function quote($value, $type = NULL)
+		public function __get(string $name)
 		{
-			if (is_null($type)) {
-				if (is_numeric($value)) {
-					$type = self::PARAM_INT;
-				} else {
-					$type = self::PARAM_STR;
-				}
+			switch ($name) {
+				case 'query_count':
+				case 'queryCount':
+					return $this->queryCount();
+				case 'query_time':
+				case 'queryTime':
+					return $this->queryTime();
 			}
-			if (is_array($value)) {
-				foreach ($value as $key => $val) {
-					$value[$key] = parent::quote($val);
+			return NULL;
+		}
+
+		/**
+		 * @param string $name
+		 * @param        $value
+		 * @return false
+		 */
+		public function __set(string $name, $value)
+		{
+			return FALSE;
+		}
+
+		/**
+		 * @param string $name
+		 * @return bool
+		 */
+		public function __isset(string $name)
+		{
+			return $name === 'query_count';
+		}
+
+		/**
+		 * @throws PDOEException
+		 */
+		public function __call(string $name, array $arguments = [])
+		{
+			if ($name === 'log') {
+				if ($this->LogEnabled) {
+					$logClass = $this->logClass;
+					($logClass::init())->log($this, $arguments[0]);
 				}
-				return implode(',', $value);
+				return NULL;
 			}
-			return parent::quote($value, $type);
+			if (method_exists($this->driver, $name)) {
+				return $this->driver->{$name}(...$arguments);
+			}
+			throw new PDOEException("Method $name is not exists");
 		}
 
 		public function __destruct()
 		{
 			$this->driver->closeConnection();
 		}
+//-------------------------------------------- magick ------------------------------------------------
 	}
 

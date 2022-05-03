@@ -2,7 +2,6 @@
 
 	namespace Traineratwot\PDOExtended\abstracts;
 
-	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Join;
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Where;
 	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
@@ -51,48 +50,10 @@
 
 		abstract public function toSql();
 
-		/**
-		 * @param string        $table
-		 * @param callable|null $callback
-		 * @return mixed|Abstract_Join|null
-		 */
-		public function join(string $table, ?callable $callback = NULL)
-		{
-			$tbl          = $this->driver->table($table);
-			$cls          = $this->driver->tools['Join'];
-			$join         = new $cls($this, $tbl, $callback);
-			$this->join[] = $join;
-			return $join;
-		}
 
-		public function joinLeft(string $table, ?string $column = NULL, ?string $leftColumn = NULL)
+		public function run(&$return = NULL)
 		{
-			$tbl  = $this->driver->table($table);
-			$cls  = $this->driver->tools['Join'];
-			$join = new $cls($this, $tbl);
-			$join->left($column, $leftColumn);
-			$this->join[] = $join;
+			$return = $this->scope->driver->connection->query($this->toSql());
 			return $this;
 		}
-
-		public function joinInner(string $table, ?string $column = NULL, ?string $innerColumn = NULL)
-		{
-			$tbl  = $this->driver->table($table);
-			$cls  = $this->driver->tools['Join'];
-			$join = new $cls($this, $tbl);
-			$join->inner($column, $innerColumn);
-			$this->join[] = $join;
-			return $this;
-		}
-
-		public function joinRight(string $table, ?string $column = NULL, ?string $rightColumn = NULL)
-		{
-			$tbl  = $this->driver->table($table);
-			$cls  = $this->driver->tools['Join'];
-			$join = new $cls($this, $tbl);
-			$join->right($column, $rightColumn);
-			$this->join[] = $join;
-			return $this;
-		}
-
 	}
