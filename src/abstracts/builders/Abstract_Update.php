@@ -15,7 +15,7 @@
 		/**
 		 * @throws DataTypeException
 		 */
-		public function set($column, $value)
+		public function set(string $column, $value)
 		{
 
 			if (!$this->scheme->columnExists($column)) {
@@ -25,6 +25,14 @@
 			$this->i++;
 			$this->columns[$this->i]       = $column;
 			$this->values["val{$this->i}"] = $val;
+			return $this;
+		}
+
+		public function setData(array $data)
+		{
+			foreach ($data as $column => $value) {
+				$this->set($column, $value);
+			}
 			return $this;
 		}
 

@@ -33,19 +33,27 @@
 
 		}
 
-		public function update()
+		public function update($data = [])
 		: Abstract_Update
 		{
-			$cls = $this->driver->tools['Update'];
-			return (new $cls($this))->setTable($this->table);
+			$cls    = $this->driver->tools['Update'];
+			$result = (new $cls($this))->setTable($this->table);
+			if (!empty($data)) {
+				$result->setData($data);
+			}
+			return $result;
 
 		}
 
-		public function insert()
+		public function insert($data = [])
 		: Abstract_Insert
 		{
-			$cls = $this->driver->tools['Insert'];
-			return (new $cls($this))->setTable($this->table);
+			$cls    = $this->driver->tools['Insert'];
+			$result = (new $cls($this))->setTable($this->table);
+			if (!empty($data)) {
+				$result->setData($data);
+			}
+			return $result;
 
 		}
 

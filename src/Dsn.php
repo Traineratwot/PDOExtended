@@ -75,6 +75,7 @@
 		{
 			return $this->driver;
 		}
+
 		public function getDriverClass()
 		: string
 		{
@@ -83,15 +84,16 @@
 // 		dsn builders
 
 		/**
-		 * @param string $driver
-		 * @param null   $class
+		 * @param string      $driver
+		 * @param string|null $class
+		 * @param string      $defaultPort
 		 * @return dsn
 		 */
-		public function setDriver(string $driver, $class = NULL)
+		public function setDriver(string $driver, string $class = NULL, string $defaultPort = '')
 		: Dsn
 		{
 			if ($class) {
-				$this->DRIVERS[$driver] = ['class' => $class, "port" => ''];
+				$this->DRIVERS[$driver] = ['class' => $class, "port" => $defaultPort];
 			}
 			$this->driver = $driver;
 			return $this;
