@@ -4,6 +4,7 @@
 
 	use DateTime;
 	use Traineratwot\Cache\Cache;
+	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\interfaces\LogInterface;
 
 	class Log implements LogInterface
@@ -11,8 +12,9 @@
 		public int    $limit = 100;
 		private ?PDOE $PDOE;
 
-		public function __construct() { }
-
+		/**
+		 * @return Log
+		 */
 		public static function init()
 		: Log
 		{
@@ -24,6 +26,12 @@
 			return $$var;
 		}
 
+		/**
+		 * @param PDOE        $PDOE
+		 * @param string|null $sql
+		 * @return void
+		 * @throws CacheException
+		 */
 		public function log(PDOE $PDOE, ?string $sql = '')
 		: void
 		{
@@ -34,6 +42,9 @@
 			$this->write($where, $when, $what);
 		}
 
+		/**
+		 * @return string
+		 */
 		private function find()
 		{
 			$debug = debug_backtrace();
@@ -46,6 +57,13 @@
 			return $d['file'] . ':' . $d['line'];
 		}
 
+		/**
+		 * @param $where
+		 * @param $when
+		 * @param $what
+		 * @return void
+		 * @throws CacheException
+		 */
 		private function write($where, $when, $what)
 		{
 			$log      = "$where [$when]: $what";
@@ -55,6 +73,9 @@
 			Cache::setCache('LOG', $newLog, 0, $this->PDOE->getKey());
 		}
 
+		/**
+		 * @return string
+		 */
 		public function get()
 		: string
 		{
