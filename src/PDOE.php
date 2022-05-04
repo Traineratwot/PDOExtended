@@ -18,7 +18,6 @@
 
 	/**
 	 * @implements Driver
-	 * @method void log(string $sql)
 	 */
 	class PDOE extends PDO
 	{
@@ -326,6 +325,15 @@
 		{
 			return $this->driver->getScheme($table);
 		}
+
+		public function log($sql)
+		{
+			if ($this->LogEnabled) {
+				$logClass = $this->logClass;
+				($logClass::init())->log($this, $sql);
+			}
+			return NULL;
+		}
 //----------------------------------------- opportunities --------------------------------------------
 //-------------------------------------------- magick ------------------------------------------------
 
@@ -370,13 +378,6 @@
 		 */
 		public function __call(string $name, array $arguments = [])
 		{
-			if ($name === 'log') {
-				if ($this->LogEnabled) {
-					$logClass = $this->logClass;
-					($logClass::init())->log($this, $arguments[0]);
-				}
-				return NULL;
-			}
 			if (method_exists($this->driver, $name)) {
 				return $this->driver->{$name}(...$arguments);
 			}
