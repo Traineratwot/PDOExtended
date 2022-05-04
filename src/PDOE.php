@@ -22,7 +22,7 @@
 	 */
 	class PDOE extends PDO
 	{
-		public const CACHE_EXPIRATION = 1;
+		public const CACHE_EXPIRATION = 600;
 
 		/**
 		 * PostgreSQL
