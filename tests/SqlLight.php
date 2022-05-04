@@ -5,13 +5,12 @@
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
-	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class SqlLight extends TestCase
 	{
 		/**
-		 * @throws DsnException|PDOEException
+		 * @throws DsnException
 		 */
 		public function setUp()
 		: void
@@ -58,6 +57,9 @@ CREATE TABLE test
 			$this->assertEquals('test', $table, 'tableExists');
 		}
 
+		/**
+		 * @throws JsonException
+		 */
 		public function testGetScheme()
 		: void
 		{
@@ -67,6 +69,7 @@ CREATE TABLE test
 		}
 
 		/**
+		 * @throws Exception
 		 */
 		public function testPool()
 		: void
