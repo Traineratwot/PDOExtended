@@ -21,7 +21,7 @@
 			$var = 'PDOE_LOG';
 			global $$var;
 			if (!isset($$var) || is_null($$var)) {
-				$$var = new Log();
+				$$var = new self();
 			}
 			return $$var;
 		}
