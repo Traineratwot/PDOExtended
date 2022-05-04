@@ -84,7 +84,6 @@
 		 * @return Column
 		 */
 		public function getColumn($column)
-		: Column
 		{
 			return $this->columns[$column];
 		}

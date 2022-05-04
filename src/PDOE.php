@@ -71,10 +71,10 @@
 		public function __construct(DsnInterface $dsn, $driverOptions = [])
 		{
 			$this->dsn = $dsn;
-			if ($driverOptions['LogEnabled']) {
+			if (array_key_exists('LogEnabled', $driverOptions)) {
 				$this->LogEnabled = (bool)$driverOptions['logClass'];
 			}
-			if ($driverOptions['logClass']) {
+			if (array_key_exists('logClass', $driverOptions)) {
 				$this->logClass = $driverOptions['logClass'];
 			}
 			try {

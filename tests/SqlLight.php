@@ -5,6 +5,7 @@
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
+	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
 	use Traineratwot\PDOExtended\PDOE;
 
 	class SqlLight extends TestCase
@@ -104,6 +105,9 @@ CREATE TABLE test
 			$this->assertEquals(24, $c);
 		}
 
+		/**
+		 * @throws SqlBuildException
+		 */
 		public function testSelect()
 		{
 			$sql = $this->db->table('test')->select()
@@ -121,7 +125,7 @@ CREATE TABLE test
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `id`, `value` FROM `test` WHERE `id` IN ('5','6','8') OR `id` < '5' ORDER BY `id` ASC LIMIT 2,1;", $sql);
 		}
 
 		public function testWhereCondition()
@@ -140,7 +144,7 @@ CREATE TABLE test
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT * FROM `test` WHERE ( `test`.`id` = '5' ) OR ( `test`.`id` <> '8' AND `test`.`id` <> '9' );", $sql);
+			$this->assertEquals("SELECT * FROM `test` WHERE ( `id` = '5' ) OR ( `id` <> '8' AND `id` <> '9' );", $sql);
 
 		}
 	}

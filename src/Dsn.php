@@ -69,10 +69,14 @@
 
 		/**
 		 * @return string
+		 * @throws DsnException
 		 */
 		public function getDriver()
 		: string
 		{
+			if(!$this->driver){
+				throw new DsnException('Driver is not set');
+			}
 			return $this->driver;
 		}
 
@@ -191,6 +195,7 @@
 
 		/**
 		 * @return int
+		 * @throws DsnException
 		 */
 		public function getPort()
 		: int

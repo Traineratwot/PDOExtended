@@ -86,11 +86,14 @@
 		public function findDataType(string $type)
 		: string
 		{
-			$type = strtolower($type);
-			foreach ($this->dataTypes as $dataType => $dataTypesList) {
-				foreach ($dataTypesList as $dt) {
-					if (strtolower($dt) === $type) {
-						return $dataType;
+			$type_ = null;
+			preg_match('/^(\w+)/',$type,$type_);
+			if($_type = $type_[1]) {
+				foreach ($this->dataTypes as $dataType => $dataTypesList) {
+					foreach ($dataTypesList as $dt) {
+						if (strtolower($dt) === $_type) {
+							return $dataType;
+						}
 					}
 				}
 			}

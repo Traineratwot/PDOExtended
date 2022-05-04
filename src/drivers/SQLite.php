@@ -109,6 +109,16 @@
 			},                                   PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
 			return $this->schemes[$table];
 		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function escapeColumn(string $column, string $table = NULL)
+		: string
+		{
+			$column = trim($column, '`');
+			return "`$column`";
+		}
 	}
 
 	//	/**

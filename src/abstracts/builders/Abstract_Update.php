@@ -20,6 +20,7 @@
 
 			if (!$this->scheme->columnExists($column)) {
 				Helpers::warn("Column '$column' does not exist in table {$this->table}");
+				return $this;
 			}
 			$val = $this->scheme->getColumn($column)->validate($value);
 			$this->i++;
@@ -42,11 +43,11 @@
 			foreach ($this->columns as $i => $column) {
 				$set[] = $this->driver->escapeColumn($column, $this->table) . " = :val$i";
 			}
-
+			$set = implode(', ', $set);
 			if ($this->where) {
 				$w            = $this->where->get();
 				$this->values = array_merge($this->values, $this->where->getValues());
-				$sql          = implode('', ['UPDATE', $this->table, 'SET', ...$set, 'WHERE', $w]);
+				$sql          = implode('', ['UPDATE', $this->table, 'SET', $set, 'WHERE', $w]);
 			} else {
 				$sql = implode('', ['UPDATE', $this->table, 'SET', ...$set]);
 			}

@@ -15,6 +15,7 @@
 		{
 			if (!$this->scheme->columnExists($column)) {
 				Helpers::warn("Column '$column' does not exist in table {$this->table} ");
+				return $this;
 			}
 			$val = $this->scheme->getColumn($column)->validate($value);
 			$this->i++;
@@ -46,7 +47,9 @@
 				$values[$column['value']['alias']] = $column['value']['val'];
 				$aliases[$i]                       = ':'.$column['value']['alias'];
 			}
-			$sql = implode('', ['INSERT INTO', $this->table, '(', ...$columns, ')', 'VALUES', '(', ...$aliases, ')',]);
+			$columns = implode(', ', $columns);
+			$aliases = implode(', ', $aliases);
+			$sql = implode('', ['INSERT INTO', $this->table, '(', $columns, ')', 'VALUES', '(', $aliases, ')',]);
 			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $values, $this->driver->connection);
 		}
