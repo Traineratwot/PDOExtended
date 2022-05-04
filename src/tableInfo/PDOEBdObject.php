@@ -15,6 +15,10 @@
 		public string $table;
 		public driver $driver;
 
+		/**
+		 * @param driver $driver
+		 * @param string $table
+		 */
 		public function __construct(driver $driver, string $table)
 		{
 			if (!$driver->tableExists($table)) {
@@ -25,6 +29,9 @@
 			$this->scheme = $driver->getScheme($table);
 		}
 
+		/**
+		 * @return Abstract_Select
+		 */
 		public function select()
 		: Abstract_Select
 		{
@@ -33,6 +40,10 @@
 
 		}
 
+		/**
+		 * @param $data
+		 * @return Abstract_Update
+		 */
 		public function update($data = [])
 		: Abstract_Update
 		{
@@ -45,6 +56,10 @@
 
 		}
 
+		/**
+		 * @param $data
+		 * @return Abstract_Insert
+		 */
 		public function insert($data = [])
 		: Abstract_Insert
 		{
@@ -57,6 +72,9 @@
 
 		}
 
+		/**
+		 * @return Abstract_Delete
+		 */
 		public function delete()
 		: Abstract_Delete
 		{
@@ -65,6 +83,9 @@
 
 		}
 
+		/**
+		 * @return string
+		 */
 		public function __toString()
 		{
 			return $this->table;

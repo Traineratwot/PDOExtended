@@ -12,6 +12,10 @@
 		public array  $links   = [];
 		public string $name    = '';
 
+		/**
+		 * @param $an_array
+		 * @return Scheme
+		 */
 		public static function __set_state($an_array)
 		{
 			$a = new self();
@@ -26,6 +30,10 @@
 			return $a;
 		}
 
+		/**
+		 * @param Column $column
+		 * @return $this
+		 */
 		public function addColumn(Column $column)
 		: self
 		{
@@ -34,6 +42,9 @@
 			return $this;
 		}
 
+		/**
+		 * @return array
+		 */
 		public function toArray()
 		: array
 		{
@@ -44,6 +55,12 @@
 			return $res;
 		}
 
+		/**
+		 * @param string $table
+		 * @param string $masterField
+		 * @param string $slaveField
+		 * @return void
+		 */
 		public function addLink(string $table, string $masterField, string $slaveField)
 		: void
 		{
@@ -53,11 +70,19 @@
 			];
 		}
 
+		/**
+		 * @param string $column
+		 * @return bool
+		 */
 		public function columnExists(string $column)
 		{
 			return isset($this->columns[$column]);
 		}
 
+		/**
+		 * @param $column
+		 * @return Column
+		 */
 		public function getColumn($column)
 		: Column
 		{

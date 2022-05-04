@@ -8,7 +8,9 @@
 	class TInt extends DataType
 	{
 		public string $phpName = 'int';
-
+		/**
+		 * @inheritDoc
+		 */
 		public function validate($value)
 		: void
 		{

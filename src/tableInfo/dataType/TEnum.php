@@ -9,7 +9,9 @@
 	{
 		public string $phpName = 'string';
 		public array  $values  = [];
-
+		/**
+		 * @inheritDoc
+		 */
 		public function validate()
 		: void
 		{

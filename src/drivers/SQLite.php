@@ -27,6 +27,9 @@
 		public static string $driver = 'sqlite';
 		public static string $port   = '';
 
+		/**
+		 * @var array|string[][]
+		 */
 		public array $dataTypes
 			= [
 				TString::class   => ['CHAR', 'TEXT', 'VARCHAR', 'STRING', 'NONE'],
@@ -39,6 +42,10 @@
 				TUnixTime::class => ['TIME'],
 			];
 
+		/**
+		 * @return array
+		 * @throws CacheException
+		 */
 		public function getTablesList()
 		: array
 		{

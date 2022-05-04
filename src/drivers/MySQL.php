@@ -30,6 +30,9 @@
 		public static string $driver = 'mysql';
 		public static string $port   = '3306';
 
+		/**
+		 * @var array|string[][]
+		 */
 		public array $dataTypes
 			= [
 				TString::class   => ['CHAR', 'TEXT', 'VARCHAR', 'STRING', 'LONGTEXT', 'TINYTEXT', 'MEDIUMTEXT', 'BINARY', 'VARBINARY'],
@@ -44,6 +47,10 @@
 				TUnixTime::class => ['TIME'],
 			];
 
+		/**
+		 * @return array
+		 * @throws CacheException
+		 */
 		public function getTablesList()
 		: array
 		{
@@ -53,8 +60,8 @@
 		}
 
 		/**
-		 * @inheritDoc
-		 * @throws DataTypeException|PDOEException|CacheException
+		 *
+		 * @throws PDOEException|CacheException
 		 */
 		public function getScheme(string $table)
 		: Scheme
@@ -105,6 +112,9 @@
 			return $this->schemes[$table];
 		}
 
+		/**
+		 * @return void
+		 */
 		public function closeConnection()
 		: void
 		{

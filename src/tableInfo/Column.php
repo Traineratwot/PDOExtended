@@ -22,6 +22,10 @@
 		 */
 		private $default;
 
+		/**
+		 * @param $an_array
+		 * @return Column
+		 */
 		public static function __set_state($an_array)
 		{
 			$a = new self();
@@ -263,6 +267,12 @@
 			];
 		}
 
+		/**
+		 * @param $name
+		 * @param $value
+		 * @return void
+		 * @throws DataTypeException
+		 */
 		public function __set($name, $value)
 		{
 			switch ($name) {

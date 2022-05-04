@@ -7,7 +7,9 @@
 	class TBool extends DataType
 	{
 		public string $phpName = 'bool';
-
+		/**
+		 * @inheritDoc
+		 */
 		public function validate()
 		: void
 		{

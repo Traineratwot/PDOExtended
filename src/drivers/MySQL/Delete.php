@@ -8,6 +8,9 @@
 	class Delete extends Abstract_Delete
 	{
 
+		/**
+		 * @return string
+		 */
 		public function toSql()
 		{
 			$v = [];

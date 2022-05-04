@@ -7,6 +7,9 @@
 	class TBlob extends DataType
 	{
 
+		/**
+		 * @inheritDoc
+		 */
 		public function validate()
 		: void
 		{

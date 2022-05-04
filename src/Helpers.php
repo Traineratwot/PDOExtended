@@ -80,11 +80,20 @@ REGEXP
 			return $value;
 		}
 
+		/**
+		 * @param string $string
+		 * @param        $flags
+		 * @return void
+		 */
 		public static function warn(string $string, $flags = E_USER_WARNING)
 		{
 			trigger_error($string, $flags);
 		}
 
+		/**
+		 * @param $v
+		 * @return mixed|string
+		 */
 		public static function strtolower($v)
 		{
 			if (is_string($v)) {

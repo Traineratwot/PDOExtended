@@ -12,6 +12,9 @@
 		public array   $pool = [];
 		protected PDOE $connection;
 
+		/**
+		 * @param PDOE $connection
+		 */
 		private function __construct(PDOE $connection)
 		{
 			$this->connection = $connection;

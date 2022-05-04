@@ -8,7 +8,9 @@
 	class TString extends DataType
 	{
 		public string $phpName = 'string';
-
+		/**
+		 * @inheritDoc
+		 */
 		public function validate($value)
 		: void
 		{
