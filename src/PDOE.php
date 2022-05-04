@@ -200,7 +200,7 @@
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
-			$this->log($arg[0]);
+			$this->log($statement);
 			$return = parent::query($statement, ...$arg);
 			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
