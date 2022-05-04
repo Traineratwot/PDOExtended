@@ -1,12 +1,12 @@
 {
 	"name"             :"traineratwot/pdo-extended",
 	"type"             :"library",
-	"version"          :"1.0.4",
+	"version"          :"1.0.5",
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
 		"test": "phpunit ./tests",
-		"up:release": "gh release create \"1.0.4\" --generate-notes"
+		"up:release": "gh release create \"1.0.5\" --generate-notes"
 	},
 	"readme"           :"./README.md",
 	"homepage"         :"https://github.com/traineratwot/PDOExtended",

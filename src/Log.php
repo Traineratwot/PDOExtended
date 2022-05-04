@@ -50,7 +50,10 @@
 			$debug = debug_backtrace();
 			$d     = NULL;
 			foreach ($debug as $d) {
-				if (strpos($d['file'], 'PDOExtended\src') === FALSE && strpos($d['file'], 'PDOExtended/src') === FALSE) {
+				$d['file'] = strtr($d['file'], [
+					'/' => '\\',
+				]);
+				if (strpos($d['file'], 'PDOExtended\src') === FALSE && strpos($d['file'], 'pdo-extended\src') === FALSE) {
 					break;
 				}
 			}
