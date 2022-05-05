@@ -6,6 +6,7 @@
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
+	use Traineratwot\cc\Config;
 	use Traineratwot\PDOExtended\abstracts\DataType;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
@@ -56,7 +57,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey());
+			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey());
 		}
 
 		/**
@@ -108,7 +109,7 @@
 					$Scheme->addLink($index['REFERENCED_TABLE_NAME'], $index['COLUMN_NAME'], $index['REFERENCED_COLUMN_NAME']);
 				}
 				return $Scheme;
-			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
+			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey() . '/tables');
 			return $this->schemes[$table];
 		}
 

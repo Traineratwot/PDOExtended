@@ -2,6 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\cc\Config;
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
@@ -17,6 +18,7 @@
 		: void
 		{
 			parent::setUp();
+			Config::set('CACHE_PATH', __DIR__ . '/cache/');
 			$this->sqLight = __DIR__ . '/test.' . random_int(0, 1000) . '.db';
 			file_put_contents($this->sqLight, '');
 			$dns = new Dsn();

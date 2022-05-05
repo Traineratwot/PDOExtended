@@ -21,8 +21,6 @@
 	 */
 	class PDOE extends PDO
 	{
-		public const CACHE_EXPIRATION = 600;
-
 		/**
 		 * PostgreSQL
 		 * <img src="https://wiki.postgresql.org/images/3/30/PostgreSQL_logo.3colors.120x120.png" width="50" height="50" />

@@ -7,6 +7,7 @@
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
+	use Traineratwot\cc\Config;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\Helpers;
@@ -51,7 +52,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-			},                 PDOE::CACHE_EXPIRATION, $this->connection->getKey());
+			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey());
 		}
 
 		/**
@@ -106,7 +107,7 @@
 				}
 
 				return $Scheme;
-			},                                   PDOE::CACHE_EXPIRATION, $this->connection->getKey() . '/tables');
+			},                                   Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey() . '/tables');
 			return $this->schemes[$table];
 		}
 
