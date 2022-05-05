@@ -2,6 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\cc\Config;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -19,6 +20,7 @@
 		: void
 		{
 			parent::setUp();
+			Config::set('CACHE_PATH', __DIR__ . '/cache/');
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_MySQL);
 			$dns->setHost('localhost');
