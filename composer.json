@@ -47,11 +47,11 @@
 		}
 	},
 	"extra": {
-		"cc": {
-			"configPath": null
-		},
 		"composer-config": {
-
+			"namespace":"PDOE",
+			"optional" :{
+				"CACHE_EXPIRATION":"Cache live time in second, default 600"
+			}
 		}
 	},
 	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json"
