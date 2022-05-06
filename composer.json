@@ -6,7 +6,8 @@
 	"license"          :"MIT",
 	"scripts"          :{
 		"test": "phpunit ./tests",
-		"up:release": "gh release create \"1.0.5\" --generate-notes"
+		"up:release": "gh release create \"1.0.5\" --generate-notes",
+		"composer-config": "composer getAllConfigs"
 	},
 	"readme"           :"./README.md",
 	"homepage"         :"https://github.com/traineratwot/PDOExtended",
@@ -48,6 +49,10 @@
 	"extra": {
 		"cc": {
 			"configPath": null
+		},
+		"composer-config": {
+
 		}
-	}
+	},
+	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json"
 }
