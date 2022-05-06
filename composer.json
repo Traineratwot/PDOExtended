@@ -1,13 +1,13 @@
 {
-	"$schema"          :"https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
+	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
 	"name"             :"traineratwot/pdo-extended",
 	"type"             :"library",
-	"version"          :"1.0.6",
+	"version"          :"1.0.7",
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
 		"test"           :"phpunit ./tests",
-		"up:release"     :"gh release create \"1.0.5\" --generate-notes",
+		"up:release"     :"gh release create \"1.0.7\" --generate-notes",
 		"composer-config":"composer getAllConfigs"
 	},
 	"readme"           :"./README.md",
@@ -49,9 +49,9 @@
 	},
 	"extra": {
 		"composer-config":{
-			"namespace":"PDOE",
-			"optional" :{
-				"CACHE_EXPIRATION":"Cache live time in second, default 600"
+			"namespace": "PDOE",
+			"optional": {
+				"CACHE_EXPIRATION": "Cache live time in second, default 600"
 			}
 		}
 	}

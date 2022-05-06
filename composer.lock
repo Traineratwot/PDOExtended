@@ -2048,16 +2048,16 @@
         },
         {
             "name": "traineratwot/cache",
-            "version": "2.0.1",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Traineratwot/cache.git",
-                "reference": "4f609c2883c1f7758531f8fe058e1625b722d1ea"
+                "reference": "25ed7a1f6a3548e00a420f38d22bd56ad882bb72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Traineratwot/cache/zipball/4f609c2883c1f7758531f8fe058e1625b722d1ea",
-                "reference": "4f609c2883c1f7758531f8fe058e1625b722d1ea",
+                "url": "https://api.github.com/repos/Traineratwot/cache/zipball/25ed7a1f6a3548e00a420f38d22bd56ad882bb72",
+                "reference": "25ed7a1f6a3548e00a420f38d22bd56ad882bb72",
                 "shasum": ""
             },
             "require": {
@@ -2071,8 +2071,7 @@
             },
             "type": "library",
             "extra": {
-                "cc": {
-                    "configPath": null,
+                "composer-config": {
                     "optional": {
                         "CACHE_PATH": "path to save cache"
                     }
@@ -2102,9 +2101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Traineratwot/cache/issues",
-                "source": "https://github.com/Traineratwot/cache/tree/2.0.1"
+                "source": "https://github.com/Traineratwot/cache/tree/2.0.2"
             },
-            "time": "2022-05-05T13:49:53+00:00"
+            "time": "2022-05-06T11:42:38+00:00"
         },
         {
             "name": "traineratwot/composer-config",
