@@ -2,6 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
+	use Traineratwot\Cache\Cache;
 	use Traineratwot\cc\Config;
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
@@ -19,7 +20,8 @@
 		{
 			parent::setUp();
 			Config::set('CACHE_PATH', __DIR__ . '/cache/');
-			$this->sqLight = __DIR__ . '/test.' . random_int(0, 1000) . '.db';
+			Cache::removeAll();
+			$this->sqLight = __DIR__ . '/test.db';
 			file_put_contents($this->sqLight, '');
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_SQLite);

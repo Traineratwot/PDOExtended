@@ -14,7 +14,9 @@
 	$dns->setHost($sqLight);
 	$db = new PDOE($dns);
 
-	$sql = $db->table('test_link_master')->insert(['master'=>'t'])
+	$sql = $db->table('test_link_master')->alter()
+			  ->addCol('test_890', 'varchar', 20)
+			  ->addCol('test_890', 'varchar', 20)
 //			  ->join('test_link_slave')->left()
 			  ->toSql()
 	;

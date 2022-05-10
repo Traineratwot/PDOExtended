@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\tableInfo;
 
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Alter;
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Delete;
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Insert;
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Select;
@@ -79,6 +80,14 @@
 		: Abstract_Delete
 		{
 			$cls = $this->driver->tools['Delete'];
+			return (new $cls($this))->setTable($this->table);
+
+		}
+
+		public function alter()
+		: Abstract_Alter
+		{
+			$cls = $this->driver->tools['Alter'];
 			return (new $cls($this))->setTable($this->table);
 
 		}

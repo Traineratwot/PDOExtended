@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e0513f8e9579fbd05214af2168f56c4",
+    "content-hash": "70718035a073dfd51395f49ea5dc4007",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -2048,22 +2048,22 @@
         },
         {
             "name": "traineratwot/cache",
-            "version": "2.0.2",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Traineratwot/cache.git",
-                "reference": "25ed7a1f6a3548e00a420f38d22bd56ad882bb72"
+                "reference": "fac0318c8e5323224da793f13dc8a9da6b4e0df9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Traineratwot/cache/zipball/25ed7a1f6a3548e00a420f38d22bd56ad882bb72",
-                "reference": "25ed7a1f6a3548e00a420f38d22bd56ad882bb72",
+                "url": "https://api.github.com/repos/Traineratwot/cache/zipball/fac0318c8e5323224da793f13dc8a9da6b4e0df9",
+                "reference": "fac0318c8e5323224da793f13dc8a9da6b4e0df9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6",
                 "phpunit/phpunit": "^9.5",
-                "traineratwot/composer-config": "^1.0"
+                "traineratwot/composer-config": "^1.1.0"
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "dev-master",
@@ -2101,22 +2101,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Traineratwot/cache/issues",
-                "source": "https://github.com/Traineratwot/cache/tree/2.0.2"
+                "source": "https://github.com/Traineratwot/cache/tree/2.0.4"
             },
-            "time": "2022-05-06T11:42:38+00:00"
+            "time": "2022-05-10T10:33:48+00:00"
         },
         {
             "name": "traineratwot/composer-config",
-            "version": "1.0.11",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Traineratwot/composer-config.git",
-                "reference": "be9d2470b56630781a6d6480265e3ba664a0221c"
+                "reference": "1fe859f81fbc2709f90d9fac66a1672a18d0c9d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Traineratwot/composer-config/zipball/be9d2470b56630781a6d6480265e3ba664a0221c",
-                "reference": "be9d2470b56630781a6d6480265e3ba664a0221c",
+                "url": "https://api.github.com/repos/Traineratwot/composer-config/zipball/1fe859f81fbc2709f90d9fac66a1672a18d0c9d8",
+                "reference": "1fe859f81fbc2709f90d9fac66a1672a18d0c9d8",
                 "shasum": ""
             },
             "require": {
@@ -2157,9 +2157,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Traineratwot/composer-config/issues",
-                "source": "https://github.com/Traineratwot/composer-config/tree/1.0.11"
+                "source": "https://github.com/Traineratwot/composer-config/tree/1.1.4"
             },
-            "time": "2022-05-08T08:39:40+00:00"
+            "time": "2022-05-10T06:44:12+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -2266,16 +2266,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.6.7",
+            "version": "1.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "d41c39cb2e487663bce9bbd97c660e244b73abad"
+                "reference": "d76498c5531232cb8386ceb6004f7e013138d3ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d41c39cb2e487663bce9bbd97c660e244b73abad",
-                "reference": "d41c39cb2e487663bce9bbd97c660e244b73abad",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d76498c5531232cb8386ceb6004f7e013138d3ba",
+                "reference": "d76498c5531232cb8386ceb6004f7e013138d3ba",
                 "shasum": ""
             },
             "require": {
@@ -2301,7 +2301,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.6.7"
+                "source": "https://github.com/phpstan/phpstan/tree/1.6.8"
             },
             "funding": [
                 {
@@ -2321,7 +2321,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-04T22:55:41+00:00"
+            "time": "2022-05-10T06:54:21+00:00"
         },
         {
             "name": "roave/security-advisories",

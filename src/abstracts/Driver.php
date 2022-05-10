@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 
+	use Traineratwot\PDOExtended\drivers\MySQL\Alter;
 	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
 	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
 	use Traineratwot\PDOExtended\drivers\MySQL\Join;
@@ -27,6 +28,7 @@
 				"Where"     => Where::class,
 				"WherePart" => WherePart::class,
 				"Join"      => Join::class,
+				"Alter"      => Alter::class,
 			];
 		public string        $eq        = '=';
 		public string        $notEq     = '<>';
@@ -60,7 +62,6 @@
 		 * @return false|string
 		 */
 		public function tableExists($table)
-		: string
 		{
 			$list = $this->getTablesList();
 			$find = FALSE;
@@ -74,6 +75,9 @@
 			return $find ? $t : FALSE;
 		}
 
+		/**
+		 * @return array
+		 */
 		abstract public function getTablesList()
 		: array;
 
@@ -100,13 +104,19 @@
 			throw new DataTypeException('Unknown data type:' . $type);
 		}
 
+		/**
+		 * @param string $table
+		 * @return PDOEBdObject
+		 */
 		public function table(string $table)
 		{
 			return new PDOEBdObject($this, $table);
 		}
 
 		/**
-		 * @inheritDoc
+		 * @param string      $column
+		 * @param string|NULL $table
+		 * @return string
 		 */
 		public function escapeColumn(string $column, string $table = NULL)
 		: string
@@ -119,7 +129,8 @@
 		}
 
 		/**
-		 * @inheritDoc
+		 * @param string $table
+		 * @return string
 		 */
 		public function escapeTable(string $table)
 		: string
@@ -128,6 +139,9 @@
 			return "`$table`";
 		}
 
+		/**
+		 * @return void
+		 */
 		public function closeConnection()
 		: void
 		{

@@ -303,8 +303,11 @@
 			return $this->driver->getTablesList();
 		}
 
+		/**
+		 * @param string $table
+		 * @return false|string|null
+		 */
 		public function tableExists(string $table)
-		: string
 		{
 			return $this->driver->tableExists($table);
 		}
@@ -387,5 +390,29 @@
 			$this->driver->closeConnection();
 		}
 //-------------------------------------------- magick ------------------------------------------------
+//------------------------------------------- getters ------------------------------------------------
+		/**
+		 * @return Driver
+		 */
+		public function getDriver()
+		{
+			return $this->driver;
+		}
+
+		/**
+		 * @return string
+		 */
+		public function getLogClass()
+		{
+			return $this->logClass;
+		}
+
+		/**
+		 * @return dsn
+		 */
+		public function getDsn()
+		{
+			return $this->dsn;
+		}
 	}
 

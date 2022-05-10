@@ -6,9 +6,10 @@
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
-		"test"           :"phpunit ./tests",
+		"test"           :"phpunit ./tests/SqlLight.php",
 		"up:release"     :"gh release create \"1.0.9\" --generate-notes",
-		"composer-config":"composer getAllConfigs"
+		"composer-config-print": "composer getAllConfigs",
+		"composer-config-update": "composer configUpdate"
 	},
 	"readme"           :"./README.md",
 	"homepage"         :"https://github.com/traineratwot/PDOExtended",
