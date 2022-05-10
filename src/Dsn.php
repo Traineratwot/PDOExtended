@@ -74,7 +74,7 @@
 		public function getDriver()
 		: string
 		{
-			if(!$this->driver){
+			if (!$this->driver) {
 				throw new DsnException('Driver is not set');
 			}
 			return $this->driver;
@@ -200,7 +200,7 @@
 		public function getPort()
 		: int
 		{
-			if (is_null($this->port)) {
+			if (!$this->port) {
 				return $this->DRIVERS[$this->getDriver()]['port'];
 			}
 			return $this->port;
@@ -213,7 +213,7 @@
 		public function setPort(int $port)
 		: Dsn
 		{
-			$this->port = $port;
+			$this->port = $port ?: NULL;
 			return $this;
 		}
 
