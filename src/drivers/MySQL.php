@@ -45,7 +45,7 @@
 				TBlob::class     => ['BLOB'],
 				TDatetime::class => ['DATETIME'],
 				TDate::class     => ['DATE'],
-				TUnixTime::class => ['TIME'],
+				TUnixTime::class => ['TIME','TIMESTAMP'],
 			];
 
 		/**
