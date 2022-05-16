@@ -171,7 +171,7 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function prepare($query, $options = NULL)
+		public function prepare($query, $options = [])
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			return parent::prepare($query, $options);
