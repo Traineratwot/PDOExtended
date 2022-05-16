@@ -37,7 +37,7 @@
 		public function addColumn(Column $column)
 		: self
 		{
-			$name                 = $column->getName();
+			$name                 = strtolower($column->getName());
 			$this->columns[$name] = $column;
 			return $this;
 		}
@@ -76,7 +76,7 @@
 		 */
 		public function columnExists(string $column)
 		{
-			return isset($this->columns[$column]);
+			return isset($this->columns[strtolower($column)]);
 		}
 
 		/**
@@ -85,7 +85,7 @@
 		 */
 		public function getColumn($column)
 		{
-			return $this->columns[$column];
+			return $this->columns[strtolower($column)];
 		}
 
 		/**
