@@ -11,7 +11,7 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function validate()
+		public function validate($value)
 		: void
 		{
 			// TODO: Implement validate() method.
