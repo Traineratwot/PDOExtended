@@ -116,6 +116,6 @@
 		public function closeConnection()
 		: void
 		{
-			$this->connection->query('KILL CONNECTION_ID()');
+//			$this->connection->query('KILL CONNECTION_ID()');
 		}
 	}
