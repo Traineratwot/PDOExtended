@@ -63,6 +63,7 @@
 		/**
 		 *
 		 * @throws PDOEException|CacheException
+		 * @throws DataTypeException
 		 */
 		public function getScheme(string $table)
 		: Scheme
@@ -81,28 +82,24 @@
 				foreach ($columns as $column) {
 					$column = array_map($Helpers . '::strtolower', $column);
 					$col    = new Column();
-					try {
-						$a = $this->findDataType($column['DATA_TYPE']);
-						/** @var DataType $validator */
-						$validator = new $a();
-						$validator->setOriginalType($column['DATA_TYPE']);
-						$col->setValidator($validator)
-							->setCanBeNull(strtolower($column['IS_NULLABLE']) === 'yes')
-							->setDbDataType($column['DATA_TYPE'])
-							->setDefault($column['COLUMN_DEFAULT'])
-							->setIsSetDefault(!is_null($column['COLUMN_DEFAULT']))
-							->setName($column['COLUMN_NAME'])
-						;
-						if (in_array($column['COLUMN_KEY'], ['pri', 'uni'])) {
-							$col->setIsUnique();
-							if ($column['COLUMN_KEY'] === 'pri') {
-								$col->setIsPrimary();
-							}
+					$a = $this->findDataType($column['DATA_TYPE']);
+					/** @var DataType $validator */
+					$validator = new $a();
+					$validator->setOriginalType($column['DATA_TYPE']);
+					$col->setValidator($validator)
+						->setCanBeNull(strtolower($column['IS_NULLABLE']) === 'yes')
+						->setDbDataType($column['DATA_TYPE'])
+						->setDefault($column['COLUMN_DEFAULT'])
+						->setIsSetDefault(!is_null($column['COLUMN_DEFAULT']))
+						->setName($column['COLUMN_NAME'])
+					;
+					if (in_array($column['COLUMN_KEY'], ['pri', 'uni'])) {
+						$col->setIsUnique();
+						if ($column['COLUMN_KEY'] === 'pri') {
+							$col->setIsPrimary();
 						}
-						$Scheme->addColumn($col);
-					} catch (Exception $e) {
-
 					}
+					$Scheme->addColumn($col);
 				}
 				$indexes = $this->connection->prepareQuery("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE   CONSTRAINT_SCHEMA=:database   AND TABLE_NAME=:table   AND REFERENCED_TABLE_NAME IS NOT NULL;;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($indexes as $index) {

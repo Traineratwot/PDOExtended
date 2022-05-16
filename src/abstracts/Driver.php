@@ -95,7 +95,7 @@
 			if($_type = $type_[1]) {
 				foreach ($this->dataTypes as $dataType => $dataTypesList) {
 					foreach ($dataTypesList as $dt) {
-						if (strtolower($dt) === $_type) {
+						if (strtolower($dt) === strtolower($_type)) {
 							return $dataType;
 						}
 					}
