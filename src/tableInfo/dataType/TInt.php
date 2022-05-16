@@ -24,7 +24,7 @@
 			if (!$this->canBeNull && is_null($value)) {
 				throw new DataTypeException("can`t be null");
 			}
-			if (!is_numeric($value) || !is_int($value + 0)) {
+			if (!is_numeric($value) && !is_int($value + 0) && $value != (int)$value) {
 				throw new DataTypeException("invalid int");
 			}
 		}
