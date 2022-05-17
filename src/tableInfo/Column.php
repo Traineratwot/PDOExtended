@@ -122,8 +122,11 @@
 		: self
 		{
 			$this->setIsSetDefault();
+			if ($this->isCanBeNull() && (strtolower($default) === 'null' || empty($default))) {
+				$default = NULL;
+			}
 			$this->validator->validate($default);
-			$default       = $this->validator->convert($default);
+			$default = $this->validator->convert($default);
 			$this->default = $default;
 			return $this;
 		}
