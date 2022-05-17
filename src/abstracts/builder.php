@@ -51,9 +51,9 @@
 		abstract public function toSql();
 
 
-		public function run(&$return = NULL)
+		public function run(string &$sql = null)
 		{
-			$return = $this->scope->driver->connection->query($this->toSql());
-			return $this;
+			$sql = $this->toSql();
+			return $this->scope->driver->connection->query($sql);
 		}
 	}
