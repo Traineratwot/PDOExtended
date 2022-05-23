@@ -22,7 +22,7 @@
 			$this->columns[$this->i] = [
 				'column' => $this->driver->escapeColumn($column),
 				'value'  => [
-					'alias' => "val{$this->i}",
+					'alias' => "PDOE[{$this->i}]val",
 					'val'   => $val,
 				],
 			];

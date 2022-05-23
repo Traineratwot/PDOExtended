@@ -25,7 +25,7 @@
 			$val = $this->scheme->getColumn($column)->validate($value);
 			$this->i++;
 			$this->columns[$this->i]       = $column;
-			$this->values["val{$this->i}"] = $val;
+			$this->values["PDOE[{$this->i}]val"] = $val;
 			return $this;
 		}
 
