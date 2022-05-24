@@ -53,7 +53,7 @@
 		private function setValue($values)
 		{
 			$this->i++;
-			$key                = ':v' . $this->i;
+			$key                = ":PDOE_{$this->i}_where";
 			$this->values[$key] = $values;
 			return $key;
 		}

@@ -24,8 +24,8 @@
 			}
 			$val = $this->scheme->getColumn($column)->validate($value);
 			$this->i++;
-			$this->columns[$this->i]       = $column;
-			$this->values["PDOE[{$this->i}]val"] = $val;
+			$this->columns[$this->i]             = $column;
+			$this->values["PDOE_{$this->i}_upd"] = $val;
 			return $this;
 		}
 
@@ -41,7 +41,7 @@
 		{
 			$set = [];
 			foreach ($this->columns as $i => $column) {
-				$set[] = $this->driver->escapeColumn($column, $this->table) . " = :val$i";
+				$set[] = $this->driver->escapeColumn($column, $this->table) . " = :PDOE_{$i}_upd";
 			}
 			$set = implode(', ', $set);
 			if ($this->where) {
@@ -49,7 +49,7 @@
 				$this->values = array_merge($this->values, $this->where->getValues());
 				$sql          = implode('', ['UPDATE', $this->table, 'SET', $set, 'WHERE', $w]);
 			} else {
-				$sql = implode('', ['UPDATE', $this->table, 'SET', ...$set]);
+				$sql = implode('', ['UPDATE', $this->table, 'SET', $set]);
 			}
 			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $this->values, $this->driver->connection);

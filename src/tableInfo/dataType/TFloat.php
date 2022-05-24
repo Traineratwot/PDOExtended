@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\tableInfo\dataType;
 
+	use Exception;
 	use Traineratwot\PDOExtended\abstracts\DataType;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
@@ -15,17 +16,10 @@
 		public function validate($value)
 		: void
 		{
-			if ($this->canBeNull && empty($value)) {
-				return;
-			}
-			if ($this->canBeNull && strtolower($value) === 'null') {
-				return;
-			}
-			if (!$this->canBeNull && is_null($value)) {
-				throw new DataTypeException("can`t be null");
-			}
-			if (!is_numeric($value) && !is_float($value + 0) && !is_int($value + 0)) {
-				throw new DataTypeException("invalid float");
+			try{
+				$value = (float)$value;
+			}catch (Exception $e){
+				throw new DataTypeException("invalid float",0,$e);
 			}
 		}
 

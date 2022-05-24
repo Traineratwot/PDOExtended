@@ -6,6 +6,13 @@
 
 	abstract class DataType
 	{
+		public ?string $columnName = NULL;
+
+		public function __construct(string $columnName = '')
+		{
+			$this->columnName = $columnName;
+		}
+
 		/**
 		 * @var mixed
 		 */

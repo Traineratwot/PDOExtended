@@ -109,6 +109,7 @@ CREATE TABLE test
 			$this->assertEquals(24, $c);
 		}
 
+
 		/**
 		 * @throws SqlBuildException
 		 */
@@ -149,6 +150,21 @@ CREATE TABLE test
 							->toSql()
 			;
 			$this->assertEquals("SELECT * FROM `test` WHERE ( `id` = '5' ) OR ( `id` <> '8' AND `id` <> '9' );", $sql);
+
+		}
+
+		public function testInsert()
+		{
+			$sql = $this->db->table('test')
+							->update()
+							->setData(
+								[
+									'value' => null,
+								]
+							)->toSql();
+			echo '<pre>';
+			var_dump($sql);
+			die;
 
 		}
 	}

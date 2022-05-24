@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\tableInfo\dataType;
 
+	use Exception;
 	use Traineratwot\PDOExtended\abstracts\DataType;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
@@ -14,8 +15,10 @@
 		public function validate($value)
 		: void
 		{
-			if (($value && $this->canBeNull) && !is_string($value)) {
-				throw new DataTypeException("invalid string");
+			try{
+				$value = (string)$value;
+			}catch (Exception $e){
+				throw new DataTypeException("invalid string",0,$e);
 			}
 		}
 
@@ -24,6 +27,6 @@
 		 */
 		public function convert($value)
 		{
-			return is_null($value) ? NULL : $value;
+			return is_null($value) ? NULL : (string)$value;
 		}
 	}

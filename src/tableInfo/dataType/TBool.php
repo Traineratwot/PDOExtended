@@ -2,18 +2,25 @@
 
 	namespace Traineratwot\PDOExtended\tableInfo\dataType;
 
+	use Exception;
 	use Traineratwot\PDOExtended\abstracts\DataType;
+	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
 	class TBool extends DataType
 	{
 		public string $phpName = 'bool';
+
 		/**
 		 * @inheritDoc
 		 */
 		public function validate($value)
 		: void
 		{
-			// TODO: Implement validate() method.
+			try {
+				$value = (bool)$value;
+			} catch (Exception $e) {
+				throw new DataTypeException("invalid bool", 0, $e);
+			}
 		}
 
 		/**
