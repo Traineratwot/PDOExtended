@@ -7,18 +7,11 @@
 	abstract class DataType
 	{
 		public ?string $columnName = NULL;
-
-		public function __construct(string $columnName = '')
-		{
-			$this->columnName = $columnName;
-		}
-
 		/**
 		 * @var mixed
 		 */
 		public        $value;
 		public string $originalType = '';
-
 		public string $phpName   = 'mixed';
 		public bool   $canBeNull = TRUE;
 		/**
@@ -26,6 +19,11 @@
 		 */
 		public      $default;
 		public bool $isSet = FALSE;
+
+		public function __construct(string $columnName = '')
+		{
+			$this->columnName = $columnName;
+		}
 
 		public static function __set_state($an_array)
 		{

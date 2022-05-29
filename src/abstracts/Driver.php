@@ -28,7 +28,7 @@
 				"Where"     => Where::class,
 				"WherePart" => WherePart::class,
 				"Join"      => Join::class,
-				"Alter"      => Alter::class,
+				"Alter"     => Alter::class,
 			];
 		public string        $eq        = '=';
 		public string        $notEq     = '<>';
@@ -90,9 +90,9 @@
 		public function findDataType(string $type)
 		: string
 		{
-			$type_ = null;
-			preg_match('/^(\w+)/',$type,$type_);
-			if($_type = $type_[1]) {
+			$type_ = NULL;
+			preg_match('/^(\w+)/', $type, $type_);
+			if ($_type = $type_[1]) {
 				foreach ($this->dataTypes as $dataType => $dataTypesList) {
 					foreach ($dataTypesList as $dt) {
 						if (strtolower($dt) === strtolower($_type)) {

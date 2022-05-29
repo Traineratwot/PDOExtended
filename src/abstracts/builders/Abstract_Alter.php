@@ -26,6 +26,15 @@
 			return $this;
 		}
 
+		private function getType($datatype, $precision)
+		{
+			if ($precision) {
+				return "$datatype($precision)";
+			}
+
+			return $datatype;
+		}
+
 		/**
 		 * @param string $column_name
 		 * @return $this
@@ -91,14 +100,5 @@
 			$sql = implode('', ['ALTER TABLE', $this->table, $actions]);
 			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, [], $this->driver->connection);
-		}
-
-		private function getType($datatype, $precision)
-		{
-			if ($precision) {
-				return "$datatype($precision)";
-			}
-
-			return $datatype;
 		}
 	}

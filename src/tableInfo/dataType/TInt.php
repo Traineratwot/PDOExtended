@@ -16,10 +16,13 @@
 		public function validate($value)
 		: void
 		{
-			try{
+			if (is_array($value) || is_object($value)) {
+				throw new DataTypeException("invalid int");
+			}
+			try {
 				$value = (int)$value;
-			}catch (Exception $e){
-				throw new DataTypeException("invalid int",0,$e);
+			} catch (Exception $e) {
+				throw new DataTypeException("invalid int", 0, $e);
 			}
 		}
 

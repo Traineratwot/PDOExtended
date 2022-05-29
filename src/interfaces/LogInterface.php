@@ -13,7 +13,7 @@
 		public static function init()
 		: self;
 
-		public function log(PDOE $PDOE,?string $sql = '')
+		public function log(PDOE $PDOE, ?string $sql = '')
 		: void;
 
 		public function get()

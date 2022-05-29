@@ -9,15 +9,16 @@
 	{
 		public string $phpName = 'string';
 		public array  $values  = [];
+
 		/**
 		 * @inheritDoc
 		 */
-		public function validate()
+		public function validate($value)
 		: void
 		{
-			if (!in_array($this->value, $this->values, TRUE)) {
-				throw new DataTypeException("invalid value ");
-			}
+//			if (!in_array($value, $this->values, TRUE)) {
+//				throw new DataTypeException("invalid value ");
+//			}
 		}
 
 		/**

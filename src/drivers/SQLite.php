@@ -7,11 +7,10 @@
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
-	use Traineratwot\cc\Config;
+	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\Helpers;
-	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBool;
@@ -22,6 +21,8 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TUnixTime;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
+
+	;
 
 	class SQLite extends Driver
 	{
@@ -52,7 +53,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey());
+			},                 Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey());
 		}
 
 		/**
@@ -107,7 +108,7 @@
 				}
 
 				return $Scheme;
-			},                                   Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey() . '/tables');
+			},                                   Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey() . '/tables');
 			return $this->schemes[$table];
 		}
 

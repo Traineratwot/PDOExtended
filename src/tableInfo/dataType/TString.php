@@ -9,16 +9,20 @@
 	class TString extends DataType
 	{
 		public string $phpName = 'string';
+
 		/**
 		 * @inheritDoc
 		 */
 		public function validate($value)
 		: void
 		{
-			try{
+			if (is_array($value) || is_object($value)) {
+				throw new DataTypeException("invalid string");
+			}
+			try {
 				$value = (string)$value;
-			}catch (Exception $e){
-				throw new DataTypeException("invalid string",0,$e);
+			} catch (Exception $e) {
+				throw new DataTypeException("invalid string", 0, $e);
 			}
 		}
 

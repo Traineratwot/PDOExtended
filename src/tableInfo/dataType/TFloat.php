@@ -16,10 +16,13 @@
 		public function validate($value)
 		: void
 		{
-			try{
+			if (is_array($value) || is_object($value)) {
+				throw new DataTypeException("invalid float");
+			}
+			try {
 				$value = (float)$value;
-			}catch (Exception $e){
-				throw new DataTypeException("invalid float",0,$e);
+			} catch (Exception $e) {
+				throw new DataTypeException("invalid float", 0, $e);
 			}
 		}
 

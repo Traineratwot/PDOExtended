@@ -16,6 +16,9 @@
 		public function validate($value)
 		: void
 		{
+			if (is_array($value) || is_object($value)) {
+				throw new DataTypeException("invalid bool");
+			}
 			try {
 				$value = (bool)$value;
 			} catch (Exception $e) {

@@ -99,43 +99,6 @@
 		}
 
 		/**
-		 * @return void
-		 */
-		public function queryCountIncrement()
-		: void
-		{
-			$this->query_count++;
-		}
-
-		/**
-		 * @param $t
-		 * @return void
-		 */
-		public function queryTimeIncrement($t)
-		: void
-		{
-			$this->query_time += abs($t * 1000);
-		}
-
-		/**
-		 * @param DsnInterface $dsn
-		 * @param array        $driverOptions
-		 * @param string|null  $var return global variable name
-		 * @return self
-		 * @throws DsnException
-		 */
-		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
-		: PDOE
-		{
-			$var = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
-			global $$var;
-			if (!isset($$var) || is_null($$var)) {
-				$$var = new self($dsn, $driverOptions);
-			}
-			return $$var;
-		}
-
-		/**
 		 * (PHP 5 &gt;= 5.1.0, PHP 7, PECL pdo &gt;= 0.2.1)<br/>
 		 * Quotes a string for use in a query.
 		 * @link https://php.net/manual/en/pdo.quote.php
@@ -166,16 +129,6 @@
 			}
 			return parent::quote($value, $type);
 		}
-//---------------------------------------------- PDO -------------------------------------------------
-
-		/**
-		 * @inheritDoc
-		 */
-		public function prepare($query, $options = [])
-		{
-			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
-			return parent::prepare($query, $options);
-		}
 
 		/**
 		 * prepare adn run sql query, safe
@@ -194,6 +147,15 @@
 		/**
 		 * @inheritDoc
 		 */
+		public function prepare($query, $options = [])
+		{
+			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
+			return parent::prepare($query, $options);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
 		public function query($statement, ...$arg)
 		{
 			$this->queryCountIncrement();
@@ -202,6 +164,53 @@
 			$return = parent::query($statement, ...$arg);
 			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
+		}
+//---------------------------------------------- PDO -------------------------------------------------
+
+		/**
+		 * @return void
+		 */
+		public function queryCountIncrement()
+		: void
+		{
+			$this->query_count++;
+		}
+
+		public function log($sql)
+		{
+			if ($this->LogEnabled) {
+				$logClass = $this->logClass;
+				($logClass::init())->log($this, $sql);
+			}
+			return NULL;
+		}
+
+		/**
+		 * @param DsnInterface $dsn
+		 * @param array        $driverOptions
+		 * @param string|null  $var return global variable name
+		 * @return self
+		 * @throws DsnException
+		 */
+		public static function init(DsnInterface $dsn, array $driverOptions = [], ?string &$var = '')
+		: PDOE
+		{
+			$var = 'PDOE_' . Cache::getKey([$dsn->get(), $driverOptions]);
+			global $$var;
+			if (!isset($$var) || is_null($$var)) {
+				$$var = new self($dsn, $driverOptions);
+			}
+			return $$var;
+		}
+
+		/**
+		 * @param $t
+		 * @return void
+		 */
+		public function queryTimeIncrement($t)
+		: void
+		{
+			$this->query_time += abs($t * 1000);
 		}
 
 		/**
@@ -219,19 +228,6 @@
 		}
 
 		/**
-		 * @inheritDoc
-		 */
-		public function exec($statement)
-		{
-			$this->queryCountIncrement();
-			$tStart = microtime(TRUE);
-			$this->log($statement);
-			$return = parent::exec($statement);
-			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
-			return $return;
-		}
-
-		/**
 		 * @param $filepath
 		 * @return false|int
 		 * @throws PDOEException
@@ -246,6 +242,21 @@
 		}
 
 		/**
+		 * @inheritDoc
+		 */
+		public function exec($statement)
+		{
+			$this->queryCountIncrement();
+			$tStart = microtime(TRUE);
+			$this->log($statement);
+			$return = parent::exec($statement);
+			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
+			return $return;
+		}
+//---------------------------------------------- PDO -------------------------------------------------
+//----------------------------------------- opportunities --------------------------------------------
+
+		/**
 		 * @param string $statement SQL request
 		 * @param array  $driver_options
 		 * @return bool|PDOEPoolStatement
@@ -255,8 +266,7 @@
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEPoolStatement::class, [$this]]);
 			return parent::prepare($statement, $driver_options);
 		}
-//---------------------------------------------- PDO -------------------------------------------------
-//----------------------------------------- opportunities --------------------------------------------
+
 		/**
 		 * Enable logging
 		 * @return void
@@ -273,24 +283,6 @@
 		public function logOff()
 		{
 			$this->LogEnabled = FALSE;
-		}
-
-		/**
-		 * @return int
-		 */
-		public function queryCount()
-		: int
-		{
-			return $this->query_count;
-		}
-
-		/**
-		 * @return int
-		 */
-		public function queryTime()
-		: int
-		{
-			return $this->query_time;
 		}
 
 		/**
@@ -327,17 +319,6 @@
 			return $this->driver->getScheme($table);
 		}
 
-		public function log($sql)
-		{
-			if ($this->LogEnabled) {
-				$logClass = $this->logClass;
-				($logClass::init())->log($this, $sql);
-			}
-			return NULL;
-		}
-//----------------------------------------- opportunities --------------------------------------------
-//-------------------------------------------- magick ------------------------------------------------
-
 		/**
 		 * @param string $name
 		 * @return array|false|int|null
@@ -363,6 +344,26 @@
 		public function __set(string $name, $value)
 		{
 			return FALSE;
+		}
+//----------------------------------------- opportunities --------------------------------------------
+//-------------------------------------------- magick ------------------------------------------------
+
+		/**
+		 * @return int
+		 */
+		public function queryCount()
+		: int
+		{
+			return $this->query_count;
+		}
+
+		/**
+		 * @return int
+		 */
+		public function queryTime()
+		: int
+		{
+			return $this->query_time;
 		}
 
 		/**

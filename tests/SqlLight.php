@@ -3,7 +3,7 @@
 
 	use PHPUnit\Framework\TestCase;
 	use Traineratwot\Cache\Cache;
-	use Traineratwot\cc\Config;
+	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\drivers\MySQL\Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;

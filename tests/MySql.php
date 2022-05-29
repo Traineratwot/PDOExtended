@@ -2,7 +2,7 @@
 
 
 	use PHPUnit\Framework\TestCase;
-	use Traineratwot\cc\Config;
+	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
@@ -130,10 +130,11 @@
 		public function testUpdate()
 		{
 			$sql = $this->db->table('test_link_master')->update()
-							->set('master', 2)
+							->set('master', [])
 							->where(3)->end()
 							->toSql()
 			;
 			$this->assertEquals("UPDATE `test_link_master` SET `test_link_master`.`master` = '2' WHERE `test_link_master`.`id` = '3';", $sql);
 		}
+
 	}

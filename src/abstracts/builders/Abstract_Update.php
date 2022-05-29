@@ -4,6 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\builder;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
+	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
 	use Traineratwot\PDOExtended\Helpers;
 
 	abstract class Abstract_Update extends Builder
@@ -12,27 +13,31 @@
 		public array $columns = [];
 		public int   $i       = 0;
 
-		/**
-		 * @throws DataTypeException
-		 */
-		public function set(string $column, $value)
-		{
-
-			if (!$this->scheme->columnExists($column)) {
-				Helpers::warn("Column '$column' does not exist in table {$this->table}");
-				return $this;
-			}
-			$val = $this->scheme->getColumn($column)->validate($value);
-			$this->i++;
-			$this->columns[$this->i]             = $column;
-			$this->values["PDOE_{$this->i}_upd"] = $val;
-			return $this;
-		}
-
 		public function setData(array $data)
 		{
 			foreach ($data as $column => $value) {
 				$this->set($column, $value);
+			}
+			return $this;
+		}
+
+		/**
+		 * @throws SqlBuildException
+		 */
+		public function set(string $column, $value)
+		{
+
+			try {
+				if (!$this->scheme->columnExists($column)) {
+					Helpers::warn("Column '$column' does not exist in table {$this->table}");
+					return $this;
+				}
+				$val = $this->scheme->getColumn($column)->validate($value);
+				$this->i++;
+				$this->columns[$this->i]             = $column;
+				$this->values["PDOE_{$this->i}_upd"] = $val;
+			} catch (DataTypeException $e) {
+				throw new SqlBuildException($column . ': ' . $e->getMessage(), 0, $e);
 			}
 			return $this;
 		}

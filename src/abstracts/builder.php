@@ -48,12 +48,11 @@
 			return $this->where;
 		}
 
-		abstract public function toSql();
-
-
-		public function run(string &$sql = null)
+		public function run(string &$sql = NULL)
 		{
 			$sql = $this->toSql();
 			return $this->scope->driver->connection->query($sql);
 		}
+
+		abstract public function toSql();
 	}

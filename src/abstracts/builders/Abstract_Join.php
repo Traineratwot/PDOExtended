@@ -27,6 +27,9 @@
 			}
 		}
 
+		/**
+		 * @throws SqlBuildException
+		 */
 		public function left(?string $column = NULL, ?string $leftColumn = NULL)
 		{
 			if (!empty($this->type)) {
@@ -37,6 +40,9 @@
 			return $this->scope;
 		}
 
+		/**
+		 * @throws SqlBuildException
+		 */
 		public function _join($column = NULL, $column2 = NULL)
 		{
 			if (is_null($column)) {
@@ -52,6 +58,9 @@
 			$this->column2 = $this->driver->escapeColumn($column2, $this->joinTable->table);
 		}
 
+		/**
+		 * @throws SqlBuildException
+		 */
 		public function inner(?string $column = NULL, ?string $innerColumn = NULL)
 		{
 			if (!empty($this->type)) {
@@ -62,6 +71,9 @@
 			return $this->scope;
 		}
 
+		/**
+		 * @throws SqlBuildException
+		 */
 		public function right(?string $column = NULL, ?string $rightColumn = NULL)
 		{
 			if (!empty($this->type)) {

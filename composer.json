@@ -2,14 +2,14 @@
 	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
 	"name"             :"traineratwot/pdo-extended",
 	"type"             :"library",
-	"version"          :"1.0.22",
+	"version"          :"1.1.0",
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
-		"test"           :"phpunit ./tests/SqlLight.php",
-		"up:release"     :"gh release create \"1.0.22\" --generate-notes",
-		"composer-config-print": "composer getAllConfigs",
-		"composer-config-update": "composer configUpdate"
+		"test"                  :"phpunit ./tests/SqlLight.php",
+		"up:release"            :"gh release create \"1.1.0\" --generate-notes",
+		"composer-config-print" :"composer getAllConfigs",
+		"composer-config-update":"composer configUpdate"
 	},
 	"readme"           :"./README.md",
 	"homepage"         :"https://github.com/traineratwot/PDOExtended",
@@ -26,15 +26,16 @@
 	},
 	"minimum-stability":"stable",
 	"require"          :{
-		"php":">=7.4",
-		"traineratwot/cache": "^2.0",
-		"traineratwot/composer-config": "^1.0"
+		"php"                :"^7.4||^8.0",
+		"ext-pdo"            :"*",
+		"traineratwot/cache" :"^2.1",
+		"traineratwot/config":"^1.0"
 	},
 	"require-dev"      :{
 		"phpunit/phpunit"              :"^9.5",
 		"roave/security-advisories"    :"dev-latest",
 		"jetbrains/phpstorm-attributes":"dev-master",
-		"phpstan/phpstan": "^1.6"
+		"traineratwot/composer-config" :"^1.1"
 	},
 	"keywords"         :[
 		"PSR-4",
@@ -43,12 +44,12 @@
 		"SQL",
 		"Query builder"
 	],
-	"config": {
-		"allow-plugins": {
-			"traineratwot/composer-config": true
+	"config"           :{
+		"allow-plugins":{
+			"traineratwot/composer-config":true
 		}
 	},
-	"extra": {
+	"extra"            :{
 		"composer-config":{
 			"namespace": "PDOE",
 			"optional": {

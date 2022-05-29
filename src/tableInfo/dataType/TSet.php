@@ -3,19 +3,21 @@
 	namespace Traineratwot\PDOExtended\tableInfo\dataType;
 
 	use Traineratwot\PDOExtended\abstracts\DataType;
+	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 
 	class TSet extends DataType
 	{
 		public string $phpName = 'string';
 		public array  $values  = [];
+
 		/**
 		 * @inheritDoc
 		 */
-		public function validate()
+		public function validate($value)
 		: void
 		{
 			//TODO make this function
-//			if (!in_array($this->value, $this->values, TRUE)) {
+//			if (!in_array($value, $this->values, TRUE)) {
 //				throw new DataTypeException("invalid value ");
 //			}
 		}

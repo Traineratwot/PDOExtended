@@ -2,17 +2,15 @@
 
 	namespace Traineratwot\PDOExtended\drivers;
 
-	use Exception;
 	use PDO;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
-	use Traineratwot\cc\Config;
+	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\abstracts\DataType;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\Helpers;
-	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBlob;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TBool;
@@ -25,6 +23,8 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TUnixTime;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
+
+	;
 
 	class MySQL extends Driver
 	{
@@ -45,7 +45,7 @@
 				TBlob::class     => ['BLOB'],
 				TDatetime::class => ['DATETIME'],
 				TDate::class     => ['DATE'],
-				TUnixTime::class => ['TIME','TIMESTAMP'],
+				TUnixTime::class => ['TIME', 'TIMESTAMP'],
 			];
 
 		/**
@@ -57,7 +57,7 @@
 		{
 			return Cache::call('tablesList', function () {
 				return $this->connection->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey());
+			},                 Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey());
 		}
 
 		/**
@@ -71,7 +71,7 @@
 			if (isset($this->schemes[$table])) {
 				return $this->schemes[$table];
 			}
-			$this->schemes[$table] =  Cache::call('Scheme_' . $table, function () use ($table) {
+			$this->schemes[$table] = Cache::call('Scheme_' . $table, function () use ($table) {
 				if (!$this->tableExists($table)) {
 					throw new PDOEException('table: "' . $table . '" is not exist');
 				}
@@ -82,7 +82,7 @@
 				foreach ($columns as $column) {
 					$column = array_map($Helpers . '::strtolower', $column);
 					$col    = new Column();
-					$a = $this->findDataType($column['DATA_TYPE']);
+					$a      = $this->findDataType($column['DATA_TYPE']);
 					/** @var DataType $validator */
 					$validator = new $a();
 					$validator->setOriginalType($column['DATA_TYPE']);
@@ -106,7 +106,7 @@
 					$Scheme->addLink($index['REFERENCED_TABLE_NAME'], $index['COLUMN_NAME'], $index['REFERENCED_COLUMN_NAME']);
 				}
 				return $Scheme;
-			},                 Config::get('CACHE_EXPIRATION','PDOE',600), $this->connection->getKey() . '/tables');
+			},                                   Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey() . '/tables');
 			return $this->schemes[$table];
 		}
 

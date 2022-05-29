@@ -80,13 +80,6 @@
 			return $this->driver;
 		}
 
-		public function getDriverClass()
-		: string
-		{
-			return $this->DRIVERS[$this->driver]['class'];
-		}
-// 		dsn builders
-
 		/**
 		 * @param string      $driver
 		 * @param string|null $class
@@ -102,6 +95,7 @@
 			$this->driver = $driver;
 			return $this;
 		}
+// 		dsn builders
 
 		/**
 		 * @return Dsn
@@ -110,6 +104,12 @@
 		: Dsn
 		{
 			return $this;
+		}
+
+		public function getDriverClass()
+		: string
+		{
+			return $this->DRIVERS[$this->driver]['class'];
 		}
 
 		/**
