@@ -113,7 +113,7 @@
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < '5' ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `test`.`id`, `test`.`value` FROM `test` WHERE `test`.`id` IN ('5','6','8') OR `test`.`id` < 5 ORDER BY `test`.`id` ASC LIMIT 2,1;", $sql);
 		}
 
 		public function testSelectLeftJoin()
@@ -130,11 +130,11 @@
 		public function testUpdate()
 		{
 			$sql = $this->db->table('test_link_master')->update()
-							->set('master', [])
+							->set('master', 2)
 							->where(3)->end()
 							->toSql()
 			;
-			$this->assertEquals("UPDATE `test_link_master` SET `test_link_master`.`master` = '2' WHERE `test_link_master`.`id` = '3';", $sql);
+			$this->assertEquals("UPDATE `test_link_master` SET `test_link_master`.`master` = 2 WHERE `test_link_master`.`id` = 3;", $sql);
 		}
 
 	}

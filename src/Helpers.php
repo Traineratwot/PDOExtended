@@ -43,7 +43,7 @@ REGEXP
 				} else {
 					continue;
 				}
-				$value = self::getValue($escape, $value);
+				$value = self::getValue($escape, $value, $word);
 				$sql   = str_replace($word, $value, $sql);
 			}
 			foreach ($question as $i) {
@@ -54,7 +54,6 @@ REGEXP
 				}
 				$value = self::getValue($escape, $value);
 				$sql   = preg_replace('@([^?](\?)[^?])|([^?](\?)$)@', ' ' . $value . ' ', $sql, 1);
-
 			}
 			$sql = trim($sql);
 			$sql .= $end;
@@ -62,18 +61,19 @@ REGEXP
 		}
 
 		/**
-		 * @param $escape
-		 * @param $value
+		 * @param             $escape
+		 * @param             $value
+		 * @param string|null $key
 		 * @return false|string
 		 */
-		public static function getValue($escape, $value)
+		public static function getValue($escape, $value, string $key = NULL)
 		{
 			if (is_null($escape)) {
 				$value = "'" . escapeshellcmd($value) . "'";
 			} elseif ($escape instanceof PDO) {
 				$value = $escape->quote($value);
 			} elseif (is_callable($escape)) {
-				$value = $escape($value);
+				$value = $escape($value, $key);
 			} else {
 				$value = "'" . escapeshellcmd($value) . "'";
 			}
@@ -82,10 +82,10 @@ REGEXP
 
 		/**
 		 * @param string $string
-		 * @param        $flags
+		 * @param int    $flags
 		 * @return void
 		 */
-		public static function warn(string $string, $flags = E_USER_WARNING)
+		public static function warn(string $string, int $flags = E_USER_WARNING)
 		{
 			trigger_error($string, $flags);
 		}

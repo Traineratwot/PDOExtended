@@ -16,7 +16,7 @@
 		private bool     $canBeNull    = FALSE;
 		private bool     $isSetDefault = FALSE;
 		private string   $comment      = '';
-		private DataType $validator;
+		public DataType $validator;
 		/**
 		 * @var mixed|null
 		 */

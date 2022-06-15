@@ -23,4 +23,9 @@
 		{
 			return is_null($value) ? NULL : $value;
 		}
+
+		public function escape($escape, $value)
+		{
+			return $value;
+		}
 	}

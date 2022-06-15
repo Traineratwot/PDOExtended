@@ -9,9 +9,10 @@
 
 	abstract class Abstract_Insert extends Builder
 	{
-		public array $values  = [];
-		public array $columns = [];
-		public int   $i       = 0;
+		public array $values     = [];
+		public array $columns    = [];
+		public int   $i          = 0;
+		public array $validators = [];
 
 		public function setData(array $data)
 		{
@@ -31,15 +32,17 @@
 					Helpers::warn("Column '$column' does not exist in table {$this->table} ");
 					return $this;
 				}
-				$val = $this->scheme->getColumn($column)->validate($value);
+				$val = $this->scheme->getColumn($column);
 				$this->i++;
-				$this->columns[$this->i] = [
+				$this->columns[$this->i]                 = [
 					'column' => $this->driver->escapeColumn($column),
 					'value'  => [
 						'alias' => "PDOE_{$this->i}_ins",
-						'val'   => $val,
+						'val'   => $val->validate($value),
 					],
 				];
+				$this->validators["PDOE_{$this->i}_ins"] = $val->validator;
+
 			} catch (DataTypeException $e) {
 				throw new SqlBuildException($column . ': ' . $e->getMessage(), 0, $e);
 			}
@@ -60,6 +63,11 @@
 			$aliases = implode(', ', $aliases);
 			$sql     = implode('', ['INSERT INTO', $this->table, '(', $columns, ')', 'VALUES', '(', $aliases, ')',]);
 			$sql     = preg_replace("/+/u", ' ', $sql);
-			return Helpers::prepare($sql, $values, $this->driver->connection);
+			return Helpers::prepare($sql, $values, function ($val, $key) {
+				if ($this->validators[trim($key, ':')]) {
+					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				}
+				return Helpers::getValue($this->driver->connection, $val);
+			});
 		}
 	}

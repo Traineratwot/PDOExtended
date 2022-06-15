@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
+	use Traineratwot\PDOExtended\Helpers;
 
 	abstract class DataType
 	{
@@ -12,8 +13,8 @@
 		 */
 		public        $value;
 		public string $originalType = '';
-		public string $phpName   = 'mixed';
-		public bool   $canBeNull = TRUE;
+		public string $phpName      = 'mixed';
+		public bool   $canBeNull    = TRUE;
 		/**
 		 * @var mixed|null
 		 */
@@ -106,5 +107,10 @@
 		: void
 		{
 			$this->originalType = $originalType;
+		}
+
+		public function escape($escape, $value)
+		{
+			return Helpers::getValue($escape, $value);
 		}
 	}

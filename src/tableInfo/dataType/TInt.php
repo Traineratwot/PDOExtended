@@ -33,4 +33,9 @@
 		{
 			return (is_null($value) || $value === 'null') ? NULL : (int)$value;
 		}
+
+		public function escape($escape, $value)
+		{
+			return $value;
+		}
 	}

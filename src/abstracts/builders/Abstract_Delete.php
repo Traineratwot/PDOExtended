@@ -7,7 +7,8 @@
 
 	abstract class Abstract_Delete extends Builder
 	{
-		public bool $isTruncate = FALSE;
+		public array $validators = [];
+		public bool  $isTruncate = FALSE;
 
 		/**
 		 * If set true, clear autoincrement
@@ -23,12 +24,17 @@
 		{
 			$v = [];
 			if ($this->where) {
-				$w   = $this->where->get();
+				$w   = $this->where->get($this->validators);
 				$v   = $this->where->getValues();
 				$sql = "DELETE FROM {$this->table} WHERE {$w}";
 			} else {
 				$sql = "DELETE FROM {$this->table}";
 			}
-			return Helpers::prepare($sql, $v, $this->driver->connection);
+			return Helpers::prepare($sql, $v, function ($val, $key) {
+				if ($this->validators[trim($key, ':')]) {
+					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				}
+				return Helpers::getValue($this->driver->connection, $val);
+			});
 		}
 	}

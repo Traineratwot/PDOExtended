@@ -130,7 +130,7 @@ CREATE TABLE test
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT `id`, `value` FROM `test` WHERE `id` IN ('5','6','8') OR `id` < '5' ORDER BY `id` ASC LIMIT 2,1;", $sql);
+			$this->assertEquals("SELECT `id`, `value` FROM `test` WHERE `id` IN ('5','6','8') OR `id` < 5 ORDER BY `id` ASC LIMIT 2,1;", $sql);
 		}
 
 		public function testWhereCondition()
@@ -149,7 +149,7 @@ CREATE TABLE test
 							})->end()
 							->toSql()
 			;
-			$this->assertEquals("SELECT * FROM `test` WHERE ( `id` = '5' ) OR ( `id` <> '8' AND `id` <> '9' );", $sql);
+			$this->assertEquals("SELECT * FROM `test` WHERE ( `id` = 5 ) OR ( `id` <> 8 AND `id` <> 9 );", $sql);
 
 		}
 
@@ -162,9 +162,6 @@ CREATE TABLE test
 									'value' => null,
 								]
 							)->toSql();
-			echo '<pre>';
-			var_dump($sql);
-			die;
-
+			$this->assertEquals("UPDATE `test` SET `value` = '';", $sql);
 		}
 	}

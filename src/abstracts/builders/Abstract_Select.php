@@ -8,9 +8,10 @@
 
 	abstract class Abstract_Select extends Builder
 	{
-		private array  $columns = [];
-		private string $limit   = '';
-		private string $order   = '';
+		private array  $columns    = [];
+		private string $limit      = '';
+		private string $order      = '';
+		public array   $validators = [];
 
 		/**
 		 * @param      $column
@@ -125,13 +126,18 @@
 				$j = implode(' ', $j);
 			}
 			if ($this->where) {
-				$w   = $this->where->get();
+				$w   = $this->where->get($this->validators);
 				$v   = $this->where->getValues();
 				$sql = implode('', ['SELECT', $columns, 'FROM', $this->table, $j, 'WHERE', $w, $this->order, $this->limit]);
 			} else {
 				$sql = implode('', ['SELECT', $columns, 'FROM', $this->table, $j, $this->order, $this->limit]);
 			}
 			$sql = preg_replace("/+/u", ' ', $sql);
-			return Helpers::prepare($sql, $v, $this->driver->connection);
+			return Helpers::prepare($sql, $v, function ($val, $key) {
+				if ($this->validators[trim($key, ':')]) {
+					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				}
+				return Helpers::getValue($this->driver->connection, $val);
+			});
 		}
 	}

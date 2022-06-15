@@ -9,9 +9,10 @@
 
 	abstract class Abstract_Update extends Builder
 	{
-		public array $values  = [];
-		public array $columns = [];
-		public int   $i       = 0;
+		public array $values     = [];
+		public array $columns    = [];
+		public int   $i          = 0;
+		public array $validators = [];
 
 		public function setData(array $data)
 		{
@@ -32,10 +33,11 @@
 					Helpers::warn("Column '$column' does not exist in table {$this->table}");
 					return $this;
 				}
-				$val = $this->scheme->getColumn($column)->validate($value);
+				$val = $this->scheme->getColumn($column);
 				$this->i++;
-				$this->columns[$this->i]             = $column;
-				$this->values["PDOE_{$this->i}_upd"] = $val;
+				$this->columns[$this->i]                 = $column;
+				$this->values["PDOE_{$this->i}_upd"]     = $val->validate($value);
+				$this->validators["PDOE_{$this->i}_upd"] = $val->validator;
 			} catch (DataTypeException $e) {
 				throw new SqlBuildException($column . ': ' . $e->getMessage(), 0, $e);
 			}
@@ -50,14 +52,19 @@
 			}
 			$set = implode(', ', $set);
 			if ($this->where) {
-				$w            = $this->where->get();
+				$w            = $this->where->get($this->validators);
 				$this->values = array_merge($this->values, $this->where->getValues());
 				$sql          = implode('', ['UPDATE', $this->table, 'SET', $set, 'WHERE', $w]);
 			} else {
 				$sql = implode('', ['UPDATE', $this->table, 'SET', $set]);
 			}
 			$sql = preg_replace("/+/u", ' ', $sql);
-			return Helpers::prepare($sql, $this->values, $this->driver->connection);
+			return Helpers::prepare($sql, $this->values, function ($val, $key) {
+				if ($this->validators[trim($key, ':')]) {
+					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				}
+				return Helpers::getValue($this->driver->connection, $val);
+			});
 
 		}
 	}
