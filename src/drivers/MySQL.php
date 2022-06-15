@@ -19,6 +19,7 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TEnum;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TFloat;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
+	use Traineratwot\PDOExtended\tableInfo\dataType\TPoint;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TSet;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TUnixTime;
@@ -41,6 +42,7 @@
 				TFloat::class    => ['DOUBLE', 'REAL', 'NUMERIC', 'DECIMAL', 'DEC', 'NUMERIC', 'FIXED', 'FLOAT', 'PRECISION'],
 				TEnum::class     => ['ENUM'],
 				TSet::class      => ['SET'],
+				TPoint::class    => ['POINT'],
 				TBool::class     => ['BOOLEAN', 'BOOL'],
 				TBlob::class     => ['BLOB'],
 				TDatetime::class => ['DATETIME'],
@@ -76,7 +78,9 @@
 					throw new PDOEException('table: "' . $table . '" is not exist');
 				}
 				$Helpers      = Helpers::class;
-				$columns      = $this->connection->prepareQuery("SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_SCHEMA=:database AND TABLE_NAME=:table ORDER BY ORDINAL_POSITION;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
+				$columns      = $this->connection->prepareQuery("SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_SCHEMA=:database AND TABLE_NAME=:table ORDER BY ORDINAL_POSITION;", [
+					'table' => $table, 'database' => $this->connection->dsn->getDatabase(),
+				])->fetchAll(PDO::FETCH_ASSOC);
 				$Scheme       = new Scheme();
 				$Scheme->name = $table;
 				foreach ($columns as $column) {
@@ -101,7 +105,9 @@
 					}
 					$Scheme->addColumn($col);
 				}
-				$indexes = $this->connection->prepareQuery("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE   CONSTRAINT_SCHEMA=:database   AND TABLE_NAME=:table   AND REFERENCED_TABLE_NAME IS NOT NULL;;", ['table' => $table, 'database' => $this->connection->dsn->getDatabase()])->fetchAll(PDO::FETCH_ASSOC);
+				$indexes = $this->connection->prepareQuery("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE   CONSTRAINT_SCHEMA=:database   AND TABLE_NAME=:table   AND REFERENCED_TABLE_NAME IS NOT NULL;;", ['table'    => $table,
+																																																					   'database' => $this->connection->dsn->getDatabase(),
+				])->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($indexes as $index) {
 					$Scheme->addLink($index['REFERENCED_TABLE_NAME'], $index['COLUMN_NAME'], $index['REFERENCED_COLUMN_NAME']);
 				}
