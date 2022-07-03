@@ -161,7 +161,11 @@
 		private function pgsql_host()
 		: string
 		{
-			$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
+			if ($this->getPort()) {
+				$dsn = "{$this->getDriver()}:host={$this->getHost()};";
+			} else {
+				$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
+			}
 			if ($this->database) {
 				$dsn .= "dbname={$this->getDatabase()};";
 			}
@@ -194,13 +198,15 @@
 		}
 
 		/**
+		 * 0 - default port
+		 * -1 - no use port
 		 * @return int
 		 * @throws DsnException
 		 */
 		public function getPort()
 		: int
 		{
-			if (!$this->port) {
+			if (!$this->port && $this->port !== -1) {
 				return $this->DRIVERS[$this->getDriver()]['port'];
 			}
 			return $this->port;
@@ -213,7 +219,7 @@
 		public function setPort(int $port)
 		: Dsn
 		{
-			$this->port = $port ?: NULL;
+			$this->port = $port;
 			return $this;
 		}
 
@@ -300,7 +306,11 @@
 		private function mysql_host()
 		: string
 		{
-			$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";
+			if ($this->getPort()) {
+				$dsn = "{$this->getDriver()}:host={$this->getHost()};";
+			} else {
+				$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";
+			}
 			if ($this->database) {
 				$dsn .= "dbname={$this->getDatabase()};";
 			}
