@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended;
 
 	use DateTime;
+	use Exception;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\interfaces\LogInterface;
@@ -30,16 +31,18 @@
 		 * @param PDOE        $PDOE
 		 * @param string|null $sql
 		 * @return void
-		 * @throws CacheException
 		 */
 		public function log(PDOE $PDOE, ?string $sql = '')
 		: void
 		{
-			$this->PDOE = $PDOE;
-			$where      = $this->find();
-			$when       = (new DateTime())->format('Y-m-d H:i:s');
-			$what       = preg_replace('@[\n\r]+@', ' ', $sql);
-			$this->write($where, $when, $what);
+			try {
+				$this->PDOE = $PDOE;
+				$where      = $this->find();
+				$when       = (new DateTime())->format('Y-m-d H:i:s');
+				$what       = preg_replace('@[\n\r]+@', ' ', $sql);
+				$this->write($where, $when, $what);
+			} catch (Exception $e) {
+			}
 		}
 
 		/**
@@ -69,11 +72,15 @@
 		 */
 		private function write($where, $when, $what)
 		{
-			$log      = "$where [$when]: $what";
-			$oldLog   = Cache::getCache('LOG', $this->PDOE->getKey()) ?: [];
-			$oldLog[] = $log;
-			$newLog   = array_slice($oldLog, $this->limit * -1, $this->limit, TRUE);
-			Cache::setCache('LOG', $newLog, 0, $this->PDOE->getKey());
+			try {
+				$log      = "$where [$when]: $what";
+				$oldLog   = Cache::getCache('LOG', $this->PDOE->getKey()) ?: [];
+				$oldLog[] = $log;
+				$newLog   = array_slice($oldLog, $this->limit * -1, $this->limit, TRUE);
+				Cache::setCache('LOG', $newLog, 0, $this->PDOE->getKey());
+			} catch (Exception $e) {
+				Cache::setCache('LOG', [], 0, $this->PDOE->getKey());
+			}
 		}
 
 		/**
@@ -82,6 +89,10 @@
 		public function get()
 		: string
 		{
-			return implode(PHP_EOL, Cache::getCache('LOG', $this->PDOE->getKey()));
+			try {
+				return implode(PHP_EOL, Cache::getCache('LOG', $this->PDOE->getKey()));
+			} catch (Exception $e) {
+				return '';
+			}
 		}
 	}
