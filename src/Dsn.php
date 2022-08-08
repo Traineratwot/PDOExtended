@@ -161,7 +161,7 @@
 		private function pgsql_host()
 		: string
 		{
-			if ($this->getPort()) {
+			if ($this->getPort() === -1) {
 				$dsn = "{$this->getDriver()}:host={$this->getHost()};";
 			} else {
 				$dsn = "{$this->getDriver()}:host={$this->getHost()};port={$this->getPort()};";
@@ -306,7 +306,7 @@
 		private function mysql_host()
 		: string
 		{
-			if ($this->getPort()) {
+			if ($this->getPort() === -1) {
 				$dsn = "{$this->getDriver()}:host={$this->getHost()};";
 			} else {
 				$dsn = "{$this->getDriver()}:host={$this->getHost()}:{$this->getPort()};";

@@ -11,11 +11,11 @@
 		private string $php_dataType;
 		private string $name;
 
-		private bool     $isPrimary    = FALSE;
-		private bool     $isUnique     = FALSE;
-		private bool     $canBeNull    = FALSE;
-		private bool     $isSetDefault = FALSE;
-		private string   $comment      = '';
+		private bool    $isPrimary    = FALSE;
+		private bool    $isUnique     = FALSE;
+		private bool    $canBeNull    = FALSE;
+		private bool    $isSetDefault = FALSE;
+		private string  $comment      = '';
 		public DataType $validator;
 		/**
 		 * @var mixed|null
@@ -41,7 +41,11 @@
 		public function validate($value)
 		{
 			$this->validator->set($value);
-			return $this->validator->get();
+			$value = $this->validator->get();
+			if ($this->isCanBeNull() && is_null($value)) {
+				return 'null';
+			}
+			return $value;
 		}
 
 		/**

@@ -81,14 +81,16 @@ CREATE TABLE test
 			$dns->setHost('localhost');
 			$dns->setUsername('root');
 			$dns->setPassword('');
+			$dns->setPort(-1);
 			$dns->setDatabase('test');
-			$this->assertEquals("mysql:host=localhost:3306;dbname=test;charset=utf8;", $dns->get(), 'sqlite');
+			$this->assertEquals("mysql:host=localhost;dbname=test;charset=utf8;", $dns->get(), 'sqlite');
 
 			$dns = new Dsn();
 			$dns->setDriver(PDOE::DRIVER_PostgreSQL);
 			$dns->setHost('127.0.0.1');
 			$dns->setUsername('postgres');
 			$dns->setPassword('');
+			$dns->setPort(5432);
 			$dns->setDatabase('test');
 			$this->assertEquals("pgsql:host=127.0.0.1;port=5432;dbname=test;", $dns->get(), 'sqlite');
 
