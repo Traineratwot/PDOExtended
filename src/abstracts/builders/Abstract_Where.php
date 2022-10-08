@@ -10,13 +10,14 @@
 
 	abstract class Abstract_Where
 	{
-		public array   $_where     = [];
-		public array   $values     = [];
-		public int     $i          = 0;
+		public array   $_where         = [];
+		public array   $values         = [];
+		public int     $i              = 0;
 		public Driver  $driver;
 		public Builder $scope;
 		private Scheme $scheme;
-		private array  $validators = [];
+		private array  $validators     = [];
+		private array  $columnsClasses = [];
 
 		/**
 		 * @throws SqlBuildException
@@ -47,11 +48,12 @@
 		 */
 		public function eq(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->eq($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->eq($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
 			return $this;
 		}
 
@@ -69,12 +71,14 @@
 
 		/**
 		 * @param array $validators
+		 * @param array $columnsClasses
 		 * @return string
 		 */
-		public function get(array &$validators = [])
+		public function get(array &$validators = [], array &$columnsClasses = [])
 		: string
 		{
-			$validators = array_merge($validators, $this->validators);
+			$validators     = array_merge($validators, $this->validators);
+			$columnsClasses = array_merge($columnsClasses, $this->columnsClasses);
 			return implode(' ', $this->_where);
 		}
 
@@ -93,11 +97,12 @@
 		 */
 		public function notEq(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->notEq($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->notEq($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
 			return $this;
 		}
 
@@ -108,11 +113,13 @@
 		 */
 		public function greater(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->greater($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->greater($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
 			return $this;
 		}
 
@@ -123,11 +130,13 @@
 		 */
 		public function greaterEq(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->greaterEq($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->greaterEq($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
 			return $this;
 		}
 
@@ -138,11 +147,13 @@
 		 */
 		public function less(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->less($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->less($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
 			return $this;
 		}
 
@@ -153,11 +164,13 @@
 		 */
 		public function lessEq(string $column, $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->lessEq($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->lessEq($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
 			return $this;
 		}
 
@@ -169,11 +182,12 @@
 		public function in(string $column, array $value)
 		{
 
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->in($column, $key)->get();
+			$key            = $this->setValue($value);
+			$cls            = $this->driver->tools['WherePart'];
+			$this->_where[] = (new $cls($this->driver, $this))->in($column, $key)->get();
 //			$val                    = $this->scheme->getColumn($column);
 //			$this->validators[trim($key, ':')] = $val->validator;
+//			$this->columnsClasses[trim($key, ':')] = $val;
 			return $this;
 		}
 
@@ -184,11 +198,13 @@
 		 */
 		public function notIn(string $column, array $value)
 		{
-			$key                    = $this->setValue($value);
-			$cls                    = $this->driver->tools['WherePart'];
-			$this->_where[]         = (new $cls($this->driver, $this))->notIn($column, $key)->get();
-			$val                    = $this->scheme->getColumn($column);
-			$this->validators[trim($key, ':')] = $val->validator;
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->notIn($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
 			return $this;
 		}
 
@@ -264,8 +280,9 @@
 		: string
 		{
 			return Helpers::prepare($this->get(), $this->getValues(), function ($val, $key) {
-				if ($this->validators[trim($key, ':')]) {
-					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				$k = trim($key, ':');
+				if (isset($this->validators[$k])) {
+					return $this->driver->escape($this->columnsClasses[$k], $val);
 				}
 				return Helpers::getValue($this->driver->connection, $val);
 			},                      '');

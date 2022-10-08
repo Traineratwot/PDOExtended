@@ -2,9 +2,11 @@
 
 	namespace Traineratwot\PDOExtended;
 
+	use JetBrains\PhpStorm\Internal\PhpStormStubsElementAvailable;
 	use PDO;
 	use PDOException;
 	use PDOStatement;
+	use ReturnTypeWillChange;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\drivers\MySQL;
@@ -13,7 +15,7 @@
 	use Traineratwot\PDOExtended\interfaces\DsnInterface;
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
-	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
+	use Traineratwot\PDOExtended\tableInfo\PDOEDbObject;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
 	/**
@@ -102,7 +104,7 @@
 		 * (PHP 5 &gt;= 5.1.0, PHP 7, PECL pdo &gt;= 0.2.1)<br/>
 		 * Quotes a string for use in a query.
 		 * @link https://php.net/manual/en/pdo.quote.php
-		 * @param mixed $value  <p>
+		 * @param mixed $string <p>
 		 *                      The string to be quoted.
 		 *                      </p>
 		 * @param ?int  $type   [optional] <p>
@@ -112,22 +114,22 @@
 		 *                      SQL statement. Returns <b>FALSE</b> if the driver does not support quoting in
 		 *                      this way.
 		 */
-		public function quote($value, $type = NULL)
+		#[ReturnTypeWillChange] public function quote($string, $type = NULL)
 		{
 			if (is_null($type)) {
-				if (is_numeric($value)) {
+				if (is_numeric($string)) {
 					$type = self::PARAM_INT;
 				} else {
 					$type = self::PARAM_STR;
 				}
 			}
-			if (is_array($value)) {
-				foreach ($value as $key => $val) {
-					$value[$key] = parent::quote($val);
+			if (is_array($string)) {
+				foreach ($string as $key => $val) {
+					$string[$key] = parent::quote($val);
 				}
-				return implode(',', $value);
+				return implode(',', $string);
 			}
-			return parent::quote($value, $type);
+			return parent::quote($string, $type);
 		}
 
 		/**
@@ -147,21 +149,19 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function prepare($query, $options = [])
+		#[ReturnTypeWillChange] public function prepare($query, $options = [])
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			return parent::prepare($query, $options);
 		}
 
-		/**
-		 * @inheritDoc
-		 */
-		public function query($statement, ...$arg)
+		#[PhpStormStubsElementAvailable('8.0')]
+		public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
 			$this->log($statement);
-			$return = parent::query($statement, ...$arg);
+			$return = parent::query($statement, $mode, ...$fetch_mode_args);
 			$this->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
 		}
@@ -207,10 +207,11 @@
 		 * @param $t
 		 * @return void
 		 */
-		public function queryTimeIncrement($t)
+		public function queryTimeIncrement(int|float $t)
 		: void
 		{
-			$this->query_time += abs($t * 1000);
+
+			$this->query_time += round(abs($t * 1000));
 		}
 
 		/**
@@ -244,7 +245,7 @@
 		/**
 		 * @inheritDoc
 		 */
-		public function exec($statement)
+		#[ReturnTypeWillChange] public function exec($statement)
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
@@ -306,7 +307,7 @@
 
 		/**
 		 * @param string $table
-		 * @return PDOEBdObject
+		 * @return PDOEDbObject
 		 */
 		public function table(string $table)
 		{
@@ -415,5 +416,9 @@
 		{
 			return $this->dsn;
 		}
+//------------------------------------------- getters ------------------------------------------------
+//------------------------------------------- create ------------------------------------------------
+
+//------------------------------------------- create ------------------------------------------------
 	}
 

@@ -31,7 +31,7 @@ REGEXP
 					$question[$key] = $i;
 					continue;
 				}
-				if (strpos($word, ':') === 0) {
+				if (str_starts_with($word, ':')) {
 					$nameTags[$key] = $word;
 				}
 			}

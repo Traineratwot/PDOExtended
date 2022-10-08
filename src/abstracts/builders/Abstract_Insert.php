@@ -9,10 +9,11 @@
 
 	abstract class Abstract_Insert extends Builder
 	{
-		public array $values     = [];
-		public array $columns    = [];
-		public int   $i          = 0;
-		public array $validators = [];
+		public array $values         = [];
+		public array $columns        = [];
+		public int   $i              = 0;
+		public array $validators     = [];
+		public array $columnsClasses = [];
 
 		public function setData(array $data)
 		{
@@ -34,15 +35,15 @@
 				}
 				$val = $this->scheme->getColumn($column);
 				$this->i++;
-				$this->columns[$this->i]                 = [
+				$this->columns[$this->i]                     = [
 					'column' => $this->driver->escapeColumn($column),
 					'value'  => [
 						'alias' => "PDOE_{$this->i}_ins",
-						'val'   => $val->validate($value),
+						'val'   => $value,
 					],
 				];
-				$this->validators["PDOE_{$this->i}_ins"] = $val->validator;
-
+				$this->validators["PDOE_{$this->i}_ins"]     = $val->validator;
+				$this->columnsClasses["PDOE_{$this->i}_ins"] = $val;
 			} catch (DataTypeException $e) {
 				throw new SqlBuildException($column . ': ' . $e->getMessage(), 0, $e);
 			}
@@ -64,8 +65,9 @@
 			$sql     = implode('', ['INSERT INTO', $this->table, '(', $columns, ')', 'VALUES', '(', $aliases, ')',]);
 			$sql     = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $values, function ($val, $key) {
-				if ($this->validators[trim($key, ':')]) {
-					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				$k = trim($key, ':');
+				if (isset($this->validators[$k])) {
+					return $this->driver->escape($this->columnsClasses[$k], $val);
 				}
 				return Helpers::getValue($this->driver->connection, $val);
 			});

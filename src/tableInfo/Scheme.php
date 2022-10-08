@@ -27,6 +27,9 @@
 			foreach ($an_array['columns'] as $column) {
 				$a->addColumn($column);
 			}
+			foreach ($an_array['links'] as $key => $link) {
+				$a->addLink($key, ...$link);
+			}
 			return $a;
 		}
 

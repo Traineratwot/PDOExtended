@@ -9,10 +9,11 @@
 
 	abstract class Abstract_Update extends Builder
 	{
-		public array $values     = [];
-		public array $columns    = [];
-		public int   $i          = 0;
-		public array $validators = [];
+		public array  $values        = [];
+		public array  $columns       = [];
+		public int    $i             = 0;
+		public array  $validators    = [];
+		public array $columnsClasses = [];
 
 		public function setData(array $data)
 		{
@@ -35,9 +36,10 @@
 				}
 				$val = $this->scheme->getColumn($column);
 				$this->i++;
-				$this->columns[$this->i]                 = $column;
-				$this->values["PDOE_{$this->i}_upd"]     = $val->validate($value);
-				$this->validators["PDOE_{$this->i}_upd"] = $val->validator;
+				$this->columns[$this->i]                    = $column;
+				$this->values["PDOE_{$this->i}_upd"]        = $value;
+				$this->validators["PDOE_{$this->i}_upd"]    = $val->validator;
+				$this->columnsClasses["PDOE_{$this->i}_upd"] = $val;
 			} catch (DataTypeException $e) {
 				throw new SqlBuildException($column . ': ' . $e->getMessage(), 0, $e);
 			}
@@ -52,7 +54,7 @@
 			}
 			$set = implode(', ', $set);
 			if ($this->where) {
-				$w            = $this->where->get($this->validators);
+				$w            = $this->where->get($this->validators,$this->columnsClasses);
 				$this->values = array_merge($this->values, $this->where->getValues());
 				$sql          = implode('', ['UPDATE', $this->table, 'SET', $set, 'WHERE', $w]);
 			} else {
@@ -60,8 +62,9 @@
 			}
 			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $this->values, function ($val, $key) {
-				if ($this->validators[trim($key, ':')]) {
-					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
+				$k = trim($key, ':');
+				if (isset($this->validators[$k])) {
+					return $this->driver->escape($this->columnsClasses[$k], $val);
 				}
 				return Helpers::getValue($this->driver->connection, $val);
 			});

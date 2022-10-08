@@ -24,11 +24,6 @@
 			if ($this->isTruncate) {
 				$sql .= "ALTER TABLE {$this->table} AUTO_INCREMENT=0;";
 			}
-			return Helpers::prepare($sql, $v, function ($val, $key) {
-				if ($this->validators[trim($key, ':')]) {
-					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
-				}
-				return Helpers::getValue($this->driver->connection, $val);
-			});
+			return Helpers::prepare($sql, $v);
 		}
 	}

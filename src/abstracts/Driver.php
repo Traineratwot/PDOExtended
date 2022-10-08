@@ -13,7 +13,8 @@
 	use Traineratwot\PDOExtended\drivers\MySQL\WherePart;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\PDOE;
-	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
+	use Traineratwot\PDOExtended\tableInfo\Column;
+	use Traineratwot\PDOExtended\tableInfo\PDOEDbObject;
 
 	abstract class Driver
 	{
@@ -106,11 +107,11 @@
 
 		/**
 		 * @param string $table
-		 * @return PDOEBdObject
+		 * @return PDOEDbObject
 		 */
 		public function table(string $table)
 		{
-			return new PDOEBdObject($this, $table);
+			return new PDOEDbObject($this, $table);
 		}
 
 		/**
@@ -146,5 +147,14 @@
 		: void
 		{
 
+		}
+
+		public function escape(Column $column, mixed $value)
+		: string
+		{
+			if (is_null($value) && $column->isCanBeNull()) {
+				return "NULL";
+			}
+			return $column->getValidator()->escape($this->connection, $value);
 		}
 	}

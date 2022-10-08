@@ -134,7 +134,7 @@
 			}
 			$sql = preg_replace("/+/u", ' ', $sql);
 			return Helpers::prepare($sql, $v, function ($val, $key) {
-				if ($this->validators[trim($key, ':')]) {
+				if (isset($this->validators[trim($key, ':')])) {
 					return $this->validators[trim($key, ':')]->escape($this->driver->connection, $val);
 				}
 				return Helpers::getValue($this->driver->connection, $val);

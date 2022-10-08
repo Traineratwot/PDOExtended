@@ -10,7 +10,7 @@
 	use Traineratwot\PDOExtended\abstracts\driver;
 	use Traineratwot\PDOExtended\Helpers;
 
-	class PDOEBdObject
+	class PDOEDbObject
 	{
 		public Scheme $scheme;
 		public string $table;
@@ -42,10 +42,10 @@
 		}
 
 		/**
-		 * @param $data
+		 * @param array $data
 		 * @return Abstract_Update
 		 */
-		public function update($data = [])
+		public function update(array $data = [])
 		: Abstract_Update
 		{
 			$cls    = $this->driver->tools['Update'];
@@ -58,10 +58,10 @@
 		}
 
 		/**
-		 * @param $data
+		 * @param array $data
 		 * @return Abstract_Insert
 		 */
-		public function insert($data = [])
+		public function insert(array $data = [])
 		: Abstract_Insert
 		{
 			$cls    = $this->driver->tools['Insert'];

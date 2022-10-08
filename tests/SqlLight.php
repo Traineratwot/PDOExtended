@@ -19,7 +19,7 @@
 		: void
 		{
 			parent::setUp();
-			Config::set('CACHE_PATH', __DIR__ . '/cache/');
+			Config::set('CACHE_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR);
 			Cache::removeAll();
 			$this->sqLight = __DIR__ . '/test.db';
 			file_put_contents($this->sqLight, '');
@@ -156,12 +156,27 @@ CREATE TABLE test
 		public function testInsert()
 		{
 			$sql = $this->db->table('test')
+							->insert()
+							->setData(
+								[
+									'value' => 2,
+								]
+							)->toSql()
+			;
+			$this->assertEquals("INSERT INTO `test` ( `value` ) VALUES ( '2' );", $sql);
+		}
+
+		public function testUpdate()
+		{
+			$sql = $this->db->table('test')
 							->update()
 							->setData(
 								[
-									'value' => null,
+									'value' => NULL,
 								]
-							)->toSql();
-			$this->assertEquals("UPDATE `test` SET `value` = '';", $sql);
+							)->toSql()
+			;
+			$this->assertEquals("UPDATE `test` SET `value` = NULL;", $sql);
 		}
+
 	}

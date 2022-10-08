@@ -5,18 +5,18 @@
 	use Traineratwot\PDOExtended\abstracts\builder;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
-	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
+	use Traineratwot\PDOExtended\tableInfo\PDOEDbObject;
 
 	abstract class Abstract_Join
 	{
 		public ?string      $type = NULL;
 		public Driver       $driver;
 		public builder      $scope;
-		public PDOEBdObject $joinTable;
+		public PDOEDbObject $joinTable;
 		public string       $column;
 		public string       $column2;
 
-		public function __construct(Builder $scope, PDOEBdObject $joinTable, $callback = NULL)
+		public function __construct(Builder $scope, PDOEDbObject $joinTable, $callback = NULL)
 		{
 			$this->driver    = $scope->driver;
 			$this->scope     = $scope;

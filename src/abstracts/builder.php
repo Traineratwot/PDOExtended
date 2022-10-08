@@ -3,7 +3,7 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Where;
-	use Traineratwot\PDOExtended\tableInfo\PDOEBdObject;
+	use Traineratwot\PDOExtended\tableInfo\PDOEDbObject;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
 	abstract class builder
@@ -11,14 +11,14 @@
 		public string          $table = '';
 		public Driver          $driver;
 		public ?Abstract_Where $where = NULL;
-		public PDOEBdObject    $scope;
+		public PDOEDbObject    $scope;
 		public Scheme          $scheme;
 		/**
 		 * @var mixed
 		 */
 		public array $join = [];
 
-		public function __construct(PDOEBdObject $scope)
+		public function __construct(PDOEDbObject $scope)
 		{
 			$this->scope  = $scope;
 			$this->driver = $scope->driver;
@@ -37,7 +37,7 @@
 		}
 
 		/**
-		 * @param callable|null|mixed $keyOrCallback callback or primary key value
+		 * @param mixed|null $keyOrCallback callback or primary key value
 		 * @return Abstract_Where
 		 */
 		public function where($keyOrCallback = NULL)

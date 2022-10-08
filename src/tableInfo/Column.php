@@ -20,7 +20,7 @@
 		/**
 		 * @var mixed|null
 		 */
-		private $default;
+		private mixed $default;
 
 		/**
 		 * @param $an_array
@@ -42,7 +42,7 @@
 		{
 			$this->validator->set($value);
 			$value = $this->validator->get();
-			if ($this->isCanBeNull() && is_null($value)) {
+			if (is_null($value) && $this->isCanBeNull()) {
 				return 'null';
 			}
 			return $value;
