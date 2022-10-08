@@ -3,14 +3,7 @@
 	namespace Traineratwot\PDOExtended\abstracts;
 
 
-	use Traineratwot\PDOExtended\drivers\MySQL\Alter;
-	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
-	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
-	use Traineratwot\PDOExtended\drivers\MySQL\Join;
-	use Traineratwot\PDOExtended\drivers\MySQL\Select;
-	use Traineratwot\PDOExtended\drivers\MySQL\Update;
-	use Traineratwot\PDOExtended\drivers\MySQL\Where;
-	use Traineratwot\PDOExtended\drivers\MySQL\WherePart;
+	use Traineratwot\PDOExtended\drivers\MySQL\Create;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\PDOE;
 	use Traineratwot\PDOExtended\tableInfo\Column;
@@ -22,14 +15,15 @@
 		public array         $schemes   = [];
 		public array         $tools
 										= [
-				"Delete"    => Delete::class,
-				"Insert"    => Insert::class,
-				"Select"    => Select::class,
-				"Update"    => Update::class,
-				"Where"     => Where::class,
-				"WherePart" => WherePart::class,
-				"Join"      => Join::class,
-				"Alter"     => Alter::class,
+				"Delete"    => '',
+				"Insert"    => '',
+				"Select"    => '',
+				"Update"    => '',
+				"Where"     => '',
+				"WherePart" => '',
+				"Join"      => '',
+				"Alter"     => '',
+				"Create"    => Create::class,
 			];
 		public string        $eq        = '=';
 		public string        $notEq     = '<>';

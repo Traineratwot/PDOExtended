@@ -9,17 +9,21 @@
 	$dns = new Dsn();
 
 	$sqLight = 'C:\light.db';
-	$dns     = new Dsn();
+
+
+	$dns = new Dsn();
 	$dns->setDriver(PDOE::DRIVER_SQLite);
 	$dns->setHost($sqLight);
 	$db = new PDOE($dns);
 
-	$sql = $db->table('test_link_master')->alter()
-			  ->addCol('test_890', 'varchar', 20)
-			  ->addCol('test_890', 'varchar', 20)
-//			  ->join('test_link_slave')->left()
+	$sql = $db->newTable('test878')
+			  ->dropTable()
+			  ->setComment('таблица test878')
+			  ->addInt('id')
+			  ->addInt('count', 15, TRUE, comment: 'tfdds')
+			  ->addString('lgkdfl', 0, TRUE, NULL, "комментарий")
+			  ->setPrimaryKey('id')
 			  ->toSql()
 	;
-	echo '<pre>';
-	var_dump($sql);
+	echo($sql);
 	die;

@@ -9,6 +9,15 @@
 	use Traineratwot\Cache\CacheException;
 	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\abstracts\Driver;
+	use Traineratwot\PDOExtended\drivers\SQLite\Alter;
+	use Traineratwot\PDOExtended\drivers\SQLite\Create;
+	use Traineratwot\PDOExtended\drivers\SQLite\Delete;
+	use Traineratwot\PDOExtended\drivers\SQLite\Insert;
+	use Traineratwot\PDOExtended\drivers\SQLite\Join;
+	use Traineratwot\PDOExtended\drivers\SQLite\Select;
+	use Traineratwot\PDOExtended\drivers\SQLite\Update;
+	use Traineratwot\PDOExtended\drivers\SQLite\Where;
+	use Traineratwot\PDOExtended\drivers\SQLite\WherePart;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\tableInfo\Column;
@@ -28,7 +37,18 @@
 	{
 		public static string $driver = 'sqlite';
 		public static string $port   = '';
-
+		public array         $tools
+			= [
+				"Delete"    => Delete::class,
+				"Insert"    => Insert::class,
+				"Select"    => Select::class,
+				"Update"    => Update::class,
+				"Where"     => Where::class,
+				"WherePart" => WherePart::class,
+				"Join"      => Join::class,
+				"Alter"     => Alter::class,
+				"Create"    => Create::class,
+			];
 		/**
 		 * @var array|string[][]
 		 */
@@ -121,6 +141,8 @@
 			$column = trim($column, '`');
 			return "`$column`";
 		}
+
+
 	}
 
 	//	/**

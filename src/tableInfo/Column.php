@@ -126,7 +126,7 @@
 		: self
 		{
 			$this->setIsSetDefault();
-			if ($this->isCanBeNull() && (strtolower($default) === 'null' || empty($default))) {
+			if ($this->isCanBeNull() && (is_null($default) || strtolower($default) === 'null' || empty($default))) {
 				$default = NULL;
 			}
 			$this->validator->validate($default);

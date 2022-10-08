@@ -16,6 +16,7 @@
 	use Traineratwot\PDOExtended\statement\PDOEPoolStatement;
 	use Traineratwot\PDOExtended\statement\PDOEStatement;
 	use Traineratwot\PDOExtended\tableInfo\PDOEDbObject;
+	use Traineratwot\PDOExtended\tableInfo\PDOENewDbObject;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
 	/**
@@ -156,7 +157,7 @@
 		}
 
 		#[PhpStormStubsElementAvailable('8.0')]
-		public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
+		#[\ReturnTypeWillChange] public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
@@ -418,7 +419,15 @@
 		}
 //------------------------------------------- getters ------------------------------------------------
 //------------------------------------------- create ------------------------------------------------
+		public function newTable(string $table)
+		{
+			return (new PDOENewDbObject($table))->setDriver($this->driver);
+		}
 
+		public static function createTable(string $table)
+		{
+			return new PDOENewDbObject($table);
+		}
 //------------------------------------------- create ------------------------------------------------
 	}
 

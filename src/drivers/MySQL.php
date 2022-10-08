@@ -8,6 +8,15 @@
 	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\abstracts\DataType;
 	use Traineratwot\PDOExtended\abstracts\Driver;
+	use Traineratwot\PDOExtended\drivers\MySQL\Alter;
+	use Traineratwot\PDOExtended\drivers\MySQL\Create;
+	use Traineratwot\PDOExtended\drivers\MySQL\Delete;
+	use Traineratwot\PDOExtended\drivers\MySQL\Insert;
+	use Traineratwot\PDOExtended\drivers\MySQL\Join;
+	use Traineratwot\PDOExtended\drivers\MySQL\Select;
+	use Traineratwot\PDOExtended\drivers\MySQL\Update;
+	use Traineratwot\PDOExtended\drivers\MySQL\Where;
+	use Traineratwot\PDOExtended\drivers\MySQL\WherePart;
 	use Traineratwot\PDOExtended\exceptions\DataTypeException;
 	use Traineratwot\PDOExtended\exceptions\PDOEException;
 	use Traineratwot\PDOExtended\Helpers;
@@ -25,13 +34,22 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TUnixTime;
 	use Traineratwot\PDOExtended\tableInfo\Scheme;
 
-	;
-
 	class MySQL extends Driver
 	{
 		public static string $driver = 'mysql';
 		public static string $port   = '3306';
-
+		public array         $tools
+									 = [
+				"Delete"    => Delete::class,
+				"Insert"    => Insert::class,
+				"Select"    => Select::class,
+				"Update"    => Update::class,
+				"Where"     => Where::class,
+				"WherePart" => WherePart::class,
+				"Join"      => Join::class,
+				"Alter"     => Alter::class,
+				"Create"    => Create::class,
+			];
 		/**
 		 * @var array|string[][]
 		 */
@@ -105,8 +123,9 @@
 					}
 					$Scheme->addColumn($col);
 				}
-				$indexes = $this->connection->prepareQuery("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE   CONSTRAINT_SCHEMA=:database   AND TABLE_NAME=:table   AND REFERENCED_TABLE_NAME IS NOT NULL;;", ['table'    => $table,
-																																																					   'database' => $this->connection->dsn->getDatabase(),
+				$indexes = $this->connection->prepareQuery("SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE   CONSTRAINT_SCHEMA=:database   AND TABLE_NAME=:table   AND REFERENCED_TABLE_NAME IS NOT NULL;;", [
+					'table'    => $table,
+					'database' => $this->connection->dsn->getDatabase(),
 				])->fetchAll(PDO::FETCH_ASSOC);
 				foreach ($indexes as $index) {
 					$Scheme->addLink($index['REFERENCED_TABLE_NAME'], $index['COLUMN_NAME'], $index['REFERENCED_COLUMN_NAME']);
