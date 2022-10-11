@@ -3,6 +3,8 @@
 	namespace Traineratwot\PDOExtended\abstracts\builders;
 
 	use Traineratwot\PDOExtended\abstracts\Driver;
+	use Traineratwot\PDOExtended\Helpers;
+	use Traineratwot\PDOExtended\tableInfo\dataType\TEnum;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 	use Traineratwot\PDOExtended\tableInfo\PDOENewDbObject;
@@ -76,12 +78,21 @@ SQL;
 			if ($comment) {
 				$comment = "COMMENT '{$comment}'";
 			}
+			$default = $column['default'];
+			if (is_null($default)) {
+				$default = "";
+			} else {
+				$default = "DEFAULT " . Helpers::getValue(NULL, $default);
+			}
 			switch ($column['type']) {
 				case TInt::class:
 					$type   = "INT";
 					$length = $column['options']['length'];
 					if ($length > 11) {
 						$type = "BIGINT";
+					}
+					if ($length <= 3) {
+						$type = "TINYINT";
 					}
 					$unsigned = $column['options']['unsigned'];
 					if ($unsigned) {
@@ -99,11 +110,10 @@ SQL;
 						$canBeBull = "NOT NULL AUTO_INCREMENT";
 					}
 					$c = <<<EOT
-`$name` $type($length) {$unsigned} {$canBeBull} {$comment}
+`$name` $type($length) {$unsigned} {$canBeBull} {$comment} {$default}
 EOT;
 					break;
 				case TString::class:
-
 					$type   = "VARCHAR";
 					$length = $column['options']['length'];
 					if ($length > 256 || $length === 0) {
@@ -119,7 +129,21 @@ EOT;
 						$canBeBull = "NOT NULL";
 					}
 					$c = <<<EOT
-`$name` $type $canBeBull {$comment}
+`$name` $type $canBeBull {$comment} {$default}
+EOT;
+					break;
+				case TEnum::class:
+					$cases = $column['options']['cases'];
+					$cases = Helpers::arrayToSqlIn($cases);
+					$type = "ENUM($cases)";
+					$canBeBull = $column['options']['canBeBull'];
+					if ($canBeBull) {
+						$canBeBull = "";
+					} else {
+						$canBeBull = "NOT NULL";
+					}
+					$c = <<<EOT
+`$name` $type $canBeBull {$comment} {$default}
 EOT;
 					break;
 			}

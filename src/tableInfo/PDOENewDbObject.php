@@ -3,6 +3,7 @@
 	namespace Traineratwot\PDOExtended\tableInfo;
 
 	use Traineratwot\PDOExtended\abstracts\driver;
+	use Traineratwot\PDOExtended\tableInfo\dataType\TEnum;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 
@@ -37,19 +38,6 @@
 			return $this;
 		}
 
-		/**
-		 * @template T of dataType
-		 * @param class-string $type
-		 * @param string       $name
-		 * @param array        $options
-		 * @return PDOENewDbObject
-		 */
-		public function addColumn(string $type, string $name, array $options = [])
-		{
-			$this->columns[] = ['type' => $type, 'name' => $name, 'options' => $options];
-			return $this;
-		}
-
 		public function addInt(string $name, $length = 10, $unsigned = FALSE, $canBeBull = TRUE, $default = NULL, $comment = '')
 		{
 			$this->columns[$name] = [
@@ -67,6 +55,16 @@
 			$this->columns[$name] = [
 				'type'       => TString::class, 'name' => $name, 'comment' => $comment, 'options' => [
 					'length'    => $length,
+					'canBeBull' => $canBeBull,
+				], 'default' => $default,
+			];
+			return $this;
+		}
+		public function addEnum(string $name, $cases = [], $canBeBull = TRUE, $default = NULL, $comment = '')
+		{
+			$this->columns[$name] = [
+				'type'       => TEnum::class, 'name' => $name, 'comment' => $comment, 'options' => [
+					'cases'    => $cases,
 					'canBeBull' => $canBeBull,
 				], 'default' => $default,
 			];

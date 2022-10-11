@@ -101,4 +101,13 @@ REGEXP
 			}
 			return $v;
 		}
+
+		public static function arrayToSqlIn($arr = [])
+		{
+			$dop = array_fill(0, count($arr), 256);
+			foreach ($arr as $key => $value) {
+				$arr[$key] = trim($value, "'");
+			}
+			return @implode(',', array_map('json_encode', $arr, $dop));
+		}
 	}

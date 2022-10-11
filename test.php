@@ -22,6 +22,7 @@
 			  ->addInt('id')
 			  ->addInt('count', 15, TRUE, comment: 'tfdds')
 			  ->addString('lgkdfl', 0, TRUE, NULL, "комментарий")
+			  ->addEnum('test', ['t1','t2','t3',0])
 			  ->setPrimaryKey('id')
 			  ->toSql()
 	;
