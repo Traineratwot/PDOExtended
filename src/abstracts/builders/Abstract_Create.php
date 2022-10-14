@@ -73,12 +73,10 @@ SQL;
 		public function columnToSql(array $column)
 		: string
 		{
-			$name    = $column['name'];
 			$comment = $column['comment'];
 			if ($comment) {
 				$comment = "COMMENT '{$comment}'";
 			}
-			$default = $column['default'];
 			if (is_null($default)) {
 				$default = "";
 			} else {
@@ -86,67 +84,91 @@ SQL;
 			}
 			switch ($column['type']) {
 				case TInt::class:
-					$type   = "INT";
-					$length = $column['options']['length'];
-					if ($length > 11) {
-						$type = "BIGINT";
-					}
-					if ($length <= 3) {
-						$type = "TINYINT";
-					}
-					$unsigned = $column['options']['unsigned'];
-					if ($unsigned) {
-						$unsigned = "UNSIGNED";
-					} else {
-						$unsigned = "";
-					}
-					$canBeBull = $column['options']['canBeBull'];
-					if ($canBeBull) {
-						$canBeBull = "";
-					} else {
-						$canBeBull = "NOT NULL";
-					}
-					if ($column['options']['isPrimary']) {
-						$canBeBull = "NOT NULL AUTO_INCREMENT";
-					}
-					$c = <<<EOT
-`$name` $type($length) {$unsigned} {$canBeBull} {$comment} {$default}
-EOT;
+					$c = $this->TInt($column);
 					break;
 				case TString::class:
-					$type   = "VARCHAR";
-					$length = $column['options']['length'];
-					if ($length > 256 || $length === 0) {
-						$type = "LONGTEXT";
-					}
-					if ($length > 0) {
-						$type = "$type($length)";
-					}
-					$canBeBull = $column['options']['canBeBull'];
-					if ($canBeBull) {
-						$canBeBull = "";
-					} else {
-						$canBeBull = "NOT NULL";
-					}
-					$c = <<<EOT
-`$name` $type $canBeBull {$comment} {$default}
-EOT;
+					$c = $this->TString($column);
 					break;
 				case TEnum::class:
-					$cases = $column['options']['cases'];
-					$cases = Helpers::arrayToSqlIn($cases);
-					$type = "ENUM($cases)";
-					$canBeBull = $column['options']['canBeBull'];
-					if ($canBeBull) {
-						$canBeBull = "";
-					} else {
-						$canBeBull = "NOT NULL";
-					}
-					$c = <<<EOT
-`$name` $type $canBeBull {$comment} {$default}
-EOT;
+					$c = $this->TEnum($column);
 					break;
 			}
 			return trim($c);
+		}
+
+		public function TInt($column)
+		: string
+		{
+			$name    = $column['name'];
+			$default = $column['default'];
+			$type    = "INT";
+			$length  = $column['options']['length'];
+			if ($length > 11) {
+				$type = "BIGINT";
+			}
+			if ($length <= 3) {
+				$type = "TINYINT";
+			}
+			$unsigned = $column['options']['unsigned'];
+			if ($unsigned) {
+				$unsigned = "UNSIGNED";
+			} else {
+				$unsigned = "";
+			}
+			$canBeBull = $column['options']['canBeBull'];
+			if ($canBeBull) {
+				$canBeBull = "";
+			} else {
+				$canBeBull = "NOT NULL";
+			}
+			if ($column['options']['isPrimary']) {
+				$canBeBull = "NOT NULL AUTO_INCREMENT";
+			}
+			return <<<EOT
+`$name` $type($length) {$unsigned} {$canBeBull} {$comment} {$default}
+EOT;
+		}
+
+		public function TString($column)
+		: string
+		{
+			$name    = $column['name'];
+			$default = $column['default'];
+			$type    = "VARCHAR";
+			$length  = $column['options']['length'];
+			if ($length > 256 || $length === 0) {
+				$type = "LONGTEXT";
+			}
+			if ($length > 0) {
+				$type = "$type($length)";
+			}
+			$canBeBull = $column['options']['canBeBull'];
+			if ($canBeBull) {
+				$canBeBull = "";
+			} else {
+				$canBeBull = "NOT NULL";
+			}
+			return <<<EOT
+`$name` $type $canBeBull {$comment} {$default}
+EOT;
+		}
+
+		public function TEnum($column)
+		: string
+		{
+			$name      = $column['name'];
+			$default   = $column['default'];
+			$cases     = $column['options']['cases'];
+			$cases     = Helpers::arrayToSqlIn($cases);
+			$type      = "ENUM($cases)";
+			$canBeBull = $column['options']['canBeBull'];
+			if ($canBeBull) {
+				$canBeBull = "";
+			} else {
+				$canBeBull = "NOT NULL";
+			}
+			return <<<EOT
+`$name` $type $canBeBull {$comment} {$default}
+EOT;
 		}
 	}

@@ -60,11 +60,12 @@
 			];
 			return $this;
 		}
+		
 		public function addEnum(string $name, $cases = [], $canBeBull = TRUE, $default = NULL, $comment = '')
 		{
 			$this->columns[$name] = [
 				'type'       => TEnum::class, 'name' => $name, 'comment' => $comment, 'options' => [
-					'cases'    => $cases,
+					'cases'     => $cases,
 					'canBeBull' => $canBeBull,
 				], 'default' => $default,
 			];
