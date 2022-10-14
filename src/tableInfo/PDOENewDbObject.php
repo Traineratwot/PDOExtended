@@ -60,7 +60,7 @@
 			];
 			return $this;
 		}
-		
+
 		public function addEnum(string $name, $cases = [], $canBeBull = TRUE, $default = NULL, $comment = '')
 		{
 			$this->columns[$name] = [
