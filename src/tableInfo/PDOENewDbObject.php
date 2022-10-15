@@ -4,6 +4,7 @@
 
 	use Traineratwot\PDOExtended\abstracts\driver;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TEnum;
+	use Traineratwot\PDOExtended\tableInfo\dataType\TFloat;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
 
@@ -50,6 +51,17 @@
 			return $this;
 		}
 
+		public function addFloat(string $name, $unsigned = FALSE, $canBeBull = TRUE, $default = NULL, $comment = '')
+		{
+			$this->columns[$name] = [
+				'type'       => TFloat::class, 'name' => $name, 'comment' => $comment, 'options' => [
+					'unsigned'  => $unsigned,
+					'canBeBull' => $canBeBull,
+				], 'default' => $default,
+			];
+			return $this;
+		}
+
 		public function addString(string $name, $length = 50, $canBeBull = TRUE, $default = NULL, $comment = '')
 		{
 			$this->columns[$name] = [
@@ -72,13 +84,24 @@
 			return $this;
 		}
 
-		public function setPrimaryKey($name)
+		public function setPrimaryKey(string|array $name)
 		{
 			foreach ($this->columns as $key => $column) {
 				$this->columns[$key]['options']['isPrimary'] = FALSE;
 			}
-			$this->columns[$name]['options']['isPrimary'] = TRUE;
+			if(!is_array($name)) {
+				$name =[$name];
+			}
+			foreach($name as $n) {
+				$this->columns[$n]['options']['isPrimary'] = TRUE;
+			}
 			$this->keys['primary']                        = $name;
+			return $this;
+		}
+
+		public function addUniqueKey(string|array $name)
+		{
+			$this->keys['unique'][] = $name;
 			return $this;
 		}
 

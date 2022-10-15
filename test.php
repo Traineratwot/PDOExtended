@@ -24,6 +24,7 @@
 			  ->addString('lgkdfl', 0, TRUE, NULL, "комментарий")
 			  ->addEnum('test', ['t1','t2','t3',0])
 			  ->setPrimaryKey('id')
+			  ->addUniqueKey(['count','lgkdfl'])
 			  ->toSql()
 	;
 	echo($sql);

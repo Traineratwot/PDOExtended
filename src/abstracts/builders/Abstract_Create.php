@@ -41,7 +41,13 @@
 				$columns[] = $this->columnToSql($column);
 			}
 			foreach ($this->scope->keys as $key => $value) {
-				$keys[] = $this->keyToSql($key, $value);
+				if ($key !== 'primary') {
+					foreach ($value as $k => $val) {
+						$keys[] = $this->keyToSql($key, $val);
+					}
+				} else {
+					$keys[] = $this->keyToSql($key, $value);
+				}
 			}
 			$body      = array_merge($columns, $keys);
 			$body      = implode(",\n\t", $body);
@@ -65,7 +71,26 @@ SQL;
 		: string
 		{
 			if ($key === 'primary') {
-				return "PRIMARY KEY (`$value`) USING BTREE";
+				if(!is_array($value)){
+					$value =[$value];
+				}
+				$columns  = implode(',', array_map(function ($column) {
+					return $this->driver->escapeColumn($column);
+				}, $value));
+				return "PRIMARY KEY ($columns) USING BTREE";
+			}
+			if ($key === 'unique') {
+				if (is_string($value)) {
+					$value =$this->driver->escapeColumn($value);
+					return "UNIQUE INDEX $value ($value)";
+				}
+				if (is_array($value)) {
+					$key_name = $this->driver->escapeColumn(implode('_', $value));
+					$columns  = implode(',', array_map(function ($column) {
+						return $this->driver->escapeColumn($column);
+					}, $value));
+					return "UNIQUE INDEX $key_name ($columns)";
+				}
 			}
 			return '';
 		}
@@ -126,6 +151,32 @@ SQL;
 			}
 			return <<<EOT
 `$name` $type($length) {$unsigned} {$canBeBull} {$comment} {$default}
+EOT;
+		}
+
+		public function TFloat($column)
+		: string
+		{
+			$name     = $column['name'];
+			$default  = $column['default'];
+			$type     = "DOUBLE";
+			$unsigned = $column['options']['unsigned'];
+			if ($unsigned) {
+				$unsigned = "UNSIGNED";
+			} else {
+				$unsigned = "";
+			}
+			$canBeBull = $column['options']['canBeBull'];
+			if ($canBeBull) {
+				$canBeBull = "";
+			} else {
+				$canBeBull = "NOT NULL";
+			}
+			if ($column['options']['isPrimary']) {
+				$canBeBull = "NOT NULL AUTO_INCREMENT";
+			}
+			return <<<EOT
+`$name` $type {$unsigned} {$canBeBull} {$comment} {$default}
 EOT;
 		}
 
