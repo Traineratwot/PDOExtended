@@ -26,19 +26,20 @@
 				$canBeBull = "NOT NULL";
 			}
 			if ($column['options']['isPrimary']) {
-				$canBeBull = "NOT NULL AUTOINCREMENT";
+				$type      = 'INTEGER';
+				$canBeBull = "PRIMARY KEY AUTOINCREMENT";
 			}
 			return <<<EOT
-`$name` $type($length) {$canBeBull} {$comment} {$default}
+`$name` $type {$canBeBull} {$comment} {$default}
 EOT;
 		}
 
 		public function TFloat($column)
 		: string
 		{
-			$name     = $column['name'];
-			$default  = $column['default'];
-			$type     = "DOUBLE";
+			$name      = $column['name'];
+			$default   = $column['default'];
+			$type      = "DOUBLE";
 			$canBeBull = $column['options']['canBeBull'];
 			if ($canBeBull) {
 				$canBeBull = "";
@@ -46,10 +47,38 @@ EOT;
 				$canBeBull = "NOT NULL";
 			}
 			if ($column['options']['isPrimary']) {
-				$canBeBull = "NOT NULL AUTOINCREMENT";
+				$canBeBull = "PRIMARY KEY AUTOINCREMENT";
 			}
 			return <<<EOT
 `$name` $type {$canBeBull} {$comment} {$default}
 EOT;
+		}
+
+		public function keyToSql($key, $value)
+		: string
+		{
+			if ($key === 'primary') {
+				if(!is_array($value)){
+					$value =[$value];
+				}
+				$columns  = implode(',', array_map(function ($column) {
+					return $this->driver->escapeColumn($column);
+				}, $value));
+				return "PRIMARY KEY ($columns)";
+			}
+			if ($key === 'unique') {
+				if (is_string($value)) {
+					$value =$this->driver->escapeColumn($value);
+					return "UNIQUE INDEX $value ($value)";
+				}
+				if (is_array($value)) {
+					$key_name = $this->driver->escapeColumn(implode('_', $value));
+					$columns  = implode(',', array_map(function ($column) {
+						return $this->driver->escapeColumn($column);
+					}, $value));
+					return "UNIQUE INDEX $key_name ($columns)";
+				}
+			}
+			return '';
 		}
 	}
