@@ -92,6 +92,11 @@
 
 		}
 
+		public function columnExists($columnName)
+		{
+			return $this->scheme->columnExists($columnName);
+		}
+
 		/**
 		 * @return string
 		 */
