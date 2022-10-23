@@ -6,6 +6,52 @@
 
 	class Create extends Abstract_Create
 	{
+		public function toSql()
+		{
+			$table_name = $this->driver->escapeTable($this->scope->table);
+			$COMMENT    = '';
+			$COLLATE    = '';
+			$ENGINE     = '';
+			if ($this->scope->comment) {
+				$COMMENT = "COMMENT='{$this->scope->comment}'";
+			}
+			if ($this->scope->collate) {
+				$COLLATE = "COLLATE={$this->scope->collate}";
+			}
+			if ($this->scope->engine) {
+				$ENGINE = "ENGINE={$this->scope->engine}";
+			}
+			$columns = [];
+			$keys    = [];
+			foreach ($this->scope->columns as $column) {
+				$columns[] = $this->columnToSql($column);
+			}
+			foreach ($this->scope->keys as $key => $value) {
+				if ($key !== 'primary') {
+					foreach ($value as $k => $val) {
+						if ($key = $this->keyToSql($key, $val)) {
+							$keys[] = $key;
+						}
+					}
+				} elseif ($key = $this->keyToSql($key, $val)) {
+					$keys[] = $key;
+				}
+			}
+			$body      = array_merge($columns, $keys);
+			$body      = implode(",\n\t", $body);
+			$dropTable = '';
+			if ($this->scope->dropTable) {
+				$dropTable = "DROP TABLE IF EXISTS $table_name;";
+			}
+			return <<<SQL
+{$dropTable}
+CREATE TABLE IF NOT EXISTS $table_name (
+	{$body}
+)
+;
+SQL;
+		}
+
 		public function TInt($column)
 		: string
 		{
@@ -30,7 +76,7 @@
 				$canBeBull = "PRIMARY KEY AUTOINCREMENT";
 			}
 			return <<<EOT
-`$name` $type {$canBeBull} {$comment} {$default}
+`$name` $type {$canBeBull} {$default}
 EOT;
 		}
 
@@ -50,7 +96,7 @@ EOT;
 				$canBeBull = "PRIMARY KEY AUTOINCREMENT";
 			}
 			return <<<EOT
-`$name` $type {$canBeBull} {$comment} {$default}
+`$name` $type {$canBeBull} {$default}
 EOT;
 		}
 
