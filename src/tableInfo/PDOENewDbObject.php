@@ -131,7 +131,6 @@
 			if (!($this->driver instanceof Driver)) {
 				return FALSE;
 			}
-
 			return TRUE;
 		}
 
