@@ -43,10 +43,12 @@
 			foreach ($this->scope->keys as $key => $value) {
 				if ($key !== 'primary') {
 					foreach ($value as $k => $val) {
-						$keys[] = $this->keyToSql($key, $val);
+						if ($key = $this->keyToSql($key, $val)) {
+							$keys[] = $key;
+						}
 					}
-				} else {
-					$keys[] = $this->keyToSql($key, $value);
+				} elseif ($key = $this->keyToSql($key, $val)) {
+					$keys[] = $key;
 				}
 			}
 			$body      = array_merge($columns, $keys);
@@ -71,17 +73,17 @@ SQL;
 		: string
 		{
 			if ($key === 'primary') {
-				if(!is_array($value)){
-					$value =[$value];
+				if (!is_array($value)) {
+					$value = [$value];
 				}
-				$columns  = implode(',', array_map(function ($column) {
+				$columns = implode(',', array_map(function ($column) {
 					return $this->driver->escapeColumn($column);
 				}, $value));
 				return "PRIMARY KEY ($columns) USING BTREE";
 			}
 			if ($key === 'unique') {
 				if (is_string($value)) {
-					$value =$this->driver->escapeColumn($value);
+					$value = $this->driver->escapeColumn($value);
 					return "UNIQUE INDEX $value ($value)";
 				}
 				if (is_array($value)) {
