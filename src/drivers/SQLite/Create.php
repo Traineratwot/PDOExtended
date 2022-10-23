@@ -26,7 +26,7 @@
 				$canBeBull = "NOT NULL";
 			}
 			if ($column['options']['isPrimary']) {
-				$canBeBull = "NOT NULL AUTO_INCREMENT";
+				$canBeBull = "NOT NULL AUTOINCREMENT";
 			}
 			return <<<EOT
 `$name` $type($length) {$canBeBull} {$comment} {$default}
@@ -46,7 +46,7 @@ EOT;
 				$canBeBull = "NOT NULL";
 			}
 			if ($column['options']['isPrimary']) {
-				$canBeBull = "NOT NULL AUTO_INCREMENT";
+				$canBeBull = "NOT NULL AUTOINCREMENT";
 			}
 			return <<<EOT
 `$name` $type {$canBeBull} {$comment} {$default}
