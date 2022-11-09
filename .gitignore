@@ -8,3 +8,5 @@ PDOE_*
 # composer.lock
 .phpunit.result.cache
 tests/cache/*
+
+.project-manager/

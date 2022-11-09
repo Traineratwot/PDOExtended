@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended\statement;
 
+	use PDO;
 	use PDOStatement;
 	use Traineratwot\PDOExtended\PDOE;
 
@@ -31,5 +32,21 @@
 			$return = parent::execute($params);
 			$this->connection->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
+		}
+
+		public function fetchAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		{
+			$rows = [];
+			while ($row = $this->fetch(PDO::FETCH_ASSOC, ...$args)) {
+				$rows[] = $row;
+			}
+			return $rows;
+		}
+
+		public function yieldAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		{
+			while ($row = $this->fetch(PDO::FETCH_ASSOC, ...$args)) {
+				yield $row;
+			}
 		}
 	}
