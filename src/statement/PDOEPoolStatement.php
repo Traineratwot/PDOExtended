@@ -2,23 +2,14 @@
 
 	namespace Traineratwot\PDOExtended\statement;
 
-	use PDOStatement;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 
-	class PDOEPoolStatement extends PDOStatement
+	class PDOEPoolStatement extends PDOEStatement
 	{
 		public array   $pool = [];
 		protected PDOE $connection;
-
-		/**
-		 * @param PDOE $connection
-		 */
-		private function __construct(PDOE $connection)
-		{
-			$this->connection = $connection;
-		}
 
 		/**
 		 * Add prepared query to pool queue
