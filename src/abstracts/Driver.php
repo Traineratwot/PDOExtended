@@ -62,7 +62,7 @@
 			$find = FALSE;
 			$t    = NULL;
 			foreach ($list as $t) {
-				if (mb_strtolower($t) === mb_strtolower($table)) {
+				if (mb_strtolower((string)$t) === mb_strtolower((string)$table)) {
 					$find = TRUE;
 					break;
 				}
