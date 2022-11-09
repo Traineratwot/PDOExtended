@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94716ca02804e155d67c8fcef68c3c15",
+    "content-hash": "870ea33a1acc6c6a83dbe7163635f7ef",
     "packages": [
         {
             "name": "traineratwot/cache",

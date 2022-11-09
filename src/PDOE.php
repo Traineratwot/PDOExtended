@@ -8,6 +8,7 @@
 	use PDOStatement;
 	use ReturnTypeWillChange;
 	use Traineratwot\Cache\Cache;
+	use Traineratwot\Cache\CacheException;
 	use Traineratwot\PDOExtended\abstracts\Driver;
 	use Traineratwot\PDOExtended\drivers\MySQL;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
@@ -140,6 +141,7 @@
 		 * @return false|PDOStatement
 		 */
 		public function prepareQuery($sql, array $values = [])
+		: false|PDOEStatement
 		{
 			$sql = Helpers::prepare($sql, $values, $this);
 			$arg = func_get_args();
@@ -150,14 +152,18 @@
 		/**
 		 * @inheritDoc
 		 */
-		#[ReturnTypeWillChange] public function prepare($query, $options = [])
+		#[ReturnTypeWillChange]
+		public function prepare($query, $options = [])
+		: false|PDOEStatement
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			return parent::prepare($query, $options);
 		}
 
 		#[PhpStormStubsElementAvailable('8.0')]
-		#[\ReturnTypeWillChange] public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
+		#[\ReturnTypeWillChange]
+		public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
+		: false|PDOEStatement
 		{
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
@@ -211,7 +217,6 @@
 		public function queryTimeIncrement(int|float $t)
 		: void
 		{
-
 			$this->query_time += round(abs($t * 1000));
 		}
 
@@ -221,6 +226,7 @@
 		 * @throws PDOEException
 		 */
 		public function queryFile($filepath)
+		: false|PDOEStatement
 		{
 			if (!file_exists($filepath)) {
 				throw new PDOEException('file "' . $filepath . '" is not exist');
@@ -235,6 +241,7 @@
 		 * @throws PDOEException
 		 */
 		public function execFile($filepath)
+		: false|int
 		{
 			if (!file_exists($filepath)) {
 				throw new PDOEException('file "' . $filepath . '" is not exist');
@@ -264,6 +271,7 @@
 		 * @return bool|PDOEPoolStatement
 		 */
 		public function poolPrepare(string $statement, array $driver_options = [])
+		: false|PDOEPoolStatement
 		{
 			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEPoolStatement::class, [$this]]);
 			return parent::prepare($statement, $driver_options);
@@ -290,6 +298,7 @@
 		/**
 		 * return list all tables in database
 		 * @return array
+		 * @throws CacheException
 		 */
 		public function getTablesList()
 		: array
