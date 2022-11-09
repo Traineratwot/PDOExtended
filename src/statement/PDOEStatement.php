@@ -33,20 +33,13 @@
 			$this->connection->queryTimeIncrement(microtime(TRUE) - $tStart);
 			return $return;
 		}
-
-		public function fetchAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		
+		public function yieldAll(int $mode = PDO::FETCH_BOTH, ...$args)
 		{
 			$rows = [];
 			while ($row = $this->fetch($mode, ...$args)) {
 				$rows[] = $row;
 			}
 			return $rows;
-		}
-
-		public function yieldAll(int $mode = PDO::FETCH_BOTH, ...$args)
-		{
-			while ($row = $this->fetch($mode, ...$args)) {
-				yield $row;
-			}
 		}
 	}
