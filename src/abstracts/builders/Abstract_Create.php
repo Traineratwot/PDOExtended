@@ -92,7 +92,10 @@ SQL;
 				if (is_array($value)) {
 					$key_name = $this->driver->escapeColumn(implode('_', $value));
 					$columns  = implode(',', array_map(function ($column) {
-						return $this->driver->escapeColumn($column);
+						if ($column) {
+							return $this->driver->escapeColumn($column);
+						}
+						return NULL;
 					}, $value));
 					return "UNIQUE INDEX $key_name ($columns)";
 				}
