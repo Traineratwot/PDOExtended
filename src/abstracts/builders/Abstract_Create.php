@@ -77,7 +77,10 @@ SQL;
 					$value = [$value];
 				}
 				$columns = implode(',', array_map(function ($column) {
-					return $this->driver->escapeColumn($column);
+					if ($column) {
+						return $this->driver->escapeColumn($column);
+					}
+					return NULL;
 				}, $value));
 				return "PRIMARY KEY ($columns) USING BTREE";
 			}
