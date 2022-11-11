@@ -77,10 +77,7 @@ SQL;
 					$value = [$value];
 				}
 				$columns = implode(',', array_map(function ($column) {
-					if ($column) {
-						return $this->driver->escapeColumn($column);
-					}
-					return NULL;
+					return $this->driver->escapeColumn($column);
 				}, $value));
 				return "PRIMARY KEY ($columns) USING BTREE";
 			}
@@ -92,10 +89,7 @@ SQL;
 				if (is_array($value)) {
 					$key_name = $this->driver->escapeColumn(implode('_', $value));
 					$columns  = implode(',', array_map(function ($column) {
-						if ($column) {
-							return $this->driver->escapeColumn($column);
-						}
-						return NULL;
+						return $this->driver->escapeColumn($column);
 					}, $value));
 					return "UNIQUE INDEX $key_name ($columns)";
 				}
