@@ -47,7 +47,7 @@
 							$keys[] = $key;
 						}
 					}
-				} elseif ($key = $this->keyToSql($key, $val)) {
+				} elseif ($key = $this->keyToSql($key, $value)) {
 					$keys[] = $key;
 				}
 			}
@@ -101,6 +101,7 @@ SQL;
 		: string
 		{
 			$comment = $column['comment'];
+			$default = $column['default'];
 			if ($comment) {
 				$comment = "COMMENT '{$comment}'";
 			}
@@ -128,6 +129,7 @@ SQL;
 		{
 			$name    = $column['name'];
 			$default = $column['default'];
+			$comment = $column['comment'];
 			$type    = "INT";
 			$length  = $column['options']['length'];
 			if ($length > 11) {
@@ -148,7 +150,7 @@ SQL;
 			} else {
 				$canBeBull = "NOT NULL";
 			}
-			if ($column['options']['isPrimary']) {
+			if (isset($column['options']['isPrimary']) && $column['options']['isPrimary']) {
 				$canBeBull = "NOT NULL AUTO_INCREMENT";
 			}
 			return <<<EOT
@@ -187,6 +189,7 @@ EOT;
 		{
 			$name    = $column['name'];
 			$default = $column['default'];
+			$comment = $column['comment'];
 			$type    = "VARCHAR";
 			$length  = $column['options']['length'];
 			if ($length > 256 || $length === 0) {
