@@ -126,12 +126,13 @@ EOT;
 				return '';
 			}
 			if ($key === 'unique') {
-				$key_name = $this->driver->escapeColumn(implode('_', $value));
 				if (is_string($value)) {
-					$value = $this->driver->escapeColumn($value);
+					$key_name = $value . '_pk';
+					$value    = $this->driver->escapeColumn($value);
 					return "constraint `$key_name` unique $value ";
 				}
 				if (is_array($value)) {
+					$key_name = $this->driver->escapeColumn(implode('_', $value)) . '_pk';
 					$columns  = implode(',', array_map(function ($column) {
 						return $this->driver->escapeColumn($column);
 					}, $value));
