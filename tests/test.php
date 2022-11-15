@@ -21,8 +21,8 @@
 
 		$create = $db->newTable('test')
 					 ->addString('id')
-					 ->setPrimaryKey('id')
 					 ->addInt('data')
+					 ->addUniqueKey(['data','id'])
 		;
 
 		var_dump($create->toSql());
