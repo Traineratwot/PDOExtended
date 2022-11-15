@@ -136,7 +136,7 @@ EOT;
 					$columns  = implode(',', array_map(function ($column) {
 						return $this->driver->escapeColumn($column);
 					}, $value));
-					return "constraint `$key_name` unique ($columns)";
+					return "constraint $key_name unique ($columns)";
 				}
 			}
 			return '';
