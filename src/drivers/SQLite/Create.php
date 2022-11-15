@@ -100,6 +100,25 @@ EOT;
 EOT;
 		}
 
+		public function TString($column)
+		: string
+		{
+			$name    = $column['name'];
+			$default = $column['default'];
+			$comment = $column['comment'];
+			$type    = "TEXT";
+			$length  = $column['options']['length'];
+			$canBeBull = $column['options']['canBeBull'];
+			if ($canBeBull) {
+				$canBeBull = "";
+			} else {
+				$canBeBull = "NOT NULL";
+			}
+			return <<<EOT
+`$name` $type $canBeBull {$comment} {$default}
+EOT;
+		}
+
 		public function keyToSql($key, $value)
 		: string
 		{
