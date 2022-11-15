@@ -132,7 +132,7 @@ EOT;
 					return "constraint `$key_name` unique ($value) ";
 				}
 				if (is_array($value)) {
-					$key_name = $this->driver->escapeColumn(implode('_', $value)) . '_pk';
+					$key_name = $this->driver->escapeColumn(str_replace('`', '', implode('_', $value)) . '_pk');
 					$columns  = implode(',', array_map(function ($column) {
 						return $this->driver->escapeColumn($column);
 					}, $value));
