@@ -103,14 +103,14 @@
 				$Scheme       = new Scheme();
 				$Scheme->name = $table;
 				foreach ($columns as $column) {
-					$columnLower = array_map($Helpers . '::strtolower', $column);
+					$column = array_map($Helpers . '::strtolower', $column);
 					$col    = new Column();
 					try {
 						$a         = $this->findDataType($column['type'] ?: 'string');
 						$validator = new $a();
 						$col->setValidator($validator)
-							->setCanBeNull(!$columnLower['notnull'])
-							->setDbDataType($columnLower['type'])
+							->setCanBeNull(!$column['notnull'])
+							->setDbDataType($column['type'])
 							->setDefault($column['dflt_value'])
 							->setIsSetDefault(!is_null($column['dflt_value']))
 							->setName($column['name'])

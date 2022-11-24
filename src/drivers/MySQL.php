@@ -102,22 +102,22 @@
 				$Scheme       = new Scheme();
 				$Scheme->name = $table;
 				foreach ($columns as $column) {
-					$columnLower = array_map($Helpers . '::strtolower', $column);
+					$column = array_map($Helpers . '::strtolower', $column);
 					$col    = new Column();
-					$a      = $this->findDataType($columnLower['DATA_TYPE']);
+					$a      = $this->findDataType($column['DATA_TYPE']);
 					/** @var DataType $validator */
 					$validator = new $a();
-					$validator->setOriginalType($columnLower['DATA_TYPE']);
+					$validator->setOriginalType($column['DATA_TYPE']);
 					$col->setValidator($validator)
 						->setCanBeNull(strtolower($column['IS_NULLABLE']) === 'yes')
-						->setDbDataType($columnLower['DATA_TYPE'])
+						->setDbDataType($column['DATA_TYPE'])
 						->setDefault($column['COLUMN_DEFAULT'])
 						->setIsSetDefault(!is_null($column['COLUMN_DEFAULT']))
 						->setName($column['COLUMN_NAME'])
 					;
-					if (in_array($columnLower['COLUMN_KEY'], ['pri', 'uni'])) {
+					if (in_array($column['COLUMN_KEY'], ['pri', 'uni'])) {
 						$col->setIsUnique();
-						if ($columnLower['COLUMN_KEY'] === 'pri') {
+						if ($column['COLUMN_KEY'] === 'pri') {
 							$col->setIsPrimary();
 						}
 					}
