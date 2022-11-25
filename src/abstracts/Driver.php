@@ -67,13 +67,22 @@
 					break;
 				}
 			}
+			if (!$find) {
+				$list = $this->getTablesList(FALSE);
+				foreach ($list as $t) {
+					if (mb_strtolower($t) === mb_strtolower($table)) {
+						$find = TRUE;
+						break;
+					}
+				}
+			}
 			return $find ? $t : FALSE;
 		}
 
 		/**
 		 * @return array
 		 */
-		abstract public function getTablesList()
+		abstract public function getTablesList(bool $cache = TRUE)
 		: array;
 
 		/**

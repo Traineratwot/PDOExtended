@@ -65,15 +65,19 @@
 			];
 
 		/**
+		 * @param bool $cache
 		 * @return array
 		 * @throws CacheException
 		 */
-		public function getTablesList()
+		public function getTablesList(bool $cache = TRUE)
 		: array
 		{
-			return Cache::call('tablesList', function () {
-				return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
-			},                 Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey());
+			if($cache) {
+				return Cache::call('tablesList', function () {
+					return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
+				},                 Config::get('CACHE_EXPIRATION', 'PDOE', 600), $this->connection->getKey());
+			}
+			return $this->connection->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_COLUMN);
 		}
 
 		/**
