@@ -8,12 +8,12 @@
 
 	class PDOEStatement extends PDOStatement
 	{
-		private PDOE $connection;
+		public PDOE $connection;
 
 		/**
 		 * @param PDOE $connection
 		 */
-		private function __construct(PDOE $connection)
+		public function __construct(PDOE $connection)
 		{
 			$this->connection = $connection;
 		}

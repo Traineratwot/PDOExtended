@@ -9,7 +9,7 @@
 	class PDOEPoolStatement extends PDOEStatement
 	{
 		public array   $pool = [];
-		protected PDOE $connection;
+		public PDOE $connection;
 
 		/**
 		 * Add prepared query to pool queue
