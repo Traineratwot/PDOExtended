@@ -12,6 +12,9 @@
 	{
 		public PDOE  $connection;
 		public array $pool = [];
+		/**
+		 * @var array<PDOEStatement|bool>
+		 */
 		public array $out;
 
 		/**
