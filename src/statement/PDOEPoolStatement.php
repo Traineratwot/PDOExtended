@@ -28,7 +28,7 @@
 		public function add(array $params, $return = FALSE)
 		{
 			$type                = $return ? 'query' : 'exec';
-			$this->pool[$type][] = Helpers::prepare($this->queryString, $params);
+			$this->pool[$type][] = Helpers::prepare($this->queryString, $params,$this->connection);
 			return $this;
 		}
 
