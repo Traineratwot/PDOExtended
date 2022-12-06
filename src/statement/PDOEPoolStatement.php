@@ -2,26 +2,24 @@
 
 	namespace Traineratwot\PDOExtended\statement;
 
+	use PDO;
+	use PDOStatement;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\Helpers;
 	use Traineratwot\PDOExtended\PDOE;
 
-	class PDOEPoolStatement extends PDOEStatement
+	class PDOEPoolStatement extends PDOStatement
 	{
-		public array   $pool = [];
-		public PDOE $connection;
+		public PDOE  $connection;
+		public array $pool = [];
+		public array $out;
 
 		/**
-		 * Add prepared query to pool queue
-		 * @param null $input_parameters
-		 * @param bool $return if true use 'query' else 'exec'
-		 * @return $this|bool
+		 * @param PDOE $connection
 		 */
-		public function execute($params = [])
-		: bool
+		private function __construct(PDOE $connection)
 		{
-			$this->add($params, FALSE);
-			return TRUE;
+			$this->connection = $connection;
 		}
 
 		public function add(array $params, $return = FALSE)
@@ -46,18 +44,46 @@
 //			if ($this->connection->dsn->getDriver() === PDOE::DRIVER_SQLite) {
 //				$limit = 1;
 //			}
-			$out = [];
+			$this->out = [];
 			foreach ($this->pool as $type => $pool) {
 				$pool = array_chunk($pool, $limit);
 				foreach ($pool as $queries) {
 					$query = implode("\n", $queries);
 					if ($type === 'query') {
-						$out[] = $this->connection->query($query);
+						$this->out[] = $this->connection->query($query);
 					} else {
-						$out[] = (bool)$this->connection->exec($query);
+						$this->out[] = (bool)$this->connection->exec($query);
 					}
 				}
 			}
-			return $out;
+			return $this->out;
+		}
+
+		public function yieldAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		{
+			foreach ($this->out as $statement) {
+				if (!is_bool($statement)) {
+					while ($row = $statement->fetch($mode, ...$args)) {
+						yield $row;
+					}
+				} else {
+					yield $statement;
+				}
+			}
+		}
+
+		public function getAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		{
+			$rows = [];
+			foreach ($this->out as $statement) {
+				if (!is_bool($statement)) {
+					while ($row = $statement->fetch($mode, ...$args)) {
+						$rows[] = $row;
+					}
+				} else {
+					$rows[] = $statement;
+				}
+			}
+			return $rows;
 		}
 	}
