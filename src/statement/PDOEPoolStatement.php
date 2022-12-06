@@ -17,7 +17,14 @@
 		 * @param bool $return if true use 'query' else 'exec'
 		 * @return $this|bool
 		 */
-		public function execute($input_parameters = NULL, bool $return = FALSE)
+		public function execute($params = [])
+		: bool
+		{
+			$this->add($params, FALSE);
+			return TRUE;
+		}
+
+		public function add(array $params, $return = FALSE)
 		{
 			$type                = $return ? 'query' : 'exec';
 			$this->pool[$type][] = Helpers::prepare($this->queryString, $input_parameters);

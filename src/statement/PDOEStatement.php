@@ -36,6 +36,12 @@
 
 		public function yieldAll(int $mode = PDO::FETCH_BOTH, ...$args)
 		{
+			while ($row = $this->fetch($mode, ...$args)) {
+				yield $row;
+			}
+		}
+		public function getAll(int $mode = PDO::FETCH_BOTH, ...$args)
+		{
 			$rows = [];
 			while ($row = $this->fetch($mode, ...$args)) {
 				$rows[] = $row;
