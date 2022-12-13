@@ -2,6 +2,7 @@
 
 	namespace Traineratwot\PDOExtended;
 
+	use Exception;
 	use PDO;
 
 	class Helpers
@@ -109,5 +110,45 @@ REGEXP
 				$arr[$key] = trim($value, "'");
 			}
 			return @implode(',', array_map('json_encode', $arr, $dop));
+		}
+
+		/**
+		 * @throws Exception
+		 */
+		public static function jsonValidate($string, $assoc = TRUE, $depth = 1024)
+		{
+			try {
+				if (!is_string($string)) {
+					return $string;
+				}
+				$error = 0;
+				// decode the JSON data
+				$string = preg_replace('/[[:cntrl:]]/', '', $string);
+				if (defined("JSON_THROW_ON_ERROR")) {
+					$result = json_decode($string, (bool)$assoc, $depth, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+				} else {
+					$result = json_decode($string, (bool)$assoc, $depth, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+				}
+
+				// switch && check possible JSON errors
+				$error = match (json_last_error()) {
+					JSON_ERROR_NONE             => 0,
+					JSON_ERROR_DEPTH            => 'The maximum stack depth has been exceeded.',
+					JSON_ERROR_STATE_MISMATCH   => 'Invalid || malformed JSON.',
+					JSON_ERROR_CTRL_CHAR        => 'Control character error, possibly incorrectly encoded.',
+					JSON_ERROR_SYNTAX           => 'Syntax error, malformed JSON.',
+					JSON_ERROR_UTF8             => 'Malformed utf8 characters, possibly incorrectly encoded.',
+					JSON_ERROR_RECURSION        => 'One || more recursive references in the value to be encoded.',
+					JSON_ERROR_INF_OR_NAN       => 'One || more NAN || INF values in the value to be encoded.',
+					JSON_ERROR_UNSUPPORTED_TYPE => 'A value of a type that cannot be encoded was given.',
+					default                     => 'Unknown JSON error occurred.',
+				};
+				if ($error) {
+					throw new \RuntimeException($error);
+				}
+			} catch (Exception $e) {
+				throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+			}
+			return $result;
 		}
 	}

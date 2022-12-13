@@ -28,6 +28,7 @@
 	use Traineratwot\PDOExtended\tableInfo\dataType\TEnum;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TFloat;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TInt;
+	use Traineratwot\PDOExtended\tableInfo\dataType\TJson;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TPoint;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TSet;
 	use Traineratwot\PDOExtended\tableInfo\dataType\TString;
@@ -56,6 +57,7 @@
 		public array $dataTypes
 			= [
 				TString::class   => ['CHAR', 'TEXT', 'VARCHAR', 'STRING', 'LONGTEXT', 'TINYTEXT', 'MEDIUMTEXT', 'BINARY', 'VARBINARY'],
+				TJson::class     => ['JSON'],
 				TInt::class      => ['BIT', 'TINYINT', 'SMALLINT', 'MEDIUMINT', 'INT', 'INTEGER', 'BIGINT',],
 				TFloat::class    => ['DOUBLE', 'REAL', 'NUMERIC', 'DECIMAL', 'DEC', 'NUMERIC', 'FIXED', 'FLOAT', 'PRECISION'],
 				TEnum::class     => ['ENUM'],
