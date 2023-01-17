@@ -2,12 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
 	"name"             :"traineratwot/pdo-extended",
 	"type"             :"library",
-	"version"          :"2.1.1",
+	"version"          :"2.1.2",
 	"description"      :"",
 	"license"          :"MIT",
 	"scripts"          :{
 		"test"                  :"phpunit ./tests/SqlLight.php",
-		"up:release"            :"gh release create \"2.1.1\" --generate-notes",
+		"up:release"            :"gh release create \"2.1.2\" --generate-notes",
 		"composer-config-print" :"composer getAllConfigs",
 		"composer-config-update":"composer configUpdate"
 	},
