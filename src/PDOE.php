@@ -163,8 +163,8 @@
 		#[PhpStormStubsElementAvailable('8.0')]
 		#[\ReturnTypeWillChange]
 		public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
-		: false|PDOEStatement
 		{
+			$this->setAttribute(PDO::ATTR_STATEMENT_CLASS, [PDOEStatement::class, [$this]]);
 			$this->queryCountIncrement();
 			$tStart = microtime(TRUE);
 			$this->log($statement);
