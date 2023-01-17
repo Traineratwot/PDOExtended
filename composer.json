@@ -28,7 +28,7 @@
 	"require"          :{
 		"php"                :"^8.1",
 		"ext-pdo"            :"*",
-		"traineratwot/cache" :"^3.0.2",
+		"traineratwot/cache" :"^2.0",
 		"traineratwot/config":"^1.0.1",
 		"monolog/monolog"    :"^3.2"
 	},
