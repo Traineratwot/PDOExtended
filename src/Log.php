@@ -4,8 +4,12 @@
 
 	use DateTime;
 	use Exception;
+	use Monolog\Handler\StreamHandler;
+	use Monolog\Level;
+	use Monolog\Logger;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
+	use Traineratwot\config\Config;
 	use Traineratwot\PDOExtended\interfaces\LogInterface;
 
 	class Log implements LogInterface
@@ -56,7 +60,7 @@
 				$d['file'] = strtr($d['file'], [
 					'/' => '\\',
 				]);
-				if (strpos($d['file'], 'PDOExtended\src') === FALSE && strpos($d['file'], 'pdo-extended\src') === FALSE) {
+				if (!str_contains($d['file'], 'PDOExtended\src') && !str_contains($d['file'], 'pdo-extended\src')) {
 					break;
 				}
 			}
@@ -72,15 +76,13 @@
 		 */
 		private function write($where, $when, $what)
 		{
-			try {
-				$log      = "$where [$when]: $what";
-				$oldLog   = Cache::getCache('LOG', $this->PDOE->getKey()) ?: [];
-				$oldLog[] = $log;
-				$newLog   = array_slice($oldLog, $this->limit * -1, $this->limit, TRUE);
-				Cache::setCache('LOG', $newLog, 0, $this->PDOE->getKey());
-			} catch (Exception $e) {
-				Cache::setCache('LOG', [], 0, $this->PDOE->getKey());
-			}
+			$category = $this->PDOE->getKey();
+			$logFile  = Config::get('CACHE_PATH', $category) . $category . DIRECTORY_SEPARATOR . 'PDOE.log';
+			$logger   = new Logger('PDOE');
+			$logger->pushHandler(new StreamHandler($logFile, Level::Debug));
+			$log = "$where -> \"$what\"";
+			$logger->error($log);
+			$logger->close();
 		}
 
 		/**

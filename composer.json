@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
+	"$schema"          :"https://raw.githubusercontent.com/Traineratwot/composer-config/master/composer-config-schema.json",
 	"name"             :"traineratwot/pdo-extended",
 	"type"             :"library",
 	"version"          :"2.0.11",
@@ -28,8 +28,9 @@
 	"require"          :{
 		"php"                :"^8.1",
 		"ext-pdo"            :"*",
-		"traineratwot/cache" :"^3.0",
-		"traineratwot/config":"^1.0"
+		"traineratwot/cache" :"^3.0.2",
+		"traineratwot/config":"^1.0.1",
+		"monolog/monolog"    :"^3.2"
 	},
 	"require-dev"      :{
 		"phpunit/phpunit"              :"^9.5",
@@ -51,9 +52,9 @@
 	},
 	"extra"            :{
 		"composer-config":{
-			"namespace": "PDOE",
-			"optional": {
-				"CACHE_EXPIRATION": "Cache live time in second, default 600"
+			"namespace":"PDOE",
+			"optional" :{
+				"CACHE_EXPIRATION":"Cache live time in second, default 600"
 			}
 		}
 	}

@@ -4,7 +4,7 @@
 	use PHPUnit\Framework\TestCase;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\config\Config;
-	use Traineratwot\PDOExtended\drivers\MySQL\Where;
+	use Traineratwot\PDOExtended\abstracts\builders\Abstract_Where;
 	use Traineratwot\PDOExtended\Dsn;
 	use Traineratwot\PDOExtended\exceptions\DsnException;
 	use Traineratwot\PDOExtended\exceptions\SqlBuildException;
@@ -136,11 +136,11 @@ CREATE TABLE test
 		public function testWhereCondition()
 		{
 			$sql = $this->db->table('test')->select()
-							->where(function (Where $w) {
-								$w->and(function (Where $w) {
+							->where(function (Abstract_Where $w) {
+								$w->and(function (Abstract_Where $w) {
 									$w->eq('id', 5);
 								});
-								$w->or(function (Where $w) {
+								$w->or(function (Abstract_Where $w) {
 									$w->notEq('id', 8);
 									$w->and();
 									$w->notEq('id', 9);
