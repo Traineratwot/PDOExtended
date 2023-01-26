@@ -77,7 +77,7 @@
 		{
 			$category = $this->PDOE->getKey();
 			$logFile  = Config::get('CACHE_PATH', $category) . $category . DIRECTORY_SEPARATOR . 'PDOE.log';
-			if (filesize($logFile) > 1024 * 1024 * 1024 * 5) {
+			if (filesize($logFile) > 1024 * 1024 * 5) {
 				unlink($logFile);
 			}
 			$logger = new Logger('PDOE');
