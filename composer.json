@@ -26,11 +26,11 @@
 	},
 	"minimum-stability":"stable",
 	"require"          :{
-		"php"                :"^8.1",
+		"php"                :">=8.1",
 		"ext-pdo"            :"*",
-		"traineratwot/cache" :"^3.0.2",
-		"traineratwot/config":"^1.0.1",
-		"monolog/monolog"    :"^3.2"
+		"traineratwot/cache" :"*",
+		"traineratwot/config":"*",
+		"monolog/monolog"    :"*"
 	},
 	"require-dev"      :{
 		"phpunit/phpunit"              :"^9.5",
