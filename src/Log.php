@@ -81,7 +81,7 @@
 				unlink($logFile);
 			}
 			$logger = new Logger('PDOE');
-			$logger->pushHandler(new StreamHandler($logFile, Logger::DEBUG));
+			$logger->pushHandler(new StreamHandler($logFile, 100));
 			$log = "$where -> \"$what\"";
 			$logger->error($log);
 			$logger->close();
