@@ -5,7 +5,6 @@
 	use DateTime;
 	use Exception;
 	use Monolog\Handler\StreamHandler;
-	use Monolog\Level;
 	use Monolog\Logger;
 	use Traineratwot\Cache\Cache;
 	use Traineratwot\Cache\CacheException;
@@ -79,7 +78,7 @@
 			$category = $this->PDOE->getKey();
 			$logFile  = Config::get('CACHE_PATH', $category) . $category . DIRECTORY_SEPARATOR . 'PDOE.log';
 			$logger   = new Logger('PDOE');
-			$logger->pushHandler(new StreamHandler($logFile, Level::Debug));
+			$logger->pushHandler(new StreamHandler($logFile, Logger::Debug));
 			$log = "$where -> \"$what\"";
 			$logger->error($log);
 			$logger->close();
