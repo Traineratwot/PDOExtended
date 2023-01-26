@@ -78,7 +78,7 @@
 			$category = $this->PDOE->getKey();
 			$logFile  = Config::get('CACHE_PATH', $category) . $category . DIRECTORY_SEPARATOR . 'PDOE.log';
 			$logger   = new Logger('PDOE');
-			$logger->pushHandler(new StreamHandler($logFile, Logger::Debug));
+			$logger->pushHandler(new StreamHandler($logFile, Logger::ERROR));
 			$log = "$where -> \"$what\"";
 			$logger->error($log);
 			$logger->close();
