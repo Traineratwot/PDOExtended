@@ -83,6 +83,15 @@
 			return $this;
 		}
 
+		public function like(string $column, $key)
+		: Abstract_WherePart
+		{
+			$column      = $this->driver->escapeColumn($column, $this->DoubleScope->table);
+			$sign        = "LIKE";
+			$this->where = "$column $sign $key";
+			return $this;
+		}
+
 		public function notIn(string $column, $key)
 		: Abstract_WherePart
 		{
