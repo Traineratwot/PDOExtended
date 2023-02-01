@@ -160,6 +160,12 @@
 			return parent::prepare($query, $options);
 		}
 
+		/**
+		 * @param $statement
+		 * @param $mode
+		 * @param ...$fetch_mode_args
+		 * @return false|PDOEStatement
+		 */
 		#[PhpStormStubsElementAvailable('8.0')]
 		#[\ReturnTypeWillChange]
 		public function query($statement, $mode = PDO::FETCH_ASSOC, ...$fetch_mode_args)
