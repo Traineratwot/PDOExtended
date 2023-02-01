@@ -209,6 +209,23 @@
 		}
 
 		/**
+		 * @param string           $column
+		 * @param string|int|float $value
+		 * @return $this
+		 */
+		public function like(string $column, string|int|float $value)
+		{
+			$key                                   = $this->setValue($value);
+			$cls                                   = $this->driver->tools['WherePart'];
+			$this->_where[]                        = (new $cls($this->driver, $this))->like($column, $key)->get();
+			$val                                   = $this->scheme->getColumn($column);
+			$this->validators[trim($key, ':')]     = $val->validator;
+			$this->columnsClasses[trim($key, ':')] = $val;
+
+			return $this;
+		}
+
+		/**
 		 * @return $this
 		 */
 		public function and(?callable $callback = NULL)
